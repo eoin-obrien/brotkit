@@ -49,6 +49,9 @@ jobs:
       - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
         with:
           python-version: "3.14"
+          # No cache in a workflow that publishes (cache-poisoning risk). Also, with the
+          # cache on and nothing to save, setup-uv's post step fails the job.
+          enable-cache: false
 
       - name: Install
         run: uv sync --locked --group dev
@@ -137,6 +140,9 @@ jobs:
       - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
         with:
           python-version: "3.14"
+          # No cache in a workflow that publishes (cache-poisoning risk). Also, with the
+          # cache on and nothing to save, setup-uv's post step fails the job.
+          enable-cache: false
 
       - name: Install and import
         env:
