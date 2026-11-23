@@ -1097,7 +1097,7 @@ Decided 23 Nov 2026. Set up in phase 0 (Backlog 0.2, 0.5 and 0.6).
 | Lint, format, types | ruff (lint + format), pyright strict |
 | Tests | pytest + Hypothesis; golden images in Git LFS, compared perceptually; GPU suite nightly on the self-hosted Xenon runner |
 | Docs | Sphinx + PyData theme + MyST-NB (notebooks executed at build), sphinx-llms-txt for llms.txt (Sphinx capped below 9 for now, ADR-0002); gallery built from recipe files doubles as regression tests. Material for MkDocs was dropped: it reached end of maintenance on 5 Nov 2026 |
-| Hooks and CI | pre-commit (ruff, pyright, Commitizen, large-file guard); GitHub Actions for CPU tests, the CUDA simulator, PR-title check and releases |
+| Hooks and CI | pre-commit (ruff, pyright, Commitizen, large-file guard); GitHub Actions for CPU tests, the CUDA simulator, PR-title check, a [zizmor](https://docs.zizmor.sh/) audit of any change under `.github/workflows/` (actions pinned to commit SHAs) and releases |
 | Licence | BSD-3-Clause |
 
 ### README, community files and agent conventions

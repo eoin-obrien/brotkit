@@ -2,7 +2,10 @@
 
 ## What and why
 
-<!-- What this changes, and the backlog item / issue it closes. -->
+<!-- What this changes, and the backlog item / issue it addresses.
+     "Closes #n" only if merging this PR by itself meets the issue's acceptance criteria.
+     If acceptance needs something after the merge (a release, a published package, a
+     nightly run), write "Refs #n" and close the issue by hand with a link to the evidence. -->
 
 Closes #
 
@@ -16,3 +19,5 @@ Closes #
 - [ ] Any deviation from the spec has an ADR in `docs/design/decisions.md`, and the spec is updated to match
 - [ ] Golden images unchanged, or the update was explicitly approved
 - [ ] User-facing docs and README updated where behaviour changed
+- [ ] `Closes #n` only if merging alone meets the acceptance criteria; otherwise `Refs #n`
+- [ ] Workflow changes: `uv run zizmor .github/workflows` is clean
