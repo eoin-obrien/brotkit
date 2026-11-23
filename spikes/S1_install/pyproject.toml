@@ -1,0 +1,15 @@
+# Spike S1 (throwaway): numba-cuda 0.30.4, the documented fallback in ADR-0005. Python 3.14
+# only (no cp315 wheels). Run from this directory:
+#   uv sync -p 3.14 && uv run smoke.py
+# The chosen backend, numba-cuda-mlir, is in ./mlir.
+[project]
+name = "s1-install"
+version = "0"
+requires-python = ">=3.14"
+dependencies = [
+    "numba-cuda[cu13]==0.30.4",
+    "numpy<2.5",  # numba-cuda 0.30.4 calls np.row_stack, removed in NumPy 2.5 (NVIDIA/numba-cuda#907)
+]
+
+[tool.uv]
+package = false

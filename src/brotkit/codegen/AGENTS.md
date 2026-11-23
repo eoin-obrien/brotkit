@@ -10,6 +10,10 @@ review" in `docs/design/spec.md`.
   Their kernels use `fastmath=False` and emit FMAs explicitly. Parity tests must cover this.
 - **Generated source must be inspectable.** Kernels are written to real `.py` files in the
   cache (never `exec`). `.source`, `.ptx` and `.explain()` must keep working. The cache key
-  covers source, backend, precision and Numba/numba-cuda versions.
+  covers source, backend, precision and Numba/numba-cuda-mlir versions.
+- **Codegen never imports the GPU JIT.** Generated CUDA source is compiled by
+  `src/brotkit/backends/cuda.py`, the only module allowed to import `numba_cuda_mlir`
+  (root AGENTS.md invariant 8). Don't import `numba_cuda_mlir` or `numba.cuda` here, even
+  for types.
 - Features compose at codegen time through template slots (`init`, `step`, `escape_test`,
   `per_iter`, `finalise`), never through runtime dispatch.

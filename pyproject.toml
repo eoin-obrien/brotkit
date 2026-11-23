@@ -23,8 +23,9 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-# Pinned by spike S1 (NVIDIA runtime/compiler wheels + numba-cuda).
-cuda = []
+# Exact pin from spike S1 (docs/design/spikes/S1.md, ADR-0005). The cu13 extra pulls the
+# NVIDIA runtime/compiler wheels (cuda-toolkit[cudart,nvcc,nvrtc], nvidia-nvjitlink).
+cuda = ["numba-cuda-mlir[cu13]==0.6.0"]
 video = ["av"]
 
 [project.urls]
@@ -75,7 +76,16 @@ select = [
     "RUF",      # ruff-specific
     "PT",       # pytest style
     "S307",     # no eval() -- see AGENTS.md invariants
+    "TID251",   # banned imports -- GPU JIT only in backends/cuda.py (AGENTS.md invariant 8)
 ]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"numba_cuda_mlir".msg = "Import numba_cuda_mlir only in src/brotkit/backends/cuda.py (AGENTS.md invariant 8)."
+"numba.cuda".msg = "brotkit's GPU JIT is numba-cuda-mlir (ADR-0005); use src/brotkit/backends/cuda.py."
+
+[tool.ruff.lint.per-file-ignores]
+"src/brotkit/backends/cuda.py" = ["TID251"]
+"spikes/**" = ["TID251"]   # throwaway spike code; see docs/design/spikes/
 
 [tool.ruff.format]
 docstring-code-format = true

@@ -163,3 +163,64 @@ published 0.0.2 to TestPyPI and PyPI, with attestations. The PyPI install check 
 afterwards: its commit was pushed to #63's branch after that PR had merged, so it missed
 run 2. It was checked by hand instead (`uv run --with brotkit==0.0.2` from PyPI imports and
 reports 0.0.2) and lands with the next release.
+
+## ADR-0005: GPU JIT is numba-cuda-mlir
+
+- **Status:** Accepted
+- **Date:** 2026-11-23
+- **Backlog:** S1 (gates S3 and S4; affects 0.3, 1.4, 1.20)
+
+### Context
+The spec chose `numba-cuda` as the GPU JIT, with Python 3.15 as the target and an open
+question about cp315 wheels (spec: Toolchain decisions). Spike S1
+([`spikes/S1.md`](spikes/S1.md)) found that `numba-cuda` will never support 3.15:
+
+- NVIDIA put `numba-cuda` in maintenance mode on 2026-06-25
+  ([NVIDIA/numba-cuda#902](https://github.com/NVIDIA/numba-cuda/issues/902)): security and
+  critical fixes only, through the life of CUDA 13, with `numba-cuda-mlir` as the successor.
+- The Python 3.15 request was closed as won't-do
+  ([#926](https://github.com/NVIDIA/numba-cuda/issues/926)): "Users who need to use Python
+  3.15 should switch to numba-cuda-mlir instead."
+- NumPy 2.5 support was closed the same way
+  ([#907](https://github.com/NVIDIA/numba-cuda/issues/907)). `numba-cuda` 0.30.4 calls
+  `np.row_stack`, which NumPy 2.5 removed, so it fails to compile any kernel unless NumPy is
+  held below 2.5.
+- 0.30.4, the last release, has cp310–cp314 wheels and no sdist, so uv can't install it on
+  3.15 at all.
+
+On Xenon (WSL2, RTX 3090 Ti, CC 8.6, driver 610.57 / CUDA 13.3), `numba-cuda-mlir[cu13]`
+0.6.0 passed the S1 smoke test (f32 elementwise, f64 `cuda.atomic.add`, `cache=True`
+written and then loaded in a fresh process) on both CPython 3.14.0 and 3.15.2, with NumPy
+2.5.5. It has no `numba` or `llvmlite` dependency and runs alongside CPU `numba` 0.68.1 in the
+same process. `uv sync --group dev --extra cuda` from the brotkit project worked on both
+Pythons.
+
+### Decision
+- The `[cuda]` extra is `numba-cuda-mlir[cu13]==0.6.0`, pinned exactly, for 3.14 and 3.15. No
+  `python_version` marker and no 3.15 error path.
+- Only `src/brotkit/backends/cuda.py` imports `numba_cuda_mlir`. Nothing in `src/brotkit`
+  imports `numba.cuda`. This is AGENTS.md invariant 8, enforced by ruff `TID251`.
+- S3 and S4 gate this decision. They must show that fastmath on/off behaves as the spec's
+  fastmath policy needs, and that PTX inspection and register-count reporting work on
+  `numba-cuda-mlir`. If either fails, stop and report; don't work around it.
+- A Dependabot PR that bumps `numba-cuda-mlir` doesn't auto-merge. It needs the nightly GPU
+  suite green first (backlog 0.3).
+
+### Consequences
+- The spec's GPU JIT row, open questions, toolkit-install row, and other mentions of
+  `numba-cuda` now name `numba-cuda-mlir`.
+- `numba-cuda-mlir` is pre-1.0. An exact pin plus the nightly GPU gate is how we absorb its
+  churn. Its extension API differs from `numba-cuda` (MLIR, not LLVM IR). brotkit generates
+  Python source and shouldn't need it, but any use of extension APIs has to target MLIR.
+- `numba-cuda-mlir` has no CUDA simulator (`NUMBA_ENABLE_CUDASIM` is ignored, and the package
+  has no simulator module), so the spec's simulator CI job is dropped. CPU CI runs codegen
+  snapshot tests (generated kernel source against reviewed snapshots) and CPU-backend parity
+  tests. GPU coverage comes from the self-hosted runner: nightly, before releases, and on a PR
+  only when the maintainer adds the `gpu` label. Untrusted PR code never runs on the
+  self-hosted runner. If S4 shows `numba-cuda-mlir` can compile to PTX with no GPU present,
+  CPU CI adds a compile-only check.
+- **Documented fallback, no code:** if `numba-cuda-mlir` fails the S3/S4 gate, the revival
+  path is `numba-cuda[cu13]==0.30.4` plus `numpy<2.5`, on Python 3.14 only (marker
+  `python_version < "3.15"`), import `from numba import cuda`, which S1 verified works on
+  Xenon. It's a dead end: no 3.15, no NumPy ≥ 2.5, and fixes only for security issues until
+  CUDA 13 ends. Reviving it would need a new ADR that supersedes this one.

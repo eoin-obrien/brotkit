@@ -8,7 +8,7 @@ Instructions for AI coding agents (and humans) working on brotkit. This file is 
 
 brotkit is a GPU-accelerated, SymPy-driven fractal rendering framework for Jupyter. A formula
 goes in as SymPy, is differentiated and code-generated into one fused kernel, and is compiled
-by Numba for the CPU or by `numba-cuda` for the GPU. A render writes a typed bundle of data
+by Numba for the CPU or by `numba-cuda-mlir` for the GPU (ADR-0005). A render writes a typed bundle of data
 layers that can be recoloured, saved and animated without re-iterating.
 
 - **The design spec in `docs/design/spec.md` is authoritative.** Record any deviation from it
@@ -62,6 +62,10 @@ Don't break these. If a change seems to need it, stop and raise it instead.
    `update-golden-images` skill). They live in Git LFS and are compared perceptually.
 7. **The generated kernel cache is never committed.** It lives in `~/.cache/brotkit/kernels/`.
    Render outputs aren't committed either; `.gitignore` covers both.
+8. **Only the CUDA backend imports the GPU JIT.** `numba_cuda_mlir` is imported in
+   `src/brotkit/backends/cuda.py` and nowhere else in `src/brotkit`. Codegen emits source; it
+   doesn't import the compiler. The legacy `numba.cuda` target isn't used at all (ADR-0005).
+   Ruff enforces both (`TID251`).
 
 See also "Rules that keep it fast" and "Conventions" in the spec.
 
