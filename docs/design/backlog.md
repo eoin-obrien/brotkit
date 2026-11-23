@@ -8,10 +8,10 @@ Status is tracked in GitHub issues (one per row), not in this file.
 
 | ID | Task | Acceptance criteria | Depends on |
 | --- | --- | --- | --- |
-| 0.1 | Reserve `brotkit` on PyPI | 0.0.1 placeholder published (a one-off manual `uv publish` is fine); Trusted Publisher then registered for the release workflow | — |
+| 0.1 | Reserve `brotkit` on PyPI | Pending Trusted Publishers registered on PyPI and TestPyPI for the release workflow; its first run publishes 0.0.1 and creates the project, with no token ever uploaded (ADR-0004) | 0.5 |
 | 0.2 | Repo scaffold | uv project, src layout, ruff, pyright strict, pytest + Hypothesis, pre-commit with Commitizen `commit-msg` hook, BSD-3 `LICENSE`, GitHub Actions CPU workflow plus PR-title Conventional Commits check, all green on an empty package | — |
 | 0.3 | Self-hosted GPU runner on Xenon | Nightly job runs `nvidia-smi` and a numba-cuda smoke kernel; doesn't clash with LLM inference (scheduled off-hours or free-VRAM check) | 0.2, S1 |
-| 0.5 | Release workflow | Manually triggered: `cz bump` (version, `CHANGELOG.md`, tag) → `uv build` → TestPyPI → PyPI via Trusted Publishing and `pypa/gh-action-pypi-publish` with attestations, from a protected `pypi` environment; a 0.0.2 dry run succeeds end to end | 0.1, 0.2 |
+| 0.5 | Release workflow | Manually triggered: `cz bump` (version, `CHANGELOG.md`, tag) → `uv build` → TestPyPI → PyPI via Trusted Publishing and `pypa/gh-action-pypi-publish` with attestations, from a protected `pypi` environment; a 0.0.2 dry run succeeds end to end | 0.2 |
 | 0.6 | README, community files and agent instructions (skeleton) | README skeleton with badge rows and install section; AGENTS.md with setup, commands and architecture invariants; CLAUDE.md as `@AGENTS.md` bridge; `.agents/skills/` with `.claude/skills` symlink; CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, CITATION.cff, issue and PR templates, CODEOWNERS, Dependabot. Hero images, quickstart output and llms.txt come in 1.23 | 0.2, 0.5 |
 | S1 | Install spike | `uv sync --extra cuda` on WSL2 gives a working kernel on Python 3.14 and 3.15 (or 3.15 blocker recorded); exact NVIDIA wheel names pinned in the spec | 0.2 |
 | S2 | Kernel cache spike | Generated `.py` + `cache=True` loads a compiled kernel in a fresh notebook session; cold and warm times recorded | S1 |

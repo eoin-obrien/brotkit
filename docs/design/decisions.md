@@ -105,3 +105,46 @@ would be broken on GitHub and PyPI.
 - Hero renders are still produced from `docs/hero/*.recipe.json` in CI and still act as a
   golden test (1.23).
 - Spec edit: the README hero-strip item notes the files aren't in LFS.
+
+## ADR-0004: Create the PyPI project through the release workflow, from version 0.0.0
+
+- **Status:** Accepted
+- **Date:** 2026-11-23
+- **Backlog:** 0.1, 0.5
+
+### Context
+Backlog 0.1 allowed a one-off manual `uv publish` to reserve `brotkit`, with the Trusted
+Publisher registered afterwards. That needs an API token, even if only once. PyPI's pending
+Trusted Publishers make the token unnecessary: the first OIDC publish from the configured
+workflow creates the project. Three practical problems came up while building the workflow
+(spec: Repository conventions, "Versioning", "Release manager" and "Publishing"):
+
+- `pyproject.toml` already said 0.0.1 with no tag. `cz bump` can't release the current
+  version as-is, and the scaffold's `docs:`/`chore:` commits aren't eligible for a bump.
+- `uv.lock` records the project's own version. With the `pep621` provider, `cz bump` changes
+  `pyproject.toml` only and leaves `uv.lock` stale.
+- `cz bump --increment PATCH` with no commits since the last tag exits 0 without bumping
+  anything, unless `--allow-no-commit` is passed.
+
+### Decision
+- No manual upload. Pending Trusted Publishers on PyPI and TestPyPI (workflow `release.yml`,
+  environments `pypi` and `testpypi`) let the release workflow create the project.
+- The version in `pyproject.toml` is reset to 0.0.0 before the first release. Run 1 forces
+  `PATCH` and publishes 0.0.1, the name reservation. Run 2 forces `PATCH` and publishes 0.0.2,
+  the end-to-end check.
+- The release workflow takes an `increment` input: `auto` (from Conventional Commits) or a
+  forced `PATCH`, `MINOR` or `MAJOR`, which adds `--allow-no-commit`. The workflow fails if
+  the version didn't change.
+- Commitizen uses the `uv` version provider, which writes the version to both
+  `pyproject.toml` and `uv.lock`.
+- TestPyPI publishes from its own `testpypi` environment, and an install-from-TestPyPI check
+  must pass before the protected `pypi` job runs.
+
+### Consequences
+- The name isn't held until run 1 completes. Pending publishers don't reserve names, so
+  run 1 should happen right after the publishers are registered.
+- Changelog entries for 0.0.1 and 0.0.2 are empty headings, because Commitizen's default
+  changelog lists only `feat`, `fix`, `refactor`, `perf` and breaking changes.
+- The bump commit and tag are pushed to `main` with the workflow's `GITHUB_TOKEN`. If `main`
+  is ever protected, the workflow (or a GitHub App) needs a bypass.
+- Spec edits: the Repository conventions "Versioning" and "Publishing" rows.
