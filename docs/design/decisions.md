@@ -78,3 +78,30 @@ Both groups stay installable together from a single lock.
   If that still hasn't happened by backlog 1.23 (when README code testing is switched on),
   switch README testing to another tool rather than keep Sphinx capped.
 - Spec edit: the Repository conventions "Docs" row notes the cap.
+
+## ADR-0003: Hero images are ordinary git files, not Git LFS
+
+- **Status:** Accepted
+- **Date:** 2026-11-23
+- **Backlog:** 0.2, 1.23
+
+### Context
+The scaffold put both `tests/golden/**` and `docs/hero/**` in Git LFS. The README hero strip
+(spec: "README, community files and agent conventions") must use absolute
+`raw.githubusercontent.com` URLs, because PyPI renders the same README. For LFS-tracked files,
+`raw.githubusercontent.com` serves the LFS pointer text, not the image, so the hero strip
+would be broken on GitHub and PyPI.
+
+### Decision
+- `docs/hero/**` is removed from LFS tracking. Hero PNGs are committed as ordinary files,
+  optimised to about 300 KB each, and served from `raw.githubusercontent.com`.
+- `tests/golden/**` stays in Git LFS.
+
+### Consequences
+- Each hero regeneration adds about 1.2 MB of history for the four images, so regenerate them
+  only when the output visibly changes.
+- The images must be optimised (for example, `oxipng`) before committing. The pre-commit
+  large-file guard (1024 KB) catches anything far over budget.
+- Hero renders are still produced from `docs/hero/*.recipe.json` in CI and still act as a
+  golden test (1.23).
+- Spec edit: the README hero-strip item notes the files aren't in LFS.

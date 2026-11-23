@@ -1106,7 +1106,7 @@ The README is the project's front page on GitHub and PyPI. It's built like a pro
 
 **README structure, in order:**
 
-1. **Hero strip:** 4 brotkit renders (Mandelbrot with DE shading, Nebulabrot, Newton basins, an oblique 4D slice), produced by `docs/hero/*.recipe.json` in CI, so the front-page image is also a golden test. Use absolute `raw.githubusercontent.com` URLs: PyPI renders the same README and relative image paths break there.
+1. **Hero strip:** 4 brotkit renders (Mandelbrot with DE shading, Nebulabrot, Newton basins, an oblique 4D slice), produced by `docs/hero/*.recipe.json` in CI, so the front-page image is also a golden test. Use absolute `raw.githubusercontent.com` URLs: PyPI renders the same README and relative image paths break there. The hero PNGs are ordinary git files, not Git LFS, optimised to about 300 KB each (ADR-0003).
 2. **One-line pitch** (GPU-accelerated, SymPy-driven fractal rendering for notebooks), then the badge rows below.
 3. **Highlights:** five bullets (any SymPy formula with analytic derivatives; render once, colour many; adaptive supersampling with correct linear-light AA; precision tiers to dd/qf and perturbation; 4D animation).
 4. **Install:** `uv add brotkit`, `uv add "brotkit[cuda]"`, requirements (NVIDIA driver, compute capability), and `brotkit doctor`.

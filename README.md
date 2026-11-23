@@ -1,6 +1,7 @@
 <!--
 Hero strip (backlog 1.23): four renders produced in CI from docs/hero/*.recipe.json, so the
 front-page image is also a golden test. Absolute URLs, because PyPI renders this README too.
+Hero PNGs are ordinary git files (not LFS), optimised to ~300 KB each: see ADR-0003.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/eoin-obrien/brotkit/main/docs/hero/mandelbrot-de.png" width="24%" alt="Mandelbrot set with distance-estimate shading">
