@@ -89,3 +89,9 @@ See also "Rules that keep it fast" and "Conventions" in the spec.
       updated to match
 - [ ] Golden images unchanged, or the update was explicitly approved
 - [ ] User-facing docs and README updated where behaviour changed
+- [ ] Issue links: `Closes #n` only when merging this PR by itself meets the issue's
+      acceptance criteria. When acceptance depends on something that happens after the merge
+      (a release, a published package, a nightly run), use `Refs #n` and close the issue by
+      hand with a link to the evidence
+- [ ] Workflow changes: `uv run zizmor .github/workflows` is clean (CI runs it on any change
+      under `.github/workflows/`)
