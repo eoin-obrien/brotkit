@@ -1,0 +1,48 @@
+{
+ "f32": {
+  "seconds": 0.0034,
+  "pixel_iterations": 3605455371,
+  "giter_s": 1074.805,
+  "mean_iter": 434.7,
+  "interior_frac": 0.3957,
+  "band_rows": 2160,
+  "launches": 1,
+  "vs_f64": 32.984
+ },
+ "df64": {
+  "seconds": 0.0203,
+  "pixel_iterations": 3605436748,
+  "giter_s": 177.821,
+  "mean_iter": 434.7,
+  "interior_frac": 0.3957,
+  "band_rows": 2160,
+  "launches": 1,
+  "vs_f64": 5.457
+ },
+ "f64": {
+  "seconds": 0.1106,
+  "pixel_iterations": 3605360226,
+  "giter_s": 32.586,
+  "mean_iter": 434.7,
+  "interior_frac": 0.3957,
+  "band_rows": 2160,
+  "launches": 1,
+  "vs_f64": 1.0
+ },
+ "dd": {
+  "seconds": 1.427,
+  "pixel_iterations": 3605360537,
+  "giter_s": 2.526,
+  "mean_iter": 434.7,
+  "interior_frac": 0.3957,
+  "band_rows": 256,
+  "launches": 9,
+  "vs_f64": 0.078
+ },
+ "_ratios": {
+  "f32_over_df64": 6.04,
+  "df64_over_f64": 5.46,
+  "f64_over_dd": 12.9,
+  "df64_over_dd": 70.4
+ }
+}

@@ -1,0 +1,119 @@
+{
+ "n": 200000,
+ "parity": [
+  {
+   "fmt": "dd",
+   "op": "add",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 0
+  },
+  {
+   "fmt": "dd",
+   "op": "mul",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 40089
+  },
+  {
+   "fmt": "dd",
+   "op": "sqr",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 50087
+  },
+  {
+   "fmt": "dd",
+   "op": "cmul",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 80351
+  },
+  {
+   "fmt": "dd",
+   "op": "csqr",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 82109
+  },
+  {
+   "fmt": "dd",
+   "op": "mul_dekker",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 40089
+  },
+  {
+   "fmt": "df64",
+   "op": "add",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 0
+  },
+  {
+   "fmt": "df64",
+   "op": "mul",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 40089
+  },
+  {
+   "fmt": "df64",
+   "op": "sqr",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 49986
+  },
+  {
+   "fmt": "df64",
+   "op": "cmul",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 80063
+  },
+  {
+   "fmt": "df64",
+   "op": "csqr",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 81787
+  },
+  {
+   "fmt": "df64",
+   "op": "mul_dekker",
+   "n": 200000,
+   "rn_differs_from_cpu": 0,
+   "naive_differs_from_cpu": 40089
+  }
+ ],
+ "identities": [
+  {
+   "prec": "f64",
+   "kernel": "bare",
+   "n": 200000,
+   "ab_minus_ab_nonzero": 0,
+   "im_z_conjz_nonzero": 0
+  },
+  {
+   "prec": "f64",
+   "kernel": "rn",
+   "n": 200000,
+   "ab_minus_ab_nonzero": 0,
+   "im_z_conjz_nonzero": 0
+  },
+  {
+   "prec": "f32",
+   "kernel": "bare",
+   "n": 200000,
+   "ab_minus_ab_nonzero": 0,
+   "im_z_conjz_nonzero": 0
+  },
+  {
+   "prec": "f32",
+   "kernel": "rn",
+   "n": 200000,
+   "ab_minus_ab_nonzero": 0,
+   "im_z_conjz_nonzero": 0
+  }
+ ]
+}

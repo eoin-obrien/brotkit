@@ -40,14 +40,14 @@ Target Python 3.15 with uv. Use Numba on the CPU and NVIDIA's `numba-cuda-mlir` 
 | `qf` | quad-float (four f32s, \~96-bit mantissa) | \~1e-26 | Optional GPU alternative to `dd` on consumer cards. It runs on the fast f32 units but needs many more operations per multiply. |
 | `perturb` | f64/df64 deltas + arbitrary-precision reference orbit | unbounded | Phase 4 (see Going wide) |
 
-Which of `dd` and `qf` is faster depends on the card's FP64:FP32 ratio, so `Precision.AUTO` decides with a one-off micro-benchmark per device and caches the result. The CPU `dd` path stays only as a reference implementation for parity tests.
+Which of `dd` and `qf` is faster depends on the card's FP64:FP32 ratio, so `Precision.AUTO` decides with a one-off micro-benchmark per device and caches the result. S3 measured z²+c on an RTX 3090 Ti (1:64 FP64) at 1075 (f32), 178 (df64), 32.6 (f64) and 2.53 (dd) Giter/s: df64 is 5.5× faster than native f64 there, so on such cards AUTO should prefer df64 over f64 whenever df64's precision suffices, and qf has to beat 2.53 Giter/s to displace dd. The CPU `dd` path stays only as a reference implementation for parity tests.
 
 `Precision.AUTO` picks the cheapest tier for which `pixel_spacing / max(1, abs(center))` sits comfortably above that type's epsilon (three orders of magnitude of headroom), and warns when it upgrades.
 
 Open questions:
 
 - ~~Check `numba-cuda` cp315 wheels.~~ Resolved by S1 and ADR-0005: `numba-cuda` will never ship cp315 ([#926](https://github.com/NVIDIA/numba-cuda/issues/926)), so the GPU JIT is `numba-cuda-mlir` on 3.14 and 3.15.
-- `numba-cuda-mlir` is pre-1.0 and generates code through MLIR rather than LLVM IR ([nvmath docs](https://docs.nvidia.com/cuda/nvmath-python/1.0.0/device-apis/utils.html) cover its native complex types). S3 and S4 gate the choice: they must show fastmath on/off behaviour, PTX inspection and register-count reporting work on it. If either fails, stop and report rather than work around it. Keep the backend boundary thin: only `backends/cuda.py` imports the JIT.
+- `numba-cuda-mlir` is pre-1.0 and generates code through MLIR rather than LLVM IR ([nvmath docs](https://docs.nvidia.com/cuda/nvmath-python/1.0.0/device-apis/utils.html) cover its native complex types). S3 and S4 gate the choice. **S3 passed the revised gate** ([spikes/S3.md](spikes/S3.md), ADR-0006): fastmath turned out to be inert below sm_100 and FMA contraction can't be disabled, so multi-word correctness now comes from codegen (`_rn` intrinsics plus explicit `cuda.fma`), and explicit FMA, non-contractible rounded add/mul and PTX/SASS inspection all work. S4 must still show register-count reporting works. If it fails, stop and report rather than work around it. Keep the backend boundary thin: only `backends/cuda.py` imports the JIT.
 
 ## Parameter names and defaults
 
@@ -572,13 +572,13 @@ The design is viable as written. Its core bet, composing features at code-genera
 | --- | --- | --- |
 | Generated source written to disk can be cached across sessions | Holds | `numba-cuda` supports `cache=True` on `@cuda.jit` with [a file-based cache](https://nvidia.github.io/numba-cuda/user/caching.html), and keeps [separate cache files per compute capability](https://numba.readthedocs.io/en/0.56.0/cuda/caching.html). S1 showed `numba-cuda-mlir` 0.6.0 writing and reloading the same `__pycache__/<module>.<func>-<line>.py3XX.{nbi,nbc}` files in a fresh process; S2 measures it. Writing real `.py` files (not `exec`) is what makes it work. |
 | Runtime parameters avoid recompiles during animation | Holds | Kernel arguments of scalar or complex type don't change the signature. Only dtype or precision changes recompile. |
-| Multi-word precision (df64, dd, qf) can be codegen-only | Holds, with a caveat | No custom device types are needed: the printer emits tuples of scalar locals. The caveat is fastmath (below). |
+| Multi-word precision (df64, dd, qf) can be codegen-only | Holds, with a caveat | No custom device types are needed: the printer emits tuples of scalar locals (S3: tuple-returning device functions inline cleanly). The caveat is FMA contraction and flush-to-zero (below); with rounding-explicit codegen, S3 got df64/dd results bit-identical to a CPU emulation of the same source. |
 | Immutable recipes as cache keys | Holds | SymPy expressions are immutable and hashable. Python 3.15 adds a [built-in hashable `frozendict`](https://docs.python.org/3.16/whatsnew/3.15.html) for params, with the PyPI `frozendict` package [as a pre-3.15 fallback](https://discuss.python.org/t/pep-814-add-frozendict-built-in-type/104854?page=7). |
 | Colouring as pure functions over saved layers | Holds | No coupling to kernels beyond layer names, which a `LayerSpec` registry pins down. |
 
 ### Risks and required changes
 
-1. **Fastmath breaks multi-word arithmetic (must fix).** Error-free transformations (two-sum, two-product) depend on the compiler not reassociating or contracting operations. On the CUDA target, `fastmath` [is only `True` or `False`](https://nvidia.github.io/numba-cuda/user/fastmath.html), and `True` enables FMA contraction and flushes denormals. That's documented for `numba-cuda`; S3 must confirm it holds on `numba-cuda-mlir` (ADR-0005). Policy: `f32` kernels may use `fastmath=True`. `df64`, `dd` and `qf` kernels must use `fastmath=False` and emit their FMAs explicitly. Parity tests must cover this.
+1. **Contraction and flush-to-zero break multi-word arithmetic (must fix).** Error-free transformations (two-sum, two-product) depend on the compiler not reassociating, contracting or flushing operations. Compiler flags can't guarantee that: on `numba-cuda-mlir` 0.6.0, FMA contraction is on by default for every architecture, even with `fastmath=False`, and can't be turned off; `fastmath=True` has no effect at all below sm_100, and on sm_100+ adds `.ftz` (S3, ADR-0006). Policy: multi-word printers (`df64`, `dd`, `qf`) never emit bare `+ - *` on floats. Every add and multiply is a libdevice round-to-nearest intrinsic (`dadd_rn`/`dmul_rn`, `fadd_rn`/`fsub_rn`/`fmul_rn`; f64 subtraction is `dadd_rn(x, -y)`), and every FMA is an explicit `cuda.fma`. These lower to `add.rn`/`mul.rn`, which the code generator doesn't fuse. Multi-word kernels compile with `fastmath=False` (FTZ). `fastmath=True` is a performance option for `f32` kernels only. Tests: generated multi-word source has no bare float operators, its PTX FMA count equals the explicit `cuda.fma` count, and its GPU results are bit-identical to a CPU emulation of the same source.
 2. **Kernel variant explosion (must fix).** Formula × feature subset × precision × backend multiplies quickly, and each fused CUDA kernel takes seconds to compile cold. Fixes: canonicalise and sort feature tuples so equivalent sets share a key; compile lazily; offer `FeatureSet.standard()` presets so notebooks reuse a few hot kernels; let a cheap feature (such as `FinalZ`) ride along rather than spawning a new variant.
 3. **Register pressure from fused features (monitor).** Every orbit accumulator lives in registers for the whole loop, and dd/qf multiply that. Too many features cut occupancy. Mitigation: report registers per thread from the compiled kernel, and above a threshold split into two launches (core + orbit statistics) automatically. This is the one place where "one kernel" bends.
 4. **Where layers live (must fix).** `Layers` must say whether each array is on the host or the device. Hold device arrays via `__cuda_array_interface__`, copy to host lazily on first NumPy access, and let CuPy colouring use them in place. Otherwise animation pays a full device-to-host copy per frame for layers it never colours.
@@ -586,7 +586,7 @@ The design is viable as written. Its core bet, composing features at code-genera
 6. **SymPy analysis can stall (monitor).** `solve(diff(f, z), z)` may not terminate quickly for transcendental or high-degree formulas. Run analysis with a timeout, fall back to numerical critical points (`nroots`), or accept a user-supplied `critical_point`. Cache analysis results by expression hash.
 7. **CSE output size (monitor).** High powers with symbolic parameters can produce very large expressions after real/imaginary splitting. Prefer Horner form and squaring chains before `cse`, and fail with a clear message above a size budget.
 8. **Density atomics contention (monitor).** Coarse Buddhabrot views concentrate hits on a few pixels. Warp-aggregated atomics (combine within a warp before writing) help, and uint32 histograms need an overflow check against `samples × max_iter`.
-9. **CPU/GPU parity is precision-bound.** libdevice and LLVM transcendental functions differ in the last bits, and orbits are chaotic. Compare at equal precision on pixels well away from the boundary (DE above a threshold), never bit-for-bit across backends.
+9. **CPU/GPU parity is precision-bound.** libdevice and LLVM transcendental functions differ in the last bits, and orbits are chaotic. Compare at equal precision on pixels well away from the boundary (DE above a threshold), never bit-for-bit across backends. The exception is multi-word arithmetic built with rounding-explicit codegen (item 1): S3 showed it is bit-identical to a CPU emulation of the same generated source, so those primitives get exact parity tests.
 
 ### Over-abstraction check
 
@@ -664,7 +664,7 @@ class Precision(StrEnum):
     @property
     def eps(self) -> float: ...            # unit roundoff per tier
     @property
-    def fastmath_allowed(self) -> bool:    # review item 1
+    def fastmath_allowed(self) -> bool:    # review item 1: performance only, inert below sm_100 (ADR-0006)
         return self is Precision.F32
 
 class Outcome(IntEnum):                     # stored in the uint8 `outcome` layer

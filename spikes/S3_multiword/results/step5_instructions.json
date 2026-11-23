@@ -1,0 +1,493 @@
+{
+ "f64/naive/k_one_mul_dekker": {
+  "explicit_fma_in_source": 0,
+  "sm_86": {
+   "ptx": {
+    "add.f64": 2,
+    "fma.rn.f64": 4,
+    "mul.f64": 5,
+    "sub.f64": 9
+   },
+   "sass": {
+    "DADD": 6,
+    "DFMA": 9,
+    "DMUL": 2
+   },
+   "ptx_excerpt": "mul.f64 \t%fd3, %fd2, %fd1;\nmul.f64 \t%fd4, %fd2, 0d41A0000002000000;\nsub.f64 \t%fd5, %fd4, %fd2;\nsub.f64 \t%fd6, %fd4, %fd5;\nsub.f64 \t%fd7, %fd2, %fd6;\nmul.f64 \t%fd8, %fd1, 0d41A0000002000000;\nsub.f64 \t%fd9, %fd8, %fd1;\nsub.f64 \t%fd10, %fd8, %fd9;\nsub.f64 \t%fd11, %fd1, %fd10;\nmul.f64 \t%fd12, %fd6, %fd10;\nsub.f64 \t%fd13, %fd12, %fd3;\nfma.rn.f64 \t%fd14, %fd6, %fd11, %fd13;\nfma.rn.f64 \t%fd15, %fd7, %fd10, %fd14;\nfma.rn.f64 \t%fd16, %fd7, %fd11, %fd15;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.f64": 2,
+    "fma.rn.f64": 4,
+    "mul.f64": 5,
+    "sub.f64": 9
+   },
+   "sass": {
+    "DADD": 6,
+    "DFMA": 9,
+    "DMUL": 2
+   },
+   "ptx_excerpt": "mul.f64 \t%rd38, %rd23, %rd34;\nmul.f64 \t%rd39, %rd23, 0d41A0000002000000;\nsub.f64 \t%rd40, %rd39, %rd23;\nsub.f64 \t%rd41, %rd39, %rd40;\nsub.f64 \t%rd42, %rd23, %rd41;\nmul.f64 \t%rd43, %rd34, 0d41A0000002000000;\nsub.f64 \t%rd44, %rd43, %rd34;\nsub.f64 \t%rd45, %rd43, %rd44;\nsub.f64 \t%rd46, %rd34, %rd45;\nmul.f64 \t%rd47, %rd41, %rd45;\nsub.f64 \t%rd48, %rd47, %rd38;\nfma.rn.f64 \t%rd49, %rd41, %rd46, %rd48;\nfma.rn.f64 \t%rd50, %rd42, %rd45, %rd49;\nfma.rn.f64 \t%rd51, %rd42, %rd46, %rd50;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.f64": 2,
+    "fma.rn.f64": 4,
+    "mul.f64": 5,
+    "sub.f64": 9
+   },
+   "sass": {
+    "DADD": 6,
+    "DFMA": 9,
+    "DMUL": 2
+   },
+   "ptx_excerpt": "mul.f64 \t%rd38, %rd23, %rd34;\nmul.f64 \t%rd39, %rd23, 0d41A0000002000000;\nsub.f64 \t%rd40, %rd39, %rd23;\nsub.f64 \t%rd41, %rd39, %rd40;\nsub.f64 \t%rd42, %rd23, %rd41;\nmul.f64 \t%rd43, %rd34, 0d41A0000002000000;\nsub.f64 \t%rd44, %rd43, %rd34;\nsub.f64 \t%rd45, %rd43, %rd44;\nsub.f64 \t%rd46, %rd34, %rd45;\nmul.f64 \t%rd47, %rd41, %rd45;\nsub.f64 \t%rd48, %rd47, %rd38;\nfma.rn.f64 \t%rd49, %rd41, %rd46, %rd48;\nfma.rn.f64 \t%rd50, %rd42, %rd45, %rd49;\nfma.rn.f64 \t%rd51, %rd42, %rd46, %rd50;"
+  }
+ },
+ "f64/naive/k_one_mul": {
+  "explicit_fma_in_source": 1,
+  "sm_86": {
+   "ptx": {
+    "add.f64": 2,
+    "fma.rn.f64": 2,
+    "mul.f64": 2,
+    "neg.f64": 1,
+    "sub.f64": 2
+   },
+   "sass": {
+    "DADD": 4,
+    "DFMA": 2,
+    "DMUL": 2
+   },
+   "ptx_excerpt": "mul.f64 \t%fd3, %fd2, %fd1;\nneg.f64 \t%fd4, %fd3;\nfma.rn.f64 \t%fd5, %fd2, %fd1, %fd4;\nmul.f64 \t%fd7, %fd2, %fd6;\nfma.rn.f64 \t%fd9, %fd8, %fd1, %fd7;\nadd.f64 \t%fd10, %fd5, %fd9;\nadd.f64 \t%fd11, %fd3, %fd10;\nsub.f64 \t%fd12, %fd11, %fd3;\nsub.f64 \t%fd13, %fd10, %fd12;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.f64": 2,
+    "fma.rn.f64": 2,
+    "mul.f64": 2,
+    "neg.f64": 1,
+    "sub.f64": 2
+   },
+   "sass": {
+    "DADD": 4,
+    "DFMA": 2,
+    "DMUL": 2
+   },
+   "ptx_excerpt": "mul.f64 \t%rd38, %rd23, %rd34;\nneg.f64 \t%rd39, %rd38;\nfma.rn.f64 \t%rd40, %rd23, %rd34, %rd39;\nmul.f64 \t%rd41, %rd23, %rd37;\nfma.rn.f64 \t%rd42, %rd26, %rd34, %rd41;\nadd.f64 \t%rd43, %rd40, %rd42;\nadd.f64 \t%rd44, %rd38, %rd43;\nsub.f64 \t%rd45, %rd44, %rd38;\nsub.f64 \t%rd46, %rd43, %rd45;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.f64": 2,
+    "fma.rn.f64": 2,
+    "mul.f64": 2,
+    "neg.f64": 1,
+    "sub.f64": 2
+   },
+   "sass": {
+    "DADD": 4,
+    "DFMA": 2,
+    "DMUL": 2
+   },
+   "ptx_excerpt": "mul.f64 \t%rd38, %rd23, %rd34;\nneg.f64 \t%rd39, %rd38;\nfma.rn.f64 \t%rd40, %rd23, %rd34, %rd39;\nmul.f64 \t%rd41, %rd23, %rd37;\nfma.rn.f64 \t%rd42, %rd26, %rd34, %rd41;\nadd.f64 \t%rd43, %rd40, %rd42;\nadd.f64 \t%rd44, %rd38, %rd43;\nsub.f64 \t%rd45, %rd44, %rd38;\nsub.f64 \t%rd46, %rd43, %rd45;"
+  }
+ },
+ "f64/naive/k_one_two_sum": {
+  "explicit_fma_in_source": 0,
+  "sm_86": {
+   "ptx": {
+    "add.f64": 2,
+    "sub.f64": 4
+   },
+   "sass": {
+    "DADD": 6
+   },
+   "ptx_excerpt": "add.f64 \t%fd3, %fd2, %fd1;\nsub.f64 \t%fd4, %fd3, %fd2;\nsub.f64 \t%fd5, %fd3, %fd4;\nsub.f64 \t%fd6, %fd2, %fd5;\nsub.f64 \t%fd7, %fd1, %fd4;\nadd.f64 \t%fd8, %fd7, %fd6;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.f64": 2,
+    "sub.f64": 4
+   },
+   "sass": {
+    "DADD": 6
+   },
+   "ptx_excerpt": "add.f64 \t%rd29, %rd22, %rd28;\nsub.f64 \t%rd30, %rd29, %rd22;\nsub.f64 \t%rd31, %rd29, %rd30;\nsub.f64 \t%rd32, %rd22, %rd31;\nsub.f64 \t%rd33, %rd28, %rd30;\nadd.f64 \t%rd34, %rd33, %rd32;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.f64": 2,
+    "sub.f64": 4
+   },
+   "sass": {
+    "DADD": 6
+   },
+   "ptx_excerpt": "add.f64 \t%rd29, %rd22, %rd28;\nsub.f64 \t%rd30, %rd29, %rd22;\nsub.f64 \t%rd31, %rd29, %rd30;\nsub.f64 \t%rd32, %rd22, %rd31;\nsub.f64 \t%rd33, %rd28, %rd30;\nadd.f64 \t%rd34, %rd33, %rd32;"
+  }
+ },
+ "f64/rn/k_one_mul_dekker": {
+  "explicit_fma_in_source": 0,
+  "sm_86": {
+   "ptx": {
+    "add.rn.f64": 15,
+    "mul.rn.f64": 9,
+    "neg.f64": 8
+   },
+   "sass": {
+    "DADD": 15,
+    "DMUL": 9
+   },
+   "ptx_excerpt": "mul.rn.f64 \t%fd3, %fd2, %fd1;\nmul.rn.f64 \t%fd5, %fd4, %fd2;\nneg.f64 \t%fd6, %fd2;\nadd.rn.f64 \t%fd7, %fd5, %fd6;\nneg.f64 \t%fd8, %fd7;\nadd.rn.f64 \t%fd9, %fd5, %fd8;\nneg.f64 \t%fd10, %fd9;\nadd.rn.f64 \t%fd11, %fd2, %fd10;\nmul.rn.f64 \t%fd12, %fd4, %fd1;\nneg.f64 \t%fd13, %fd1;\nadd.rn.f64 \t%fd14, %fd12, %fd13;\nneg.f64 \t%fd15, %fd14;\nadd.rn.f64 \t%fd16, %fd12, %fd15;\nneg.f64 \t%fd17, %fd16;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.rn.f64": 6,
+    "mul.rn.f64": 9,
+    "sub.rn.f64": 9
+   },
+   "sass": {
+    "DADD": 15,
+    "DMUL": 9
+   },
+   "ptx_excerpt": "mul.rn.f64 \t%rd37, %rd22, %rd33;\nmul.rn.f64 \t%rd39, %rd38, %rd22;\nsub.rn.f64 \t%rd40, %rd39, %rd22;\nsub.rn.f64 \t%rd41, %rd39, %rd40;\nsub.rn.f64 \t%rd42, %rd22, %rd41;\nmul.rn.f64 \t%rd43, %rd38, %rd33;\nsub.rn.f64 \t%rd44, %rd43, %rd33;\nsub.rn.f64 \t%rd45, %rd43, %rd44;\nsub.rn.f64 \t%rd46, %rd33, %rd45;\nmul.rn.f64 \t%rd47, %rd41, %rd45;\nsub.rn.f64 \t%rd48, %rd47, %rd37;\nmul.rn.f64 \t%rd49, %rd41, %rd46;\nadd.rn.f64 \t%rd50, %rd48, %rd49;\nmul.rn.f64 \t%rd51, %rd42, %rd45;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.rn.f64": 6,
+    "mul.rn.f64": 9,
+    "sub.rn.f64": 9
+   },
+   "sass": {
+    "DADD": 15,
+    "DMUL": 9
+   },
+   "ptx_excerpt": "mul.rn.f64 \t%rd37, %rd22, %rd33;\nmul.rn.f64 \t%rd39, %rd38, %rd22;\nsub.rn.f64 \t%rd40, %rd39, %rd22;\nsub.rn.f64 \t%rd41, %rd39, %rd40;\nsub.rn.f64 \t%rd42, %rd22, %rd41;\nmul.rn.f64 \t%rd43, %rd38, %rd33;\nsub.rn.f64 \t%rd44, %rd43, %rd33;\nsub.rn.f64 \t%rd45, %rd43, %rd44;\nsub.rn.f64 \t%rd46, %rd33, %rd45;\nmul.rn.f64 \t%rd47, %rd41, %rd45;\nsub.rn.f64 \t%rd48, %rd47, %rd37;\nmul.rn.f64 \t%rd49, %rd41, %rd46;\nadd.rn.f64 \t%rd50, %rd48, %rd49;\nmul.rn.f64 \t%rd51, %rd42, %rd45;"
+  }
+ },
+ "f64/rn/k_one_mul": {
+  "explicit_fma_in_source": 1,
+  "sm_86": {
+   "ptx": {
+    "add.rn.f64": 5,
+    "fma.rn.f64": 1,
+    "mul.rn.f64": 3,
+    "neg.f64": 2
+   },
+   "sass": {
+    "DADD": 5,
+    "DFMA": 1,
+    "DMUL": 3
+   },
+   "ptx_excerpt": "mul.rn.f64 \t%fd3, %fd2, %fd1;\nneg.f64 \t%fd4, %fd3;\nfma.rn.f64 \t%fd5, %fd2, %fd1, %fd4;\nmul.rn.f64 \t%fd7, %fd2, %fd6;\nmul.rn.f64 \t%fd9, %fd8, %fd1;\nadd.rn.f64 \t%fd10, %fd7, %fd9;\nadd.rn.f64 \t%fd11, %fd5, %fd10;\nadd.rn.f64 \t%fd12, %fd3, %fd11;\nadd.rn.f64 \t%fd13, %fd12, %fd4;\nneg.f64 \t%fd14, %fd13;\nadd.rn.f64 \t%fd15, %fd11, %fd14;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.rn.f64": 3,
+    "fma.rn.f64": 1,
+    "mul.rn.f64": 3,
+    "neg.f64": 1,
+    "sub.rn.f64": 2
+   },
+   "sass": {
+    "DADD": 5,
+    "DFMA": 1,
+    "DMUL": 3
+   },
+   "ptx_excerpt": "mul.rn.f64 \t%rd41, %rd26, %rd37;\nneg.f64 \t%rd42, %rd41;\nfma.rn.f64 \t%rd43, %rd26, %rd37, %rd42;\nmul.rn.f64 \t%rd44, %rd26, %rd40;\nmul.rn.f64 \t%rd45, %rd29, %rd37;\nadd.rn.f64 \t%rd46, %rd44, %rd45;\nadd.rn.f64 \t%rd47, %rd43, %rd46;\nadd.rn.f64 \t%rd48, %rd41, %rd47;\nsub.rn.f64 \t%rd49, %rd48, %rd41;\nsub.rn.f64 \t%rd50, %rd47, %rd49;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.rn.f64": 3,
+    "fma.rn.f64": 1,
+    "mul.rn.f64": 3,
+    "neg.f64": 1,
+    "sub.rn.f64": 2
+   },
+   "sass": {
+    "DADD": 5,
+    "DFMA": 1,
+    "DMUL": 3
+   },
+   "ptx_excerpt": "mul.rn.f64 \t%rd41, %rd26, %rd37;\nneg.f64 \t%rd42, %rd41;\nfma.rn.f64 \t%rd43, %rd26, %rd37, %rd42;\nmul.rn.f64 \t%rd44, %rd26, %rd40;\nmul.rn.f64 \t%rd45, %rd29, %rd37;\nadd.rn.f64 \t%rd46, %rd44, %rd45;\nadd.rn.f64 \t%rd47, %rd43, %rd46;\nadd.rn.f64 \t%rd48, %rd41, %rd47;\nsub.rn.f64 \t%rd49, %rd48, %rd41;\nsub.rn.f64 \t%rd50, %rd47, %rd49;"
+  }
+ },
+ "f64/rn/k_one_two_sum": {
+  "explicit_fma_in_source": 0,
+  "sm_86": {
+   "ptx": {
+    "add.rn.f64": 6,
+    "neg.f64": 3
+   },
+   "sass": {
+    "DADD": 6
+   },
+   "ptx_excerpt": "add.rn.f64 \t%fd3, %fd2, %fd1;\nneg.f64 \t%fd4, %fd2;\nadd.rn.f64 \t%fd5, %fd3, %fd4;\nneg.f64 \t%fd6, %fd5;\nadd.rn.f64 \t%fd7, %fd3, %fd6;\nneg.f64 \t%fd8, %fd7;\nadd.rn.f64 \t%fd9, %fd2, %fd8;\nadd.rn.f64 \t%fd10, %fd1, %fd6;\nadd.rn.f64 \t%fd11, %fd9, %fd10;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.rn.f64": 2,
+    "sub.rn.f64": 4
+   },
+   "sass": {
+    "DADD": 6
+   },
+   "ptx_excerpt": "add.rn.f64 \t%rd29, %rd22, %rd28;\nsub.rn.f64 \t%rd30, %rd29, %rd22;\nsub.rn.f64 \t%rd31, %rd29, %rd30;\nsub.rn.f64 \t%rd32, %rd22, %rd31;\nsub.rn.f64 \t%rd33, %rd28, %rd30;\nadd.rn.f64 \t%rd34, %rd32, %rd33;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.rn.f64": 2,
+    "sub.rn.f64": 4
+   },
+   "sass": {
+    "DADD": 6
+   },
+   "ptx_excerpt": "add.rn.f64 \t%rd29, %rd22, %rd28;\nsub.rn.f64 \t%rd30, %rd29, %rd22;\nsub.rn.f64 \t%rd31, %rd29, %rd30;\nsub.rn.f64 \t%rd32, %rd22, %rd31;\nsub.rn.f64 \t%rd33, %rd28, %rd30;\nadd.rn.f64 \t%rd34, %rd32, %rd33;"
+  }
+ },
+ "f32/naive/k_one_mul_dekker": {
+  "explicit_fma_in_source": 0,
+  "sm_86": {
+   "ptx": {
+    "add.f32": 2,
+    "fma.rn.f32": 4,
+    "mul.f32": 5,
+    "sub.f32": 9
+   },
+   "sass": {
+    "FADD": 6,
+    "FFMA": 9,
+    "FMUL": 2
+   },
+   "ptx_excerpt": "mul.f32 \t%f3, %f2, %f1;\nmul.f32 \t%f4, %f2, 0f45800800;\nsub.f32 \t%f5, %f4, %f2;\nsub.f32 \t%f6, %f4, %f5;\nsub.f32 \t%f7, %f2, %f6;\nmul.f32 \t%f8, %f1, 0f45800800;\nsub.f32 \t%f9, %f8, %f1;\nsub.f32 \t%f10, %f8, %f9;\nsub.f32 \t%f11, %f1, %f10;\nmul.f32 \t%f12, %f6, %f10;\nsub.f32 \t%f13, %f12, %f3;\nfma.rn.f32 \t%f14, %f6, %f11, %f13;\nfma.rn.f32 \t%f15, %f7, %f10, %f14;\nfma.rn.f32 \t%f16, %f7, %f11, %f15;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.f32": 2,
+    "fma.rn.f32": 4,
+    "mul.f32": 5,
+    "sub.f32": 9
+   },
+   "sass": {
+    "FADD": 6,
+    "FFMA": 9,
+    "FMUL": 2
+   },
+   "ptx_excerpt": "mul.f32 \t%r10, %r6, %r8;\nmul.f32 \t%r11, %r6, 0f45800800;\nsub.f32 \t%r12, %r11, %r6;\nsub.f32 \t%r13, %r11, %r12;\nsub.f32 \t%r14, %r6, %r13;\nmul.f32 \t%r15, %r8, 0f45800800;\nsub.f32 \t%r16, %r15, %r8;\nsub.f32 \t%r17, %r15, %r16;\nsub.f32 \t%r18, %r8, %r17;\nmul.f32 \t%r19, %r13, %r17;\nsub.f32 \t%r20, %r19, %r10;\nfma.rn.f32 \t%r21, %r13, %r18, %r20;\nfma.rn.f32 \t%r22, %r14, %r17, %r21;\nfma.rn.f32 \t%r23, %r14, %r18, %r22;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.ftz.f32": 2,
+    "fma.rn.ftz.f32": 4,
+    "mul.ftz.f32": 5,
+    "sub.ftz.f32": 9
+   },
+   "sass": {
+    "FADD.FTZ": 6,
+    "FFMA.FTZ": 9,
+    "FMUL.FTZ": 2
+   },
+   "ptx_excerpt": "mul.ftz.f32 \t%r10, %r6, %r8;\nmul.ftz.f32 \t%r11, %r6, 0f45800800;\nsub.ftz.f32 \t%r12, %r11, %r6;\nsub.ftz.f32 \t%r13, %r11, %r12;\nsub.ftz.f32 \t%r14, %r6, %r13;\nmul.ftz.f32 \t%r15, %r8, 0f45800800;\nsub.ftz.f32 \t%r16, %r15, %r8;\nsub.ftz.f32 \t%r17, %r15, %r16;\nsub.ftz.f32 \t%r18, %r8, %r17;\nmul.ftz.f32 \t%r19, %r13, %r17;\nsub.ftz.f32 \t%r20, %r19, %r10;\nfma.rn.ftz.f32 \t%r21, %r13, %r18, %r20;\nfma.rn.ftz.f32 \t%r22, %r14, %r17, %r21;\nfma.rn.ftz.f32 \t%r23, %r14, %r18, %r22;"
+  }
+ },
+ "f32/naive/k_one_mul": {
+  "explicit_fma_in_source": 1,
+  "sm_86": {
+   "ptx": {
+    "add.f32": 2,
+    "fma.rn.f32": 2,
+    "mul.f32": 2,
+    "neg.f32": 1,
+    "sub.f32": 2
+   },
+   "sass": {
+    "FADD": 4,
+    "FFMA": 2,
+    "FMUL": 2
+   },
+   "ptx_excerpt": "mul.f32 \t%f3, %f2, %f1;\nneg.f32 \t%f4, %f3;\nfma.rn.f32 \t%f5, %f2, %f1, %f4;\nmul.f32 \t%f7, %f2, %f6;\nfma.rn.f32 \t%f9, %f8, %f1, %f7;\nadd.f32 \t%f10, %f5, %f9;\nadd.f32 \t%f11, %f3, %f10;\nsub.f32 \t%f12, %f11, %f3;\nsub.f32 \t%f13, %f10, %f12;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.f32": 2,
+    "fma.rn.f32": 2,
+    "mul.f32": 2,
+    "neg.f32": 1,
+    "sub.f32": 2
+   },
+   "sass": {
+    "FADD": 4,
+    "FFMA": 2,
+    "FMUL": 2
+   },
+   "ptx_excerpt": "mul.f32 \t%r10, %r6, %r8;\nneg.f32 \t%r11, %r10;\nfma.rn.f32 \t%r12, %r6, %r8, %r11;\nmul.f32 \t%r13, %r6, %r9;\nfma.rn.f32 \t%r14, %r7, %r8, %r13;\nadd.f32 \t%r15, %r12, %r14;\nadd.f32 \t%r16, %r10, %r15;\nsub.f32 \t%r17, %r16, %r10;\nsub.f32 \t%r18, %r15, %r17;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.ftz.f32": 2,
+    "fma.rn.ftz.f32": 2,
+    "mul.ftz.f32": 2,
+    "neg.ftz.f32": 1,
+    "sub.ftz.f32": 2
+   },
+   "sass": {
+    "FADD.FTZ": 4,
+    "FFMA.FTZ": 2,
+    "FMUL.FTZ": 2
+   },
+   "ptx_excerpt": "mul.ftz.f32 \t%r10, %r6, %r8;\nneg.ftz.f32 \t%r11, %r10;\nfma.rn.ftz.f32 \t%r12, %r6, %r8, %r11;\nmul.ftz.f32 \t%r13, %r6, %r9;\nfma.rn.ftz.f32 \t%r14, %r7, %r8, %r13;\nadd.ftz.f32 \t%r15, %r12, %r14;\nadd.ftz.f32 \t%r16, %r10, %r15;\nsub.ftz.f32 \t%r17, %r16, %r10;\nsub.ftz.f32 \t%r18, %r15, %r17;"
+  }
+ },
+ "f32/naive/k_one_two_sum": {
+  "explicit_fma_in_source": 0,
+  "sm_86": {
+   "ptx": {
+    "add.f32": 2,
+    "sub.f32": 4
+   },
+   "sass": {
+    "FADD": 6
+   },
+   "ptx_excerpt": "add.f32 \t%f3, %f2, %f1;\nsub.f32 \t%f4, %f3, %f2;\nsub.f32 \t%f5, %f3, %f4;\nsub.f32 \t%f6, %f2, %f5;\nsub.f32 \t%f7, %f1, %f4;\nadd.f32 \t%f8, %f7, %f6;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.f32": 2,
+    "sub.f32": 4
+   },
+   "sass": {
+    "FADD": 6
+   },
+   "ptx_excerpt": "add.f32 \t%r8, %r6, %r7;\nsub.f32 \t%r9, %r8, %r6;\nsub.f32 \t%r10, %r8, %r9;\nsub.f32 \t%r11, %r6, %r10;\nsub.f32 \t%r12, %r7, %r9;\nadd.f32 \t%r13, %r12, %r11;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.ftz.f32": 2,
+    "sub.ftz.f32": 4
+   },
+   "sass": {
+    "FADD.FTZ": 6
+   },
+   "ptx_excerpt": "add.ftz.f32 \t%r8, %r6, %r7;\nsub.ftz.f32 \t%r9, %r8, %r6;\nsub.ftz.f32 \t%r10, %r8, %r9;\nsub.ftz.f32 \t%r11, %r6, %r10;\nsub.ftz.f32 \t%r12, %r7, %r9;\nadd.ftz.f32 \t%r13, %r12, %r11;"
+  }
+ },
+ "f32/rn/k_one_mul_dekker": {
+  "explicit_fma_in_source": 0,
+  "sm_86": {
+   "ptx": {
+    "add.rn.f32": 6,
+    "mul.rn.f32": 9,
+    "sub.rn.f32": 9
+   },
+   "sass": {
+    "FADD": 15,
+    "FMUL": 9
+   },
+   "ptx_excerpt": "mul.rn.f32 \t%f24, %f3, %f12;\nmul.rn.f32 \t%f5, %f28, %f3;\nsub.rn.f32 %f1, %f5, %f3;\nsub.rn.f32 %f4, %f5, %f1;\nsub.rn.f32 %f7, %f3, %f4;\nmul.rn.f32 \t%f14, %f28, %f12;\nsub.rn.f32 %f10, %f14, %f12;\nsub.rn.f32 %f13, %f14, %f10;\nsub.rn.f32 %f16, %f12, %f13;\nmul.rn.f32 \t%f20, %f4, %f13;\nsub.rn.f32 %f19, %f20, %f24;\nmul.rn.f32 \t%f29, %f4, %f16;\nadd.rn.f32 \t%f30, %f19, %f29;\nmul.rn.f32 \t%f31, %f7, %f13;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.rn.f32": 6,
+    "mul.rn.f32": 9,
+    "sub.rn.f32": 9
+   },
+   "sass": {
+    "FADD": 15,
+    "FMUL": 9
+   },
+   "ptx_excerpt": "mul.rn.f32 \t%r18, %r5, %r10;\nmul.rn.f32 \t%r6, %r25, %r5;\nsub.rn.f32 %r7, %r6, %r5;\nsub.rn.f32 %r9, %r6, %r7;\nsub.rn.f32 %r8, %r5, %r9;\nmul.rn.f32 \t%r11, %r25, %r10;\nsub.rn.f32 %r12, %r11, %r10;\nsub.rn.f32 %r14, %r11, %r12;\nsub.rn.f32 %r13, %r10, %r14;\nmul.rn.f32 \t%r16, %r9, %r14;\nsub.rn.f32 %r15, %r16, %r18;\nmul.rn.f32 \t%r26, %r9, %r13;\nadd.rn.f32 \t%r27, %r15, %r26;\nmul.rn.f32 \t%r28, %r8, %r14;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.rn.ftz.f32": 6,
+    "mul.rn.ftz.f32": 9,
+    "sub.rn.ftz.f32": 9
+   },
+   "sass": {
+    "FADD.FTZ": 15,
+    "FMUL.FTZ": 9
+   },
+   "ptx_excerpt": "mul.rn.ftz.f32 \t%r18, %r5, %r10;\nmul.rn.ftz.f32 \t%r6, %r25, %r5;\nsub.rn.ftz.f32 %r7, %r6, %r5;\nsub.rn.ftz.f32 %r9, %r6, %r7;\nsub.rn.ftz.f32 %r8, %r5, %r9;\nmul.rn.ftz.f32 \t%r11, %r25, %r10;\nsub.rn.ftz.f32 %r12, %r11, %r10;\nsub.rn.ftz.f32 %r14, %r11, %r12;\nsub.rn.ftz.f32 %r13, %r10, %r14;\nmul.rn.ftz.f32 \t%r16, %r9, %r14;\nsub.rn.ftz.f32 %r15, %r16, %r18;\nmul.rn.ftz.f32 \t%r26, %r9, %r13;\nadd.rn.ftz.f32 \t%r27, %r15, %r26;\nmul.rn.ftz.f32 \t%r28, %r8, %r14;"
+  }
+ },
+ "f32/rn/k_one_mul": {
+  "explicit_fma_in_source": 1,
+  "sm_86": {
+   "ptx": {
+    "add.rn.f32": 3,
+    "fma.rn.f32": 1,
+    "mul.rn.f32": 3,
+    "neg.f32": 1,
+    "sub.rn.f32": 2
+   },
+   "sass": {
+    "FADD": 5,
+    "FFMA": 1,
+    "FMUL": 3
+   },
+   "ptx_excerpt": "mul.rn.f32 \t%f3, %f8, %f7;\nneg.f32 \t%f9, %f3;\nfma.rn.f32 \t%f10, %f8, %f7, %f9;\nmul.rn.f32 \t%f12, %f8, %f11;\nmul.rn.f32 \t%f14, %f13, %f7;\nadd.rn.f32 \t%f15, %f12, %f14;\nadd.rn.f32 \t%f5, %f10, %f15;\nadd.rn.f32 \t%f2, %f3, %f5;\nsub.rn.f32 %f1, %f2, %f3;\nsub.rn.f32 %f4, %f5, %f1;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.rn.f32": 3,
+    "fma.rn.f32": 1,
+    "mul.rn.f32": 3,
+    "neg.f32": 1,
+    "sub.rn.f32": 2
+   },
+   "sass": {
+    "FADD": 5,
+    "FFMA": 1,
+    "FMUL": 3
+   },
+   "ptx_excerpt": "mul.rn.f32 \t%r6, %r11, %r13;\nneg.f32 \t%r15, %r6;\nfma.rn.f32 \t%r16, %r11, %r13, %r15;\nmul.rn.f32 \t%r17, %r11, %r14;\nmul.rn.f32 \t%r18, %r12, %r13;\nadd.rn.f32 \t%r19, %r17, %r18;\nadd.rn.f32 \t%r8, %r16, %r19;\nadd.rn.f32 \t%r5, %r6, %r8;\nsub.rn.f32 %r9, %r5, %r6;\nsub.rn.f32 %r7, %r8, %r9;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.rn.ftz.f32": 3,
+    "fma.rn.ftz.f32": 1,
+    "mul.rn.ftz.f32": 3,
+    "neg.ftz.f32": 1,
+    "sub.rn.ftz.f32": 2
+   },
+   "sass": {
+    "FADD.FTZ": 5,
+    "FFMA.FTZ": 1,
+    "FMUL.FTZ": 3
+   },
+   "ptx_excerpt": "mul.rn.ftz.f32 \t%r6, %r11, %r13;\nneg.ftz.f32 \t%r15, %r6;\nfma.rn.ftz.f32 \t%r16, %r11, %r13, %r15;\nmul.rn.ftz.f32 \t%r17, %r11, %r14;\nmul.rn.ftz.f32 \t%r18, %r12, %r13;\nadd.rn.ftz.f32 \t%r19, %r17, %r18;\nadd.rn.ftz.f32 \t%r8, %r16, %r19;\nadd.rn.ftz.f32 \t%r5, %r6, %r8;\nsub.rn.ftz.f32 %r9, %r5, %r6;\nsub.rn.ftz.f32 %r7, %r8, %r9;"
+  }
+ },
+ "f32/rn/k_one_two_sum": {
+  "explicit_fma_in_source": 0,
+  "sm_86": {
+   "ptx": {
+    "add.rn.f32": 2,
+    "sub.rn.f32": 4
+   },
+   "sass": {
+    "FADD": 6
+   },
+   "ptx_excerpt": "add.rn.f32 \t%f5, %f3, %f11;\nsub.rn.f32 %f1, %f5, %f3;\nsub.rn.f32 %f4, %f5, %f1;\nsub.rn.f32 %f7, %f3, %f4;\nsub.rn.f32 %f10, %f11, %f1;\nadd.rn.f32 \t%f13, %f7, %f10;"
+  },
+  "sm_100_fastmath_False": {
+   "ptx": {
+    "add.rn.f32": 2,
+    "sub.rn.f32": 4
+   },
+   "sass": {
+    "FADD": 6
+   },
+   "ptx_excerpt": "add.rn.f32 \t%r6, %r5, %r11;\nsub.rn.f32 %r7, %r6, %r5;\nsub.rn.f32 %r9, %r6, %r7;\nsub.rn.f32 %r8, %r5, %r9;\nsub.rn.f32 %r10, %r11, %r7;\nadd.rn.f32 \t%r13, %r8, %r10;"
+  },
+  "sm_100_fastmath_True": {
+   "ptx": {
+    "add.rn.ftz.f32": 2,
+    "sub.rn.ftz.f32": 4
+   },
+   "sass": {
+    "FADD.FTZ": 6
+   },
+   "ptx_excerpt": "add.rn.ftz.f32 \t%r6, %r5, %r11;\nsub.rn.ftz.f32 %r7, %r6, %r5;\nsub.rn.ftz.f32 %r9, %r6, %r7;\nsub.rn.ftz.f32 %r8, %r5, %r9;\nsub.rn.ftz.f32 %r10, %r11, %r7;\nadd.rn.ftz.f32 \t%r13, %r8, %r10;"
+  }
+ }
+}
