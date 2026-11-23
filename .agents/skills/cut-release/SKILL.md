@@ -32,15 +32,19 @@ gh run watch "$(gh run list --workflow release.yml --limit 1 --json databaseId -
 Job order: **bump** (CPU tests, `cz bump`, `uv build --no-sources`, wheel smoke test, atomic
 push of the bump commit and `vX.Y.Z` tag) → **testpypi** → **testpypi-install** (installs
 the exact version from TestPyPI) → **pypi**, which waits for the maintainer to approve the
-protected `pypi` environment.
+protected `pypi` environment → **pypi-install** (installs the exact version from PyPI). A
+green run therefore proves the release installs from PyPI.
 
 ## After
 
 - Check `https://pypi.org/project/brotkit/` shows the version with attestations ("Verified
-  details" / provenance), and that `uv pip install brotkit==X.Y.Z` works.
-- If a publish job failed after the tag was pushed, fix the cause and use **Re-run failed
-  jobs**. The `dist` artifact is reused, so the same files are uploaded. Don't re-run the
-  whole workflow, because that would bump again.
+  details" / provenance). The `pypi-install` job has already checked that it installs.
+- If a publish job failed after the tag was pushed because of a transient problem (an index
+  outage, a rejected approval), use **Re-run failed jobs**. The `dist` artifact is reused,
+  so the same files are uploaded. A re-run uses the workflow file **from the original
+  commit**, so it can't pick up a fix to the workflow. If the workflow itself was broken,
+  fix it on `main` and cut the next version; the stranded tag stays TestPyPI-only
+  (ADR-0004 update). Don't re-run the whole workflow, because that would bump again.
 
 ## Trusted Publisher settings
 
