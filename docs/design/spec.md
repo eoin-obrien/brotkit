@@ -18,13 +18,13 @@ Non-goals for v1: arbitrary-precision deep zoom (designed for, built in phase 4)
 
 ## Toolchain decisions
 
-Target Python 3.15 with uv. Use Numba on the CPU and the separate `numba-cuda` package on the GPU, with float32 as the GPU default and float64 or double-float only when the zoom needs it.
+Target Python 3.15 with uv. Use Numba on the CPU and NVIDIA's `numba-cuda-mlir` package on the GPU, with float32 as the GPU default and float64 or double-float only when the zoom needs it.
 
 | Decision | Choice | Why |
 | --- | --- | --- |
 | Python | 3.15, `requires-python = ">=3.14"` | [3.15.0 shipped 9 Oct 2026](https://docs.python.org/3.15/whatsnew/3.15.html). Allowing 3.14 keeps a fallback if a GPU wheel lags. |
 | CPU JIT | `numba>=0.68` | [0.68 ships CPython 3.15 wheels](https://pypi.org/project/Numba/) for Linux, Windows and macOS arm64. |
-| GPU JIT | `numba-cuda` (NVIDIA) | The built-in `numba.cuda` was [deprecated in 0.61](https://numba.readthedocs.io/en/0.63.0/_sources/release/0.61.0-notes.rst.txt) and `numba-cuda` is now the supported target ([PyPI](https://pypi.org/project/numba-cuda/)). |
+| GPU JIT | `numba-cuda-mlir[cu13]==0.6.0` (NVIDIA), exact pin (ADR-0005) | The built-in `numba.cuda` was [deprecated in 0.61](https://numba.readthedocs.io/en/0.63.0/_sources/release/0.61.0-notes.rst.txt). Its successor `numba-cuda` [went into maintenance mode](https://github.com/NVIDIA/numba-cuda/issues/902) in June 2026 and won't add Python 3.15 or NumPy 2.5. `numba-cuda-mlir` ([PyPI](https://pypi.org/project/numba-cuda-mlir/)) has cp311–cp315 wheels, and spike S1 ran it on 3.14 and 3.15 with NumPy 2.5. Only `backends/cuda.py` imports it. |
 | Symbolics | `sympy` | Analytic derivatives plus `pycode`/`ccode` printers drive codegen (section below). |
 | Arrays | NumPy 2.x, optional CuPy for device-side colouring | Colouring stays NumPy by default. CuPy is an extra for colouring 8k+ frames on the GPU. |
 | Packaging | uv project, src layout, extras `[cuda]`, `[video]`; PEP 735 dependency groups `dev`, `docs` (ADR-0001) | `uv sync --group dev --extra cuda` on the GPU box and `uv sync --group dev` on a laptop. |
@@ -46,8 +46,8 @@ Which of `dd` and `qf` is faster depends on the card's FP64:FP32 ratio, so `Prec
 
 Open questions:
 
-- Check `numba-cuda` cp315 wheels before pinning 3.15 on the GPU machine. The 0.30.x wheels I found were tagged cp314.
-- NVIDIA is also publishing `numba-cuda-mlir`, an alternative compiler with native complex types ([nvmath docs](https://docs.nvidia.com/cuda/nvmath-python/1.0.0/device-apis/utils.html)). Keep the backend boundary thin so it can be swapped in later.
+- ~~Check `numba-cuda` cp315 wheels.~~ Resolved by S1 and ADR-0005: `numba-cuda` will never ship cp315 ([#926](https://github.com/NVIDIA/numba-cuda/issues/926)), so the GPU JIT is `numba-cuda-mlir` on 3.14 and 3.15.
+- `numba-cuda-mlir` is pre-1.0 and generates code through MLIR rather than LLVM IR ([nvmath docs](https://docs.nvidia.com/cuda/nvmath-python/1.0.0/device-apis/utils.html) cover its native complex types). S3 and S4 gate the choice: they must show fastmath on/off behaviour, PTX inspection and register-count reporting work on it. If either fails, stop and report rather than work around it. Keep the backend boundary thin: only `backends/cuda.py` imports the JIT.
 
 ## Parameter names and defaults
 
@@ -170,7 +170,7 @@ result = render(
 2. **Differentiate.** Exterior DE uses z′ ← f\_z·z′ + f\_c (parameter plane) or z′ ← f\_z·z′ (Julia). Interior DE adds f\_zz and f\_zc. Non-holomorphic formulas (Burning Ship, Tricorn) get a 2×2 Jacobian instead of a complex derivative, and DE uses its operator norm.
 3. **Lower to reals.** Split every complex variable into an (x, y) pair, run `sympy.cse` over the whole step plus derivatives, and print with a custom `RealPairPrinter`. Integer powers become squaring chains. Non-integer or symbolic powers become polar exp/log, with a warning about the branch-cut seam. Explicit reals are what make the `f32` and `df64` tiers possible: `df64` swaps the printer's `+ − ×` for two-sum/two-product device-function calls, and the dd printer emits the same error-free transformations over f64 pairs (FMA-based two-product), so both tiers come from one lowering pass.
 4. **Assemble.** The family template has slots (`init`, `step`, `escape_test`, `per_iter`, `finalise`). Each feature contributes code to those slots and declares its output layers and dtype. Features are compile-time mix-ins, never runtime virtual calls.
-5. **Compile and cache.** Write the generated source to `~/.cache/brotkit/kernels/<sha256>.py`, import it, and decorate with `numba.njit(parallel=True)` or `cuda.jit`. Numba's on-disk `cache=True` needs functions that live in real files, so writing the file rather than calling `exec` gives warm starts across notebook sessions. The hash covers the source, backend, precision, and Numba/numba-cuda versions.
+5. **Compile and cache.** Write the generated source to `~/.cache/brotkit/kernels/<sha256>.py`, import it, and decorate with `numba.njit(parallel=True)` or `cuda.jit`. Numba's on-disk `cache=True` needs functions that live in real files, so writing the file rather than calling `exec` gives warm starts across notebook sessions. The hash covers the source, backend, precision, and Numba/numba-cuda-mlir versions.
 
 **Runtime parameters vs specialisation.** Parameters are kernel arguments by default, so animating `k` never recompiles. `specialize={"p": 3}` bakes a value in, so integer powers unroll and constants fold. Use it for stills, and automatically for `p` when it is an integer.
 
@@ -359,7 +359,7 @@ Use compressed NPZ with the metadata embedded as a JSON entry, load with `allow_
 **Embedded metadata** (`__meta__`, stored as a uint8 array of UTF-8 JSON):
 
 - `schema`: `"brotkit/layers"`, `schema_version`, `type` (registry key such as `"EscapeTimeResult"`), `type_version`.
-- Provenance: `brotkit` version, git SHA if dirty-checked, Numba and numba-cuda versions, device name, created timestamp (UTC), wall time.
+- Provenance: `brotkit` version, git SHA if dirty-checked, Numba and numba-cuda-mlir versions, device name, created timestamp (UTC), wall time.
 - Formula: a JSON expression tree restricted to whitelisted node types (see Phase 1 additions), plus LaTeX and `str` for humans, and the params. Never `srepr`, which needs `eval` to load.
 - View: **centre and width as decimal strings**, not floats, so deep-zoom coordinates survive; plus pixels, rotation, the PixelSampling config, and the Embedding (origin and basis vectors).
 - Numerics: precision tier, `escape_radius`, `max_iter`, `de_convention`, feature list with their params, RNG seed and sampler (density).
@@ -511,7 +511,7 @@ flowchart LR
   subgraph once["Runs once per render"]
     R[Recipe<br/>SymPy formula, view, features, precision] --> G[Codegen<br/>diff, cse, lower to reals, add features]
     G --> K[Kernel cache<br/>hashed .py on disk, Numba cache=True]
-    K --> B[Backend<br/>CPU njit+prange / CUDA via numba-cuda]
+    K --> B[Backend<br/>CPU njit+prange / CUDA via numba-cuda-mlir]
   end
   B -- one fused pass --> L[Layers<br/>raw arrays + lazy derived mu, DE, angle]
   L -- recolour freely --> C[Colouring<br/>field, scale, ramp, composite, tone map]
@@ -529,7 +529,7 @@ src/brotkit/
   core/        View, Precision, Recipe, registry, hashing
   formula/     Formula, analysis (degree, critical points, holomorphy), zoo/
   codegen/     printers (RealPair, DF64), templates/ (escape, convergent, density), features/, cache
-  backends/    cpu.py (njit+prange), cuda.py (numba-cuda), launch geometry, tiling
+  backends/    cpu.py (njit+prange), cuda.py (numba-cuda-mlir; the only importer, ADR-0005), launch geometry, tiling
   layers/      Layers, lazy derived fields, stats
   sampling/    PixelSampling, sample patterns (Sobol, blue noise, ...), SampleStore, reconstruction filters
   colour/      Ramp, Scale, interpolation spaces, compositing, lighting, io (ggr/map)
@@ -570,7 +570,7 @@ The design is viable as written. Its core bet, composing features at code-genera
 
 | Claim in the design | Verdict | Evidence / reasoning |
 | --- | --- | --- |
-| Generated source written to disk can be cached across sessions | Holds | `numba-cuda` supports `cache=True` on `@cuda.jit` with [a file-based cache](https://nvidia.github.io/numba-cuda/user/caching.html), and keeps [separate cache files per compute capability](https://numba.readthedocs.io/en/0.56.0/cuda/caching.html). Writing real `.py` files (not `exec`) is what makes it work. |
+| Generated source written to disk can be cached across sessions | Holds | `numba-cuda` supports `cache=True` on `@cuda.jit` with [a file-based cache](https://nvidia.github.io/numba-cuda/user/caching.html), and keeps [separate cache files per compute capability](https://numba.readthedocs.io/en/0.56.0/cuda/caching.html). S1 showed `numba-cuda-mlir` 0.6.0 writing and reloading the same `__pycache__/<module>.<func>-<line>.py3XX.{nbi,nbc}` files in a fresh process; S2 measures it. Writing real `.py` files (not `exec`) is what makes it work. |
 | Runtime parameters avoid recompiles during animation | Holds | Kernel arguments of scalar or complex type don't change the signature. Only dtype or precision changes recompile. |
 | Multi-word precision (df64, dd, qf) can be codegen-only | Holds, with a caveat | No custom device types are needed: the printer emits tuples of scalar locals. The caveat is fastmath (below). |
 | Immutable recipes as cache keys | Holds | SymPy expressions are immutable and hashable. Python 3.15 adds a [built-in hashable `frozendict`](https://docs.python.org/3.16/whatsnew/3.15.html) for params, with the PyPI `frozendict` package [as a pre-3.15 fallback](https://discuss.python.org/t/pep-814-add-frozendict-built-in-type/104854?page=7). |
@@ -578,7 +578,7 @@ The design is viable as written. Its core bet, composing features at code-genera
 
 ### Risks and required changes
 
-1. **Fastmath breaks multi-word arithmetic (must fix).** Error-free transformations (two-sum, two-product) depend on the compiler not reassociating or contracting operations. On the CUDA target, `fastmath` [is only `True` or `False`](https://nvidia.github.io/numba-cuda/user/fastmath.html), and `True` enables FMA contraction and flushes denormals. Policy: `f32` kernels may use `fastmath=True`. `df64`, `dd` and `qf` kernels must use `fastmath=False` and emit their FMAs explicitly. Parity tests must cover this.
+1. **Fastmath breaks multi-word arithmetic (must fix).** Error-free transformations (two-sum, two-product) depend on the compiler not reassociating or contracting operations. On the CUDA target, `fastmath` [is only `True` or `False`](https://nvidia.github.io/numba-cuda/user/fastmath.html), and `True` enables FMA contraction and flushes denormals. That's documented for `numba-cuda`; S3 must confirm it holds on `numba-cuda-mlir` (ADR-0005). Policy: `f32` kernels may use `fastmath=True`. `df64`, `dd` and `qf` kernels must use `fastmath=False` and emit their FMAs explicitly. Parity tests must cover this.
 2. **Kernel variant explosion (must fix).** Formula × feature subset × precision × backend multiplies quickly, and each fused CUDA kernel takes seconds to compile cold. Fixes: canonicalise and sort feature tuples so equivalent sets share a key; compile lazily; offer `FeatureSet.standard()` presets so notebooks reuse a few hot kernels; let a cheap feature (such as `FinalZ`) ride along rather than spawning a new variant.
 3. **Register pressure from fused features (monitor).** Every orbit accumulator lives in registers for the whole loop, and dd/qf multiply that. Too many features cut occupancy. Mitigation: report registers per thread from the compiled kernel, and above a threshold split into two launches (core + orbit statistics) automatically. This is the one place where "one kernel" bends.
 4. **Where layers live (must fix).** `Layers` must say whether each array is on the host or the device. Hold device arrays via `__cuda_array_interface__`, copy to host lazily on first NumPy access, and let CuPy colouring use them in place. Otherwise animation pays a full device-to-host copy per frame for layers it never colours.
@@ -640,7 +640,7 @@ Every class the spec defines, where its sketch lives, and when it's built.
 | Value object | `@dataclass(frozen=True, slots=True, kw_only=True)` | configs, recipes, ramps, scales, features, views, tracks | No ndarrays, no mutable containers: use `tuple`, `frozendict`, `frozenset`. Validate and normalise in `__post_init__` via `object.__setattr__`. Derived values via `field(init=False)` set in `__post_init__`, since `cached_property` can't be used with `slots`. Variants via `dataclasses.replace`. |
 | Closed set | `enum.StrEnum` | `Precision`, `BackendKind`, `RepeatMode`, `DEConvention`, `Outcome` (`IntEnum`, it is stored in a uint8 layer) | Serialises as its string, so JSON metadata stays readable. |
 | Polymorphic value | frozen dataclass subclassing an `ABC` | `Feature`, `Ramp`, `Scale`, `KernelFamily`, `Sampler` | Abstract methods only, no shared mutable state. Each subclass registers a `kind` string for JSON round-tripping. |
-| Capability | `typing.Protocol` (`@runtime_checkable` only where dispatch needs it) | `Backend`, `Encoder`, `ArraySink` | Structural, so a CuPy or a future `numba-cuda-mlir` backend needs no inheritance. |
+| Capability | `typing.Protocol` (`@runtime_checkable` only where dispatch needs it) | `Backend`, `Encoder`, `ArraySink` | Structural, so a CuPy backend, or a later GPU JIT replacing `numba-cuda-mlir`, needs no inheritance. |
 | Resource holder | regular class with `__slots__` | `Layers`, `Histograms`, `CompiledKernel`, `KernelCache`, `FramePipeline` | Owns arrays, device memory or threads. Explicit `close()` / context manager. Arrays exposed read-only (`flags.writeable = False`). Custom `__reduce__` rebuilds from the recipe instead of pickling dispatchers. |
 | Mutable builder | `@dataclass(slots=True)` (not frozen) | `Snippets` during codegen, `StatsAccumulator` | Short-lived, never stored or hashed. |
 
@@ -840,7 +840,7 @@ class Backend(Protocol):
 
 @dataclass(**FROZEN)
 class Provenance:
-    brotkit: str; numba: str; numba_cuda: str | None
+    brotkit: str; numba: str; numba_cuda_mlir: str | None
     device: str; created_utc: str; wall_time_s: float
 
 class Result(ABC):                          # resource holder
@@ -969,7 +969,7 @@ The additions that pay for themselves are deep zoom, feature-finding numerics, a
 | **Vector overlays** | Trace equipotentials and external rays as SVG paths in view coordinates, alongside `trace_orbit`, for publication figures. | 3 |
 | **Formula zoo** | Curated recipes: Multibrot, Burning Ship, Tricorn and multicorns, McMullen maps, λz(1 − z) and 1/c planes, Phoenix, Nova, Magnet, Collatz, Lyapunov (its own small family), bicomplex and split-complex Mandelbrots, each with tuned defaults and a thumbnail test. | 1–2 |
 | **Test harness** | CPU vs GPU parity within tolerance per precision; mu continuity across band edges; DE ≤ brute-force distance on sampled points; known nucleus periods; golden images with perceptual diff. Generated kernels need this more than hand-written ones. | 1 |
-| **Benchmarks** | Log Giter/s (pixel-iterations per second) per device in metadata. Track regressions across Numba/numba-cuda upgrades. | 1 |
+| **Benchmarks** | Log Giter/s (pixel-iterations per second) per device in metadata. Track regressions across Numba/numba-cuda-mlir upgrades. | 1 |
 | **Scale-out** | Tiles dispatched across GPUs or machines (Dask or Ray), merged with the same layer schema. Density histograms simply add. | 4 |
 | **Print output** | Poster tiling with overlap, 16-bit TIFF with DPI, embedded ICC profile (sRGB or Display P3). | 3 |
 
@@ -997,7 +997,7 @@ Changes made after the spec was settled are recorded as numbered ADRs in [decisi
 | Overflow / NaN | Guard + `Outcome.NUMERIC_FAIL = 4` | The DE kernel tracks log\|dz\| with rescaling, so normal f32 renders can't overflow. Any non-finite value ends that sample with outcome 4. Metadata records the count, and a warning suggesting a higher precision tier fires above 0.1% of samples. Colouring gives failed samples a dedicated colour, magenta by default. |
 | RNG | Philox4x32-10 as generated device code | Counter-based: each random draw is a pure function of (seed, pixel or sample index, draw number), so chunking, tiling and resuming never change results. NumPy has the same Philox generator, so the CPU path matches bit for bit. It drives Sobol scrambling, jitter and Buddhabrot sampling. |
 | Compositing and masks | Typed Python expressions | `L.mu`, `L.de`, `L.outcome` are layer references. Operators build an expression tree (`(L.outcome == Outcome.ESCAPED) & (L.de < 2 * px)`) that is validated when built and serialised as JSON. Blend modes (`over`, `multiply`, `screen`, `add`, `mix`) are typed nodes too. No string parsing anywhere. |
-| CI and GPU testing | CPU + simulator on every push, GPU nightly | GitHub Actions runs CPU tests and the `numba-cuda` simulator. A self-hosted runner on your GPU machine runs CPU/GPU parity, fastmath/multi-word checks and golden images nightly and before releases. Golden images live in Git LFS and are compared with a perceptual metric, never bit-exact. |
+| CI and GPU testing | CPU + simulator on every push, GPU nightly | GitHub Actions runs CPU tests. `numba-cuda-mlir` has no CUDA simulator (S1), so the simulator job in the original plan is open: decide in 0.3/1.4 whether to drop it or replace it (ADR-0005). A self-hosted runner on your GPU machine runs CPU/GPU parity, fastmath/multi-word checks and golden images nightly and before releases. Golden images live in Git LFS and are compared with a perceptual metric, never bit-exact. |
 
 ### Phase 1 additions: robustness
 
@@ -1007,7 +1007,7 @@ These five close holes in the original design. All are phase 1.
 | --- | --- | --- |
 | Safe formula serialisation | JSON expression tree: whitelist + registered functions | Loading `srepr` text goes through `sympify`/`parse_expr`, which use `eval`, so a malicious recipe could run code. Formulas are saved instead as a JSON tree of allowed nodes: `Add`, `Mul`, `Pow`, `Symbol`, `Integer`, `Rational`, `Float`, `I`, and a fixed set of elementary functions (`exp`, `log`, `sin`, `cos`, `tan`, `sinh`, `cosh`, `tanh`, `Abs`, `re`, `im`, `conjugate`, `sqrt`). User functions must be registered in code with `@register_function("name")` and appear in the tree by name only. Unknown node types or names are refused with an error naming them. `Formula.to_json()` / `Formula.from_json()` are the only paths, and both are fuzz-tested. |
 | CUDA and multiprocessing | `spawn` workers, one GPU context per process | Forked children can't use a CUDA context created in the parent. Render workers and the frame pipeline use `multiprocessing.get_context("spawn")` explicitly, without changing the global start method. Each worker initialises its own context and kernel cache. Objects cross processes as recipes, never as compiled kernels or device arrays. |
-| CUDA toolkit install | NVIDIA runtime and compiler wheels in the `[cuda]` extra | `uv sync --extra cuda` installs the CUDA runtime and compiler libraries as wheels, so a clean machine needs only the NVIDIA driver. A system toolkit is used if present and newer. `brotkit doctor` reports driver, toolkit, GPU compute capability and FP64:FP32 ratio, and runs a smoke-test kernel. Pin the exact wheel names when implementing; I haven't verified the current package names. |
+| CUDA toolkit install | NVIDIA runtime and compiler wheels in the `[cuda]` extra | `uv sync --extra cuda` installs `numba-cuda-mlir[cu13]`, which pulls the CUDA 13 wheels: `cuda-toolkit[cudart,nvcc,nvrtc]` → `nvidia-cuda-runtime`, `nvidia-cuda-nvcc`, `nvidia-cuda-crt`, `nvidia-cuda-nvrtc`, `nvidia-nvvm`, plus `nvidia-nvjitlink`, `cuda-bindings`, `cuda-core` and `cuda-pathfinder` (S1 versions in `docs/design/spikes/S1.md`). A clean machine needs only an NVIDIA driver at r580 or newer. `cuda-pathfinder` loads the wheel libraries before any system toolkit, so a system `/usr/local/cuda` is ignored. CUDA minor-version compatibility lets the 13.5 wheels run on a driver reporting 13.3. `brotkit doctor` reports driver and runtime CUDA versions (flagging runtime > driver), toolkit library paths, GPU compute capability and FP64:FP32 ratio, and runs a smoke-test kernel. |
 | Memory planning and out-of-memory | Dry-run estimate + auto-tile + retry smaller | `brotkit.estimate(recipe)` runs a low-res pass and reports GPU memory, host memory, disk and time. Renders above a size threshold (default: estimated GPU memory > 50% of free) get the estimate automatically and pick a tile size that fits. On an actual GPU out-of-memory error the tile is halved and retried, down to 64 px, with a warning. Below that the render fails with the estimate attached. |
 | Command-line tool | Typer | `brotkit render recipe.json`, `brotkit animate anim.json [--resume]`, `brotkit colour layers.npz palette.json`, `brotkit estimate recipe.json`, `brotkit doctor`. Commands are thin wrappers over the facade functions, so the CLI and the Python API can't drift. Progress goes to stderr, results to stdout as JSON for scripting. Typer is a core dependency, the CUDA libraries are not. |
 
@@ -1080,7 +1080,7 @@ The number systems need two new printers beside `RealPairPrinter`: `BicomplexPri
 | Reference orbit and glitches | gmpy2 (MPFR) + single reference with rebasing | Reference orbit computed on the CPU at the precision the zoom needs, stored as f64 or extended-exponent arrays for the GPU. Zhuoran's rebasing handles most glitches. Multi-reference correction is a fallback, triggered only by a glitch detector. |
 | User-defined features | Public `@feature` API, marked experimental | Small declared snippet API (`init`, `per_iter`, `on_exit`, `finalise` over named variables `z`, `dz`, `n`, `c`) plus `LayerSpec`s. May change between minor versions until 1.0. Built-in features use the same API. |
 | Tiling and multi-GPU | Square tiles + work queue | 256–512 px tiles double as interrupt chunks, each with a 2 px filter apron and its own adaptive refinement. A low-res cost pass orders tiles hardest first. One worker per GPU pulls from the queue. Posters larger than GPU memory stream tiles to Zarr. |
-| Python | `>=3.14`, GIL build only | `frozendict` backport on 3.14, built-in on 3.15. Free-threaded builds are experimental and untested until numba-cuda supports them. |
+| Python | `>=3.14`, GIL build only | `frozendict` backport on 3.14, built-in on 3.15. Free-threaded builds are experimental and untested until numba-cuda-mlir supports them. |
 | Licence | BSD-3-Clause | Same as NumPy, Numba and SciPy. |
 | File-format versioning | Semver schema + migrations | Minor bumps are additive, and older readers ignore unknown keys. Major bumps require a registered `migrate()` hook. Each release reads the previous two major versions and refuses older ones with a clear error. |
 
@@ -1173,7 +1173,7 @@ Build in six stages: spikes first, then a walking skeleton that renders end to e
 
 Task-level plan with acceptance criteria: [backlog.md](backlog.md).
 
-1. **Phase 0, spikes and scaffolding.** Reserve `brotkit` on PyPI; set up the repo (uv, ruff, pyright strict, pytest + Hypothesis, pre-commit, Conventional Commits via Commitizen, BSD-3 licence, CI, release workflow with Trusted Publishing); set up a self-hosted GPU runner on Xenon. Five spikes: install (numba-cuda + CUDA wheels under WSL2), kernel cache, multi-word arithmetic with fastmath off, register pressure, chunked launches. Collect baseline renders from the old framework.
+1. **Phase 0, spikes and scaffolding.** Reserve `brotkit` on PyPI; set up the repo (uv, ruff, pyright strict, pytest + Hypothesis, pre-commit, Conventional Commits via Commitizen, BSD-3 licence, CI, release workflow with Trusted Publishing); set up a self-hosted GPU runner on Xenon. Five spikes: install (GPU JIT + CUDA wheels under WSL2; S1 chose numba-cuda-mlir, ADR-0005), kernel cache, multi-word arithmetic with fastmath off, register pressure, chunked launches. Collect baseline renders from the old framework.
    - *Gate:* every spike has a written result in the doc, and any design change it forces is made before phase 1a starts.
 2. **Phase 1a, walking skeleton.** z² + c only: core value objects, safe JSON formula, f32/f64 printer, escape-time template with `Smooth` and `DistanceEstimate`, CPU and CUDA backends with kernel cache and chunked launches, minimal `Layers`, minimal colouring to 16-bit PNG, NPZ save/load, `render()`.
    - *Gate:* a 4K Mandelbrot renders on the 3090 Ti and on the CPU, matches within tolerance, reloads from disk, recolours without re-rendering, and passes one golden-image test in the nightly GPU job.
@@ -1194,6 +1194,6 @@ Tool naming: [Ultra Fractal Mandelbrot](https://www.ultrafractal.com/help/formul
 
 Newton and Buddhabrot: [Wikipedia, Newton fractal](https://en.wikipedia.org/wiki/Newton_fractal) · [Wikibooks, Newton method](https://kwx.liehendr.com/content/wikibooks_en_all_maxi_2021-03/A/Fractals/Mathematics/Newton_method) · [Green, The Buddhabrot Technique](https://superliminal.com/fractals/bbrot/) · [Aramant, Buddhabrot part 2](https://davidaramant.github.io/post/the-buddhabrot-part-2) · [Bitterli on importance sampling vs Metropolis-Hastings](https://dotat.at/:/4NBGV) · [Boswell's MH approach](https://quuxplusone.github.io/blog/2021/07/27/buddhabrot)
 
-Toolchain and deep zoom: [Python 3.15 What's New](https://docs.python.org/3.15/whatsnew/3.15.html) · [Numba on PyPI](https://pypi.org/project/Numba/) · [numba-cuda on PyPI](https://pypi.org/project/numba-cuda/) · [Numba 0.61 notes](https://numba.readthedocs.io/en/0.63.0/_sources/release/0.61.0-notes.rst.txt) · [RTX 5090 specs](https://www.techpowerup.com/gpu-specs/geforce-rtx-5090.c4216) · [Munafo, BLA](https://mrob.com/pub/muency/bivariatelinearapproximati.html) · [Fractalshades maths](https://gbillotey.github.io/Fractalshades-doc/math.html) · [OKLab circles](https://alecjacobson.com/weblog/large-colorful-circles-oklab-vs-rgb.html)
+Toolchain and deep zoom: [Python 3.15 What's New](https://docs.python.org/3.15/whatsnew/3.15.html) · [Numba on PyPI](https://pypi.org/project/Numba/) · [numba-cuda on PyPI](https://pypi.org/project/numba-cuda/) · [numba-cuda-mlir on PyPI](https://pypi.org/project/numba-cuda-mlir/) · [numba-cuda maintenance notice](https://github.com/NVIDIA/numba-cuda/issues/902) · [Numba 0.61 notes](https://numba.readthedocs.io/en/0.63.0/_sources/release/0.61.0-notes.rst.txt) · [RTX 5090 specs](https://www.techpowerup.com/gpu-specs/geforce-rtx-5090.c4216) · [Munafo, BLA](https://mrob.com/pub/muency/bivariatelinearapproximati.html) · [Fractalshades maths](https://gbillotey.github.io/Fractalshades-doc/math.html) · [OKLab circles](https://alecjacobson.com/weblog/large-colorful-circles-oklab-vs-rgb.html)
 
 Later decisions: [numba-cuda on-disk kernel caching](https://nvidia.github.io/numba-cuda/user/caching.html) · [numba-cuda fastmath](https://nvidia.github.io/numba-cuda/user/fastmath.html) · [PEP 814, frozendict](https://peps.python.org/pep-0814/) · [Danca, Bourke & Romera, alternated Julia sets](https://paulbourke.net/papers/Danca/) · [Comerford, non-autonomous Julia sets](https://digitalcommons.uri.edu/math_facpubs/111) · [Sumi, polynomial semigroups](https://arxiv.org/pdf/math/0703591)
