@@ -1,6 +1,6 @@
 [project]
 name = "brotkit"
-version = "0.0.1"
+version = "0.0.0"
 description = "GPU-accelerated, SymPy-driven fractal rendering for notebooks"
 readme = "README.md"
 license = "BSD-3-Clause"
@@ -102,7 +102,7 @@ markers = [
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version_provider = "pep621"
+version_provider = "uv"   # also keeps uv.lock in step
 tag_format = "v$version"
 update_changelog_on_bump = true
 major_version_zero = true

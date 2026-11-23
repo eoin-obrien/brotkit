@@ -73,7 +73,8 @@ See also "Rules that keep it fast" and "Conventions" in the spec.
 - PRs are squash-merged into `main`, so **the PR title becomes the commit**. Make it a valid
   Conventional Commit.
 - Versioning is semver, 0.x until the API settles. The version lives only in
-  `pyproject.toml`. Releases use `cz bump` via the release workflow; never bump by hand.
+  `pyproject.toml` (Commitizen's `uv` provider mirrors it into `uv.lock`). Releases use
+  `cz bump` via the release workflow (`cut-release` skill); never bump or tag by hand.
 
 ### PR checklist
 
