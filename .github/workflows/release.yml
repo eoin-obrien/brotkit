@@ -2,7 +2,8 @@ name: Release
 
 # Manually triggered release (backlog 0.5). One run:
 #   tests -> cz bump (version, CHANGELOG.md, tag) -> uv build -> push -> TestPyPI
-#   -> install check -> PyPI (after approval of the protected `pypi` environment).
+#   -> install check -> PyPI (after approval of the protected `pypi` environment)
+#   -> install check from PyPI.
 # Publishing uses Trusted Publishing (OIDC), so no tokens are stored. The PyPI and
 # TestPyPI trusted publishers are bound to this file name and to the `pypi` and
 # `testpypi` environments: renaming either breaks publishing.
@@ -178,3 +179,33 @@ jobs:
           path: dist/
 
       - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
+
+  pypi-install:
+    name: Install from PyPI
+    needs: [bump, pypi]
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          python-version: "3.14"
+          enable-cache: false   # see testpypi-install
+
+      - name: Install and import
+        env:
+          VERSION: ${{ needs.bump.outputs.version }}
+        run: |
+          # The index and CDN can lag the upload by a minute or two.
+          for attempt in 1 2 3 4 5 6; do
+            if uv run --isolated --no-project --no-cache \
+                --default-index https://pypi.org/simple/ \
+                --with "brotkit==$VERSION" \
+                python -c "import brotkit, sys; assert brotkit.__version__ == sys.argv[1]" "$VERSION"; then
+              echo "### brotkit $VERSION installs from PyPI" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Attempt $attempt failed; retrying in 30 s"
+            sleep 30
+          done
+          echo "::error::brotkit $VERSION was published but did not install from PyPI"
+          exit 1

@@ -148,3 +148,18 @@ workflow creates the project. Three practical problems came up while building th
 - The bump commit and tag are pushed to `main` with the workflow's `GITHUB_TOKEN`. If `main`
   is ever protected, the workflow (or a GitHub App) needs a bypass.
 - Spec edits: the Repository conventions "Versioning" and "Publishing" rows.
+
+**Update (2026-11-23):** Release run 1
+([45215851937](https://github.com/eoin-obrien/brotkit/actions/runs/45215851937)) tagged
+v0.0.1 and published it to TestPyPI. The TestPyPI install check passed, but `setup-uv`'s
+post step failed the job: caching is on by default and the step runs with `--no-cache`, so
+there was nothing to save. The PyPI job was skipped. "Re-run failed jobs" uses the workflow
+file from the original commit, so it couldn't recover the run, and the workflow can't
+publish an existing tag. The release workflow now disables the uv cache and also installs
+from PyPI after publishing. **0.0.1 exists only as a git tag and on TestPyPI. 0.0.2 is the
+first PyPI release, and it creates the project and holds the name.**
+Run 2 ([45219689842](https://github.com/eoin-obrien/brotkit/actions/runs/45219689842))
+published 0.0.2 to TestPyPI and PyPI, with attestations. The PyPI install check was added
+afterwards: its commit was pushed to #63's branch after that PR had merged, so it missed
+run 2. It was checked by hand instead (`uv run --with brotkit==0.0.2` from PyPI imports and
+reports 0.0.2) and lands with the next release.
