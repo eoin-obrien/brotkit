@@ -1,0 +1,9 @@
+numba-cuda-mlir 0.6.0
+sm_86  fastmath=False ['fma.rn.f32', 'div.rn.f32', 'add.f32']
+sm_86  fastmath=True  ['fma.rn.f32', 'div.rn.f32', 'add.f32']
+sm_90  fastmath=False ['fma.rn.f32', 'div.rn.f32', 'add.f32']
+sm_90  fastmath=True  ['fma.rn.f32', 'div.rn.f32', 'add.f32']
+sm_100  fastmath=False ['fma.rn.f32', 'div.rn.f32', 'add.f32']
+sm_100  fastmath=True  ['fma.rn.ftz.f32', 'div.full.ftz.f32', 'add.ftz.f32']
+sm_120  fastmath=False ['fma.rn.f32', 'div.rn.f32', 'add.f32']
+sm_120  fastmath=True  ['fma.rn.ftz.f32', 'div.full.ftz.f32', 'add.ftz.f32']

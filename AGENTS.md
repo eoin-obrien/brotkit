@@ -54,8 +54,9 @@ Don't break these. If a change seems to need it, stop and raise it instead.
 3. **Never `eval` / `sympify` / `parse_expr` on loaded data.** Formulas load only through the
    whitelisted JSON expression tree (`Formula.from_json`). NPZ files load with
    `allow_pickle=False`, and no class name from a file is ever imported dynamically.
-4. **fastmath only for f32.** df64, dd and qf kernels compile with `fastmath=False` and emit
-   their FMAs explicitly.
+4. **fastmath only for f32.** df64, dd and qf kernels compile with `fastmath=False`, and their
+   correctness comes from codegen, not flags: every float add/sub/mul is a libdevice `_rn`
+   intrinsic and every FMA an explicit `cuda.fma`, never bare `+ - *` (ADR-0006).
 5. **No arrays in frozen dataclasses.** Use `tuple`, `frozendict` and `frozenset`. Arrays
    belong to resource holders (`Layers`, `Histograms`, ...).
 6. **Golden images are updated only with explicit approval** from the maintainer (see the

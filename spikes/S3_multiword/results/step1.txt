@@ -1,0 +1,23 @@
+== fastmath=False vs True on this GPU (sm_86): IR, PTX, SASS, runtime
+fastmath=False
+  MLIR target : ['#nvvm.target<O = 3, chip = "sm_86">']
+  LLVM fp ops : ['fadd float', 'fdiv float', 'fmul float']
+  PTX fp ops  : ['fma.rn.f32', 'div.rn.f32', 'add.f32', 'fma.rn.f32']
+  SASS fp ops : ['FFMA', 'FFMA', 'MUFU.RCP', 'FADD.FTZ', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA.RZ', 'FFMA.RM', 'FFMA.RP', 'FADD.FTZ', 'FFMA', 'MUFU.RCP', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FADD', 'FFMA']
+  1e-40 + 1e-40 = 1.99999e-40 (0.0 would mean flush-to-zero)
+fastmath=True
+  MLIR target : ['#nvvm.target<O = 3, chip = "sm_86", flags = {fast}>']
+  LLVM fp ops : ['fadd float', 'fdiv float', 'fmul float']
+  PTX fp ops  : ['fma.rn.f32', 'div.rn.f32', 'add.f32', 'fma.rn.f32']
+  SASS fp ops : ['FFMA', 'FFMA', 'MUFU.RCP', 'FADD.FTZ', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA.RZ', 'FFMA.RM', 'FFMA.RP', 'FADD.FTZ', 'FFMA', 'MUFU.RCP', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FFMA', 'FADD', 'FFMA']
+  1e-40 + 1e-40 = 1.99999e-40 (0.0 would mean flush-to-zero)
+
+== _rn intrinsics survive (no fusion)
+  PTX : ['mul.rn.f32', 'add.rn.f32']
+  SASS: ['FMUL', 'FADD']
+
+== API used
+  fastmath      : cuda.jit(fastmath=bool); cuda.compile_ptx(fn, sig, fastmath=bool, cc=(M, m))
+  explicit FMA  : cuda.fma(a, b, c)  (also cuda.libdevice.fma / fmaf)
+  rn add/mul    : cuda.libdevice.dadd_rn, dmul_rn, fadd_rn, fsub_rn, fmul_rn (no dsub_rn: use dadd_rn(x, -y))
+  inspection    : k.inspect_asm(sig) / inspect_ptx / inspect_lto_ptx / inspect_sass / inspect_llvm / inspect_mlir

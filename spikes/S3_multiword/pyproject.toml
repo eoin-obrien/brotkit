@@ -1,0 +1,16 @@
+# Spike S3 (throwaway): multi-word arithmetic on numba-cuda-mlir. Never library code.
+# Run from this directory:
+#   uv sync -p 3.15 && uv run step1_api.py   (then step2..step6; see docs/design/spikes/S3.md)
+[project]
+name = "s3-multiword"
+version = "0"
+requires-python = ">=3.14"
+dependencies = [
+    "numba-cuda-mlir[cu13]==0.6.0",  # same exact pin as the root [cuda] extra (ADR-0005)
+    "numpy",
+    "mpmath",
+    "gmpy2",  # mpmath backend; speeds up the CPU reference
+]
+
+[tool.uv]
+package = false

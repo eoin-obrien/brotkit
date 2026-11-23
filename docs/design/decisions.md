@@ -224,3 +224,75 @@ Pythons.
   `python_version < "3.15"`), import `from numba import cuda`, which S1 verified works on
   Xenon. It's a dead end: no 3.15, no NumPy ≥ 2.5, and fixes only for security issues until
   CUDA 13 ends. Reviving it would need a new ADR that supersedes this one.
+
+## ADR-0006: Multi-word correctness comes from rounding-explicit intrinsics and explicit FMA
+
+- **Status:** Accepted
+- **Date:** 2026-11-23
+- **Backlog:** S3 (revises the S3 half of the ADR-0005 gate; affects 1.3, 2.3)
+
+### Context
+Spec review item 1 ("Fastmath breaks multi-word arithmetic") made `fastmath=False` the thing
+that protects error-free transformations. It assumed `fastmath=False` means no FMA
+contraction, no reassociation and no flush-to-zero, and that `fastmath=True` turns those on.
+ADR-0005 made S3 confirm that on `numba-cuda-mlir`. Spike S3 ([`spikes/S3.md`](spikes/S3.md))
+found on `numba-cuda-mlir` 0.6.0:
+
+- **`fastmath=True` has no effect below sm_100.** Pre-Blackwell targets compile through a
+  bundled LLVM 7 bridge (`libMLIRToLLVM70.so`) that passes libnvvm only `-arch=` and `-opt=`.
+  The PTX, the SASS and the runtime behaviour are the same with the flag on or off. On sm_100+
+  it works (`.ftz`, approximate division).
+- **FMA contraction is on by default on every architecture, and there's no way to turn it
+  off.** With `fastmath=False`, `a*b + c` compiles to `fma.rn`, and ptxas fuses un-rounded
+  `mul`/`add` further. The vendored numba-cuda NVVM code has the same default, so the
+  ADR-0005 fallback is unlikely to differ.
+
+So the original gate (fastmath control) failed. The maintainer revised it. Fastmath control
+was the wrong requirement, because correctness shouldn't depend on compiler flags. The
+revised gate needs explicit FMA, round-to-nearest non-contractible add and mul, no FTZ or
+reassociation by default, and PTX/SASS inspection. All four pass.
+
+### Decision
+- **Multi-word printers (df64, dd, qf) never emit bare `+`, `-`, `*` on floats.** Every add,
+  subtract and multiply in multi-word code is a libdevice round-to-nearest intrinsic:
+  - `cuda.libdevice.dadd_rn` / `dmul_rn` for f64 words, with subtraction as `dadd_rn(x, -y)`
+    (libdevice has no `dsub_rn`; negation is exact)
+  - `fadd_rn` / `fsub_rn` / `fmul_rn` for f32 words
+  - every FMA is an explicit `cuda.fma`
+
+  These lower to `add.rn` / `mul.rn` / `sub.rn`, which the PTX ISA protects from
+  optimization, and S3 confirmed they reach SASS unfused on sm_86 and sm_100.
+- **Bare float operations next to multi-word code go through the same rewrite.** That
+  includes scaling by 2 and pixel offsets. Contraction works on inlined code, so it can fuse
+  across a device-function boundary.
+- **fastmath is a performance option only**, allowed for `f32` kernels as before, and
+  currently inert below sm_100. Multi-word kernels still compile with `fastmath=False`: on
+  sm_100+, fastmath adds `.ftz` even to the `_rn` intrinsics, and flush-to-zero breaks
+  `two_sum` on subnormals.
+- **Codegen emits integer-to-float casts explicitly** (`np.float32(i)`) in generated f32 and
+  df64 code. Numba types `int64 * float32` as f64, which silently promotes a whole "f32"
+  kernel to f64.
+- **Multi-word tests (backlog 1.3, 2.3) include:**
+  - a snapshot check that generated multi-word source contains no bare float `BinOp`
+  - a PTX check that a multi-word kernel's FMA count equals the number of `cuda.fma` calls in
+    its source and that it has no un-rounded `add`/`mul`/`sub` outside comparisons
+  - a bit-exact CPU/GPU parity test against a CPU emulation of the same generated source
+    (S3: 0 differing results out of 200,000 per op)
+
+### Consequences
+- Multi-word correctness no longer depends on numba-cuda-mlir's fastmath handling or its
+  contraction default. If upstream fixes either (issue drafted in
+  `spikes/S3_multiword/upstream_issue.md`), nothing here changes.
+- **Plain `f32`/`f64` kernels still contract**, since nothing turns it off. Their CPU/GPU
+  parity stays tolerance-based (review item 9). Multi-word paths get exact parity.
+- **`_rn` intrinsics rule out fusions the compiler might otherwise pick.** S3 measured the
+  resulting kernels anyway: on the RTX 3090 Ti, df64 runs at 178 Giter/s (5.5× native f64)
+  and dd at 2.53 Giter/s (f64 / 12.9).
+- The fastmath policy in the spec (f32 only) is unchanged. Only the stated reason and
+  mechanism change.
+- **Spec edits:**
+  - Architecture review items 1 and 9, and the multi-word row of "What holds up"
+  - the Toolchain open-questions bullet on the numba-cuda-mlir gate
+  - the precision-tier note on AUTO and dd-vs-qf
+  - the `Precision.fastmath_allowed` comment
+- **Agent rules:** the codegen `AGENTS.md` and root `AGENTS.md` invariant 4.
