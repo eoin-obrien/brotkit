@@ -1,6 +1,6 @@
 [project]
 name = "brotkit"
-version = "0.0.0"
+version = "0.0.1"
 description = "GPU-accelerated, SymPy-driven fractal rendering for notebooks"
 readme = "README.md"
 license = "BSD-3-Clause"
