@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cpu:
+    name: CPU (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    # 3.15 may fail until spike S1 confirms wheel availability; 3.14 is required.
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: "3.14"
+            experimental: false
+          - python: "3.15"
+            experimental: true
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v10.4.0
+        with:
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --locked --group dev
+
+      - name: Lint
+        run: uv run --frozen ruff check
+
+      - name: Format
+        run: uv run --frozen ruff format --check
+
+      - name: Typecheck
+        run: uv run --frozen pyright
+
+      - name: Test (CPU)
+        run: uv run --frozen pytest -m "not gpu"

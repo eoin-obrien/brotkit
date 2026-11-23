@@ -27,7 +27,7 @@ Target Python 3.15 with uv. Use Numba on the CPU and the separate `numba-cuda` p
 | GPU JIT | `numba-cuda` (NVIDIA) | The built-in `numba.cuda` was [deprecated in 0.61](https://numba.readthedocs.io/en/0.63.0/_sources/release/0.61.0-notes.rst.txt) and `numba-cuda` is now the supported target ([PyPI](https://pypi.org/project/numba-cuda/)). |
 | Symbolics | `sympy` | Analytic derivatives plus `pycode`/`ccode` printers drive codegen (section below). |
 | Arrays | NumPy 2.x, optional CuPy for device-side colouring | Colouring stays NumPy by default. CuPy is an extra for colouring 8k+ frames on the GPU. |
-| Packaging | uv project, src layout, extras `[cuda]`, `[video]`, `[dev]` | `uv sync --extra cuda` on the GPU box and plain `uv sync` on a laptop. |
+| Packaging | uv project, src layout, extras `[cuda]`, `[video]`; PEP 735 dependency groups `dev`, `docs` (ADR-0001) | `uv sync --group dev --extra cuda` on the GPU box and `uv sync --group dev` on a laptop. |
 
 **Precision is the big GPU decision.** Consumer NVIDIA cards run FP64 at [1/64 of FP32 rate (RTX 5090: 104.8 vs 1.64 TFLOPS)](https://www.techpowerup.com/gpu-specs/geforce-rtx-5090.c4216). The framework therefore has three precision tiers, picked from the view's pixel spacing:
 
@@ -985,6 +985,8 @@ Every design question raised so far is settled, decided 15–23 Nov 2026. A deci
 
 The pixel-grid and anti-aliasing decisions live in the Sampling and anti-aliasing section, and the iteration-folding decisions in their own section.
 
+Changes made after the spec was settled are recorded as numbered ADRs in [decisions.md](decisions.md), and this snapshot is edited to match.
+
 ### Phase 1 core decisions
 
 | Area | Decision | Consequences |
@@ -1094,7 +1096,7 @@ Decided 23 Nov 2026. Set up in phase 0 (Backlog 0.2, 0.5 and 0.6).
 | Publishing | `uv build` in CI, then TestPyPI and PyPI via [Trusted Publishing](https://docs.pypi.org/trusted-publishers/) with `pypa/gh-action-pypi-publish`, which also generates attestations (`uv publish` [doesn't yet](https://docs.astral.sh/uv/guides/package/)). Publishing runs from a protected `pypi` environment; no tokens stored. |
 | Lint, format, types | ruff (lint + format), pyright strict |
 | Tests | pytest + Hypothesis; golden images in Git LFS, compared perceptually; GPU suite nightly on the self-hosted Xenon runner |
-| Docs | Sphinx + PyData theme + MyST-NB (notebooks executed at build), sphinx-llms-txt for llms.txt; gallery built from recipe files doubles as regression tests. Material for MkDocs was dropped: it reached end of maintenance on 5 Nov 2026 |
+| Docs | Sphinx + PyData theme + MyST-NB (notebooks executed at build), sphinx-llms-txt for llms.txt (Sphinx capped below 9 for now, ADR-0002); gallery built from recipe files doubles as regression tests. Material for MkDocs was dropped: it reached end of maintenance on 5 Nov 2026 |
 | Hooks and CI | pre-commit (ruff, pyright, Commitizen, large-file guard); GitHub Actions for CPU tests, the CUDA simulator, PR-title check and releases |
 | Licence | BSD-3-Clause |
 
@@ -1104,7 +1106,7 @@ The README is the project's front page on GitHub and PyPI. It's built like a pro
 
 **README structure, in order:**
 
-1. **Hero strip:** 4 brotkit renders (Mandelbrot with DE shading, Nebulabrot, Newton basins, an oblique 4D slice), produced by `docs/hero/*.recipe.json` in CI, so the front-page image is also a golden test. Use absolute `raw.githubusercontent.com` URLs: PyPI renders the same README and relative image paths break there.
+1. **Hero strip:** 4 brotkit renders (Mandelbrot with DE shading, Nebulabrot, Newton basins, an oblique 4D slice), produced by `docs/hero/*.recipe.json` in CI, so the front-page image is also a golden test. Use absolute `raw.githubusercontent.com` URLs: PyPI renders the same README and relative image paths break there. The hero PNGs are ordinary git files, not Git LFS, optimised to about 300 KB each (ADR-0003).
 2. **One-line pitch** (GPU-accelerated, SymPy-driven fractal rendering for notebooks), then the badge rows below.
 3. **Highlights:** five bullets (any SymPy formula with analytic derivatives; render once, colour many; adaptive supersampling with correct linear-light AA; precision tiers to dd/qf and perturbation; 4D animation).
 4. **Install:** `uv add brotkit`, `uv add "brotkit[cuda]"`, requirements (NVIDIA driver, compute capability), and `brotkit doctor`.
@@ -1128,7 +1130,7 @@ README code blocks run in CI with `pytest-markdown-docs`, so the front page can 
 **Agent instructions:**
 
 - **AGENTS.md is canonical.** It's the open format [contributed to the Agentic AI Foundation](https://openai.com/index/agentic-ai-foundation/) under the Linux Foundation and read by Codex, Cursor, Copilot, Gemini CLI and others. Contents:
-  - setup: `uv sync --extra cuda --group dev`
+  - setup: `uv sync --group dev`, plus `--extra cuda` on the GPU machine (ADR-0001)
   - exact commands: lint, typecheck, CPU tests, GPU tests (marker), a single test, docs build
   - architecture invariants: frozen value objects only; no Python in the hot loop; never `eval`/`sympify` on loaded data; fastmath only for f32; no arrays in frozen dataclasses; golden images updated only with explicit approval; the generated kernel cache is never committed
   - commit conventions, where the design spec lives, and the PR checklist

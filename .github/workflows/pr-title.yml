@@ -1,0 +1,26 @@
+name: PR title
+
+# PRs are squash-merged, so the title becomes the commit on main and must be a
+# Conventional Commit. Checked with the same Commitizen version as the hook.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  conventional-commit:
+    name: Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v10.4.0
+
+      - name: cz check
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}   # via env, never interpolated into the script
+        run: uv run --frozen --only-group dev cz check --message "$PR_TITLE"

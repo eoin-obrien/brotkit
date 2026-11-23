@@ -1,0 +1,10 @@
+# Normalise line endings
+* text=auto eol=lf
+
+# Golden images live in Git LFS (compared perceptually, never bit-exact).
+tests/golden/** filter=lfs diff=lfs merge=lfs -text
+
+# Hero images (docs/hero/) are NOT in LFS: raw.githubusercontent.com serves LFS pointer
+# files, which would break the README on GitHub and PyPI. Commit them as ordinary,
+# optimised PNGs under ~300 KB each. See ADR-0003.
+docs/hero/*.png binary

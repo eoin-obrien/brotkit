@@ -1,0 +1,45 @@
+name: Bug report
+description: Something renders wrongly, crashes or doesn't install
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. For security issues, please use [private reporting](https://github.com/eoin-obrien/brotkit/security/advisories/new) instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead. Attach images if the problem is visual.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproducer
+      description: The smallest code or `.recipe.json` that shows the problem.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: "`brotkit doctor` output"
+      description: |
+        Paste the full output of `brotkit doctor` (driver, toolkit, GPU, compute capability, versions).
+        If it isn't available in your version, give your OS, Python, brotkit, Numba and numba-cuda versions and GPU model.
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Backend
+      options: [CPU, CUDA, Both, Not applicable]
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Tracebacks, logs, the precision tier used, whether it's a regression.

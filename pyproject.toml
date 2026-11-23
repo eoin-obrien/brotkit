@@ -1,0 +1,108 @@
+[project]
+name = "brotkit"
+version = "0.0.1"
+description = "GPU-accelerated, SymPy-driven fractal rendering for notebooks"
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+authors = [{ name = "Eoin O'Brien" }]
+requires-python = ">=3.14"
+keywords = ["fractal", "mandelbrot", "julia", "buddhabrot", "sympy", "numba", "cuda", "jupyter"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+# Pinned by spike S1 (NVIDIA runtime/compiler wheels + numba-cuda).
+cuda = []
+video = ["av"]
+
+[project.urls]
+Repository = "https://github.com/eoin-obrien/brotkit"
+Issues = "https://github.com/eoin-obrien/brotkit/issues"
+
+[dependency-groups]
+dev = [
+    "commitizen>=4.20",
+    "hypothesis>=6.170",
+    "packaging>=25",
+    "pre-commit>=4.7",
+    "pyright>=1.1.414",
+    "pytest>=9.2",
+    "pytest-markdown-docs>=0.9.2",
+    "ruff>=0.17.6",
+]
+docs = [
+    "myst-nb>=1.4",
+    "pydata-sphinx-theme>=0.24",
+    # Capped below 9: myst-nb on Sphinx 9 needs markdown-it-py>=4.2, but
+    # pytest-markdown-docs (dev group) pins markdown-it-py<4. Lift the cap when it
+    # supports markdown-it-py 4. See ADR-0002 in docs/design/decisions.md.
+    "sphinx>=8.2,<9",
+    "sphinx-llms-txt>=0.7.1",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.10,<0.10.0"]
+build-backend = "uv_build"
+
+# --- ruff -------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",   # pycodestyle
+    "F",        # pyflakes
+    "I",        # isort
+    "B",        # bugbear
+    "UP",       # pyupgrade
+    "SIM",      # simplify
+    "RUF",      # ruff-specific
+    "PT",       # pytest style
+    "S307",     # no eval() -- see AGENTS.md invariants
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+# The design docs are hand-formatted snapshots; their code blocks are sketches.
+exclude = ["docs/design/**"]
+
+# --- pyright ----------------------------------------------------------------
+
+[tool.pyright]
+include = ["src", "tests"]
+typeCheckingMode = "strict"
+
+# --- pytest -----------------------------------------------------------------
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers", "--strict-config", "-ra"]
+xfail_strict = true
+markers = [
+    "gpu: needs a CUDA GPU (run with -m gpu; excluded from CPU CI)",
+    "slow: long-running test",
+]
+
+# --- commitizen -------------------------------------------------------------
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "pep621"
+tag_format = "v$version"
+update_changelog_on_bump = true
+major_version_zero = true
