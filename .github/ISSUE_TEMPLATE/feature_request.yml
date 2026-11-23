@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest a formula, colouring, feature or improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What do you want to do?
+      description: The render, workflow or result you're after, and why the current API doesn't get you there.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How it might look from a notebook (API sketch), and any references (papers, Mu-Ency, other tools).
+  - type: textarea
+    id: spec
+    attributes:
+      label: Fit with the design spec
+      description: Does this fit `docs/design/spec.md` and the backlog, or does it need a new decision? Leave blank if unsure.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

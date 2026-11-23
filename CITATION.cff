@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use brotkit in your research, please cite it as below."
+type: software
+title: "brotkit: GPU-accelerated, SymPy-driven fractal rendering for notebooks"
+abstract: >-
+  brotkit separates iterating a fractal formula from colouring the result. Formulas are
+  written in SymPy, differentiated and code-generated into fused Numba kernels for the CPU
+  or GPU, and renders produce data layers that can be recoloured, saved and animated without
+  re-iterating.
+authors:
+  - family-names: "O'Brien"
+    given-names: "Eoin"
+repository-code: "https://github.com/eoin-obrien/brotkit"
+license: BSD-3-Clause
+keywords:
+  - fractal
+  - mandelbrot
+  - julia set
+  - buddhabrot
+  - sympy
+  - numba
+  - cuda
+  - jupyter
+# doi: added from the first Zenodo-archived release
