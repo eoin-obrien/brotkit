@@ -213,8 +213,12 @@ Pythons.
   churn. Its extension API differs from `numba-cuda` (MLIR, not LLVM IR). brotkit generates
   Python source and shouldn't need it, but any use of extension APIs has to target MLIR.
 - `numba-cuda-mlir` has no CUDA simulator (`NUMBA_ENABLE_CUDASIM` is ignored, and the package
-  has no simulator module). The spec's "CPU tests + `numba-cuda` simulator on every push" CI
-  plan is open and must be settled in 0.3 or 1.4.
+  has no simulator module), so the spec's simulator CI job is dropped. CPU CI runs codegen
+  snapshot tests (generated kernel source against reviewed snapshots) and CPU-backend parity
+  tests. GPU coverage comes from the self-hosted runner: nightly, before releases, and on a PR
+  only when the maintainer adds the `gpu` label. Untrusted PR code never runs on the
+  self-hosted runner. If S4 shows `numba-cuda-mlir` can compile to PTX with no GPU present,
+  CPU CI adds a compile-only check.
 - **Documented fallback, no code:** if `numba-cuda-mlir` fails the S3/S4 gate, the revival
   path is `numba-cuda[cu13]==0.30.4` plus `numpy<2.5`, on Python 3.14 only (marker
   `python_version < "3.15"`), import `from numba import cuda`, which S1 verified works on
