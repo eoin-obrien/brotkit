@@ -1,0 +1,56 @@
+# --- Python / uv ---
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.hypothesis/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.ipynb_checkpoints/
+
+# --- Numba on-disk cache (index + compiled data) ---
+*.nbi
+*.nbc
+
+# --- brotkit generated kernel cache (never committed; see AGENTS.md) ---
+# Default location is ~/.cache/brotkit/kernels/; these cover a repo-local
+# BROTKIT_CACHE_DIR or XDG_CACHE_HOME pointed inside the checkout.
+.cache/
+.brotkit-cache/
+brotkit-cache/
+/kernels/
+
+# --- render outputs ---
+*.layers.npz
+*.density.npz
+*.zarr/
+*.exr
+*.mp4
+*.mkv
+*.mov
+renders/
+out/
+output/
+# ...except committed goldens and hero images (tracked in Git LFS)
+!tests/golden/**
+!docs/hero/**
+
+# --- docs ---
+docs/_build/
+docs/jupyter_execute/
+
+# --- editors / OS ---
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- local agent settings ---
+.claude/settings.local.json

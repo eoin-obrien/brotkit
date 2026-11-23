@@ -1,0 +1,8 @@
+# Normalise line endings
+* text=auto eol=lf
+
+# Golden images and hero renders live in Git LFS (compared perceptually, never bit-exact).
+tests/golden/** filter=lfs diff=lfs merge=lfs -text
+docs/hero/** filter=lfs diff=lfs merge=lfs -text
+# Hero recipes are small text files and stay in plain git so they diff.
+docs/hero/*.recipe.json -filter -diff -merge text
