@@ -1,0 +1,1122 @@
+{
+ "f32/A": {
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 0
+  },
+  "ptxas": {
+   "regs": 20,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  },
+  "njl": {
+   "regs": 20,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 20,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  }
+ },
+ "f32/B": {
+  "driver": {
+   "regs": 26,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 24,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 26,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 24,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "f32/C": {
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 34,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 34,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 34,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "f32/F6": {
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 8
+  },
+  "ptxas": {
+   "regs": 38,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  },
+  "njl": {
+   "regs": 44,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 38,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  }
+ },
+ "f32/S2": {
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 5
+  },
+  "ptxas": {
+   "regs": 36,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  },
+  "njl": {
+   "regs": 40,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 36,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  }
+ },
+ "f32rn/A": {
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 0
+  },
+  "ptxas": {
+   "regs": 20,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  },
+  "njl": {
+   "regs": 20,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 20,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  }
+ },
+ "f32rn/B": {
+  "driver": {
+   "regs": 24,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 22,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 24,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 22,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "f32rn/C": {
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 34,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 34,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 34,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "f32rn/F6": {
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 8
+  },
+  "ptxas": {
+   "regs": 38,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  },
+  "njl": {
+   "regs": 44,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 38,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  }
+ },
+ "f32rn/S2": {
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 5
+  },
+  "ptxas": {
+   "regs": 36,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  },
+  "njl": {
+   "regs": 40,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 36,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  }
+ },
+ "f64/A": {
+  "driver": {
+   "regs": 25,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 0
+  },
+  "ptxas": {
+   "regs": 25,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  },
+  "njl": {
+   "regs": 25,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 25,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  }
+ },
+ "f64/B": {
+  "driver": {
+   "regs": 32,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 30,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 32,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 30,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "f64/C": {
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 34,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 34,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 34,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "f64/F6": {
+  "driver": {
+   "regs": 52,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 8
+  },
+  "ptxas": {
+   "regs": 46,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  },
+  "njl": {
+   "regs": 52,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 46,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  }
+ },
+ "f64/S2": {
+  "driver": {
+   "regs": 45,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 5
+  },
+  "ptxas": {
+   "regs": 38,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  },
+  "njl": {
+   "regs": 45,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 38,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  }
+ },
+ "df64/A": {
+  "driver": {
+   "regs": 28,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 0
+  },
+  "ptxas": {
+   "regs": 28,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  },
+  "njl": {
+   "regs": 28,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 28,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  }
+ },
+ "df64/B": {
+  "driver": {
+   "regs": 37,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 37,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 37,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 37,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "df64/C": {
+  "driver": {
+   "regs": 40,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 40,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 40,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 40,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "df64/F6": {
+  "driver": {
+   "regs": 54,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 8
+  },
+  "ptxas": {
+   "regs": 47,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  },
+  "njl": {
+   "regs": 54,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 47,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  }
+ },
+ "df64/S2": {
+  "driver": {
+   "regs": 46,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 5
+  },
+  "ptxas": {
+   "regs": 39,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  },
+  "njl": {
+   "regs": 46,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 39,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  }
+ },
+ "dd/A": {
+  "driver": {
+   "regs": 40,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 0
+  },
+  "ptxas": {
+   "regs": 40,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  },
+  "njl": {
+   "regs": 40,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 40,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 0
+  }
+ },
+ "dd/B": {
+  "driver": {
+   "regs": 58,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 59,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 58,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 59,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "dd/C": {
+  "driver": {
+   "regs": 59,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 3
+  },
+  "ptxas": {
+   "regs": 58,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  },
+  "njl": {
+   "regs": 59,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 58,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 3
+  }
+ },
+ "dd/F6": {
+  "driver": {
+   "regs": 72,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 896,
+   "calls": 8
+  },
+  "ptxas": {
+   "regs": 66,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  },
+  "njl": {
+   "regs": 72,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 66,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  }
+ },
+ "dd/S2": {
+  "driver": {
+   "regs": 53,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 5
+  },
+  "ptxas": {
+   "regs": 47,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  },
+  "njl": {
+   "regs": 53,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 47,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  }
+ },
+ "qf/A": {
+  "driver": {
+   "regs": 47,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 1
+  },
+  "ptxas": {
+   "regs": 47,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 1
+  },
+  "njl": {
+   "regs": 47,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 47,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 1
+  }
+ },
+ "qf/B": {
+  "driver": {
+   "regs": 64,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 4
+  },
+  "ptxas": {
+   "regs": 64,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 4
+  },
+  "njl": {
+   "regs": 64,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 64,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 4
+  }
+ },
+ "qf/C": {
+  "driver": {
+   "regs": 64,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 4
+  },
+  "ptxas": {
+   "regs": 64,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 4
+  },
+  "njl": {
+   "regs": 64,
+   "stack": 0,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 64,
+   "stack_spill": [
+    0,
+    0,
+    0
+   ],
+   "calls": 4
+  }
+ },
+ "qf/F6": {
+  "driver": {
+   "regs": 72,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 896,
+   "calls": 8
+  },
+  "ptxas": {
+   "regs": 72,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  },
+  "njl": {
+   "regs": 72,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 72,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 8
+  }
+ },
+ "qf/S2": {
+  "driver": {
+   "regs": 60,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 5
+  },
+  "ptxas": {
+   "regs": 55,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  },
+  "njl": {
+   "regs": 60,
+   "stack": 32,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 55,
+   "stack_spill": [
+    32,
+    0,
+    0
+   ],
+   "calls": 5
+  }
+ },
+ "qfb/A": {
+  "driver": {
+   "regs": 55,
+   "local": 16,
+   "shared": 0,
+   "maxtpb": 1024,
+   "calls": 1
+  },
+  "ptxas": {
+   "regs": 55,
+   "stack_spill": [
+    16,
+    0,
+    0
+   ],
+   "calls": 1
+  },
+  "njl": {
+   "regs": 55,
+   "stack": 16,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 55,
+   "stack_spill": [
+    16,
+    0,
+    0
+   ],
+   "calls": 1
+  }
+ },
+ "qfb/B": {
+  "driver": {
+   "regs": 70,
+   "local": 112,
+   "shared": 0,
+   "maxtpb": 896,
+   "calls": 4
+  },
+  "ptxas": {
+   "regs": 70,
+   "stack_spill": [
+    112,
+    0,
+    0
+   ],
+   "calls": 4
+  },
+  "njl": {
+   "regs": 70,
+   "stack": 112,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 70,
+   "stack_spill": [
+    112,
+    0,
+    0
+   ],
+   "calls": 4
+  }
+ },
+ "qfb/C": {
+  "driver": {
+   "regs": 72,
+   "local": 112,
+   "shared": 0,
+   "maxtpb": 896,
+   "calls": 4
+  },
+  "ptxas": {
+   "regs": 72,
+   "stack_spill": [
+    112,
+    0,
+    0
+   ],
+   "calls": 4
+  },
+  "njl": {
+   "regs": 72,
+   "stack": 112,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 72,
+   "stack_spill": [
+    112,
+    0,
+    0
+   ],
+   "calls": 4
+  }
+ },
+ "qfb/F6": {
+  "driver": {
+   "regs": 77,
+   "local": 128,
+   "shared": 0,
+   "maxtpb": 768,
+   "calls": 8
+  },
+  "ptxas": {
+   "regs": 80,
+   "stack_spill": [
+    128,
+    0,
+    0
+   ],
+   "calls": 8
+  },
+  "njl": {
+   "regs": 77,
+   "stack": 128,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 80,
+   "stack_spill": [
+    128,
+    0,
+    0
+   ],
+   "calls": 8
+  }
+ },
+ "qfb/S2": {
+  "driver": {
+   "regs": 66,
+   "local": 40,
+   "shared": 0,
+   "maxtpb": 896,
+   "calls": 5
+  },
+  "ptxas": {
+   "regs": 62,
+   "stack_spill": [
+    40,
+    0,
+    0
+   ],
+   "calls": 5
+  },
+  "njl": {
+   "regs": 66,
+   "stack": 40,
+   "lmem": 0
+  },
+  "lto_ptxas": {
+   "regs": 62,
+   "stack_spill": [
+    40,
+    0,
+    0
+   ],
+   "calls": 5
+  }
+ }
+}

@@ -1,0 +1,245 @@
+{
+ "env": {
+  "ok": true,
+  "detail": {
+   "CUDA_VISIBLE_DEVICES": null,
+   "/dev/dxg": true,
+   "/dev/nvidia0": false,
+   "/usr/lib/wsl/lib": true,
+   "libcuda.so.1": true,
+   "nvidia-smi": "/usr/lib/wsl/lib/nvidia-smi",
+   "python": "3.15.2"
+  }
+ },
+ "import numba_cuda_mlir.cuda": {
+  "ok": true,
+  "detail": "0.6.0"
+ },
+ "compile_ptx f32/A cc=86": {
+  "ok": true,
+  "detail": "10478 chars, .target sm_86, restype=none"
+ },
+ "compile_ptx f32/A cc=100": {
+  "ok": true,
+  "detail": "9645 chars, .target sm_100, restype=none"
+ },
+ "compile_ptx f32/A cc=120": {
+  "ok": true,
+  "detail": "9650 chars, .target sm_120, restype=none"
+ },
+ "compile_ptx dd/C cc=86": {
+  "ok": true,
+  "detail": "25543 chars, .target sm_86, restype=none"
+ },
+ "compile_ptx dd/C cc=100": {
+  "ok": true,
+  "detail": "20922 chars, .target sm_100, restype=none"
+ },
+ "compile_ptx dd/C cc=120": {
+  "ok": true,
+  "detail": "20922 chars, .target sm_120, restype=none"
+ },
+ "compile_ptx qf/C cc=86": {
+  "ok": true,
+  "detail": "161497 chars, .target sm_86, restype=none"
+ },
+ "compile_ptx qf/C cc=100": {
+  "ok": true,
+  "detail": "156807 chars, .target sm_100, restype=none"
+ },
+ "compile_ptx qf/C cc=120": {
+  "ok": true,
+  "detail": "156807 chars, .target sm_120, restype=none"
+ },
+ "compile_ptx f32/A cc=None (current device)": {
+  "ok": true,
+  "detail": "10478 chars"
+ },
+ "compile_ptx dd/C cc=86 launch_bounds=(256, 2)": {
+  "ok": true,
+  "detail": [
+   ".maxntid 256, 1, 1",
+   ".minnctapersm 2"
+  ]
+ },
+ "cuda.compile output=ltoir f32/A cc=86": {
+  "ok": false,
+  "error": "NotImplementedError: The C ABI is not supported for kernels",
+  "tb": "Traceback (most recent call last):\n  File \"/home/eoin/brotkit/spikes/S4_registers/q1_nogpu.py\", line 31, in deco\n    out = fn()\n  File \"/home/eoin/brotkit/spikes/S4_registers/q1_nogpu.py\", line 131, in _cc\n    res = cuda.compile(k.py_func, gen.signature(\"f32\"), device=False, cc=(8, 6), output=out)\n  File \"/home/eoin/brotkit/spikes/S4_registers/.venv/lib/python3.15/site-packages/numba_cuda_mlir/compiler.py\", line 399, in compile\n    raise NotImplementedError(\"The C ABI is not supported for kernels\")\nNotImplementedError: The C ABI is not supported for kernels\n"
+ },
+ "cuda.compile output=cubin f32/A cc=86": {
+  "ok": false,
+  "error": "NotImplementedError: Unsupported output type: cubin",
+  "tb": "Traceback (most recent call last):\n  File \"/home/eoin/brotkit/spikes/S4_registers/q1_nogpu.py\", line 31, in deco\n    out = fn()\n  File \"/home/eoin/brotkit/spikes/S4_registers/q1_nogpu.py\", line 131, in _cc\n    res = cuda.compile(k.py_func, gen.signature(\"f32\"), device=False, cc=(8, 6), output=out)\n  File \"/home/eoin/brotkit/spikes/S4_registers/.venv/lib/python3.15/site-packages/numba_cuda_mlir/compiler.py\", line 395, in compile\n    raise NotImplementedError(f\"Unsupported output type: {output}\")\nNotImplementedError: Unsupported output type: cubin\n"
+ },
+ "ptxas(wheel) -v f32/A sm_86": {
+  "ok": true,
+  "detail": [
+   "    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+   "Used 20 registers, used 0 barriers, 520 bytes cmem[0]"
+  ]
+ },
+ "ptxas(wheel) -v f32/A sm_100": {
+  "ok": true,
+  "detail": [
+   "    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+   "Used 21 registers, used 0 barriers"
+  ]
+ },
+ "ptxas(wheel) -v f32/A sm_120": {
+  "ok": true,
+  "detail": [
+   "    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+   "Used 22 registers, used 0 barriers"
+  ]
+ },
+ "ptxas(wheel) -v dd/C sm_86": {
+  "ok": true,
+  "detail": [
+   "    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+   "Used 58 registers, used 0 barriers, 544 bytes cmem[0], 8 bytes cmem[2]"
+  ]
+ },
+ "ptxas(wheel) -v dd/C sm_100": {
+  "ok": true,
+  "detail": [
+   "    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+   "Used 62 registers, used 0 barriers"
+  ]
+ },
+ "ptxas(wheel) -v dd/C sm_120": {
+  "ok": true,
+  "detail": [
+   "    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+   "Used 56 registers, used 0 barriers"
+  ]
+ },
+ "ptxas(wheel) -v qf/C sm_86": {
+  "ok": true,
+  "detail": [
+   "    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+   "Used 64 registers, used 0 barriers, 544 bytes cmem[0]"
+  ]
+ },
+ "ptxas(wheel) -v qf/C sm_100": {
+  "ok": true,
+  "detail": [
+   "    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+   "Used 64 registers, used 0 barriers"
+  ]
+ },
+ "ptxas(wheel) -v qf/C sm_120": {
+  "ok": true,
+  "detail": [
+   "    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+   "Used 71 registers, used 0 barriers"
+  ]
+ },
+ "ptxas(wheel) -v -maxrregcount=32 dd/C sm_86": {
+  "ok": true,
+  "detail": [
+   "    144 bytes stack frame, 192 bytes spill stores, 208 bytes spill loads",
+   "Used 32 registers, used 0 barriers, 144 bytes cumulative stack size, 544 bytes cmem[0], 8 bytes cmem[2]"
+  ]
+ },
+ "nvJitLink -verbose f32/A sm_86": {
+  "ok": true,
+  "detail": {
+   "cubin_bytes": 7584,
+   "info_log": [
+    "info    : 4 bytes gmem",
+    "info    : Function properties for '_Z7k_f32_Afffii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE':",
+    "info    : used 20 registers, used 6 barriers, 0 stack, 0 bytes smem, 520 bytes cmem[0], 0 bytes lmem"
+   ]
+  }
+ },
+ "nvJitLink -verbose dd/C sm_86": {
+  "ok": true,
+  "detail": {
+   "cubin_bytes": 17504,
+   "info_log": [
+    "ptxas info    : 0 bytes gmem",
+    "ptxas info    : Compiling entry function '_Z6k_dd_Cdddddii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE' for 'sm_86'",
+    "ptxas info    : Function properties for _Z6k_dd_Cdddddii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE",
+    "ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+    "ptxas info    : Used 59 registers, used 0 barriers, 544 bytes cmem[0], 8 bytes cmem[2]",
+    "ptxas info    : Compile time = 17.780 ms",
+    "info    : 4 bytes gmem",
+    "info    : Function properties for '_Z6k_dd_Cdddddii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE':",
+    "info    : used 59 registers, used 6 barriers, 0 stack, 0 bytes smem, 544 bytes cmem[0], 8 bytes cmem[2], 0 bytes lmem"
+   ]
+  }
+ },
+ "nvJitLink -verbose qf/C sm_86": {
+  "ok": true,
+  "detail": {
+   "cubin_bytes": 37664,
+   "info_log": [
+    "ptxas info    : 0 bytes gmem",
+    "ptxas info    : Function properties for _Z21w_mul_136297365407056ffffffff",
+    "ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+    "ptxas info    : Compile time = 3.165 ms",
+    "ptxas info    : Function properties for _Z21c_mul_136297365408336ffffffffffffffff",
+    "ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+    "ptxas info    : Compile time = 14.051 ms",
+    "ptxas info    : Function properties for _Z21w_sqr_136297365407376ffff",
+    "ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+    "ptxas info    : Compile time = 2.095 ms",
+    "ptxas info    : Function properties for _Z21w_add_136297365406416ffffffff",
+    "ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+    "ptxas info    : Compile time = 2.382 ms",
+    "ptxas info    : Compiling entry function '_Z6k_qf_Cfffffffffii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE' for 'sm_86'",
+    "ptxas info    : Function properties for _Z6k_qf_Cfffffffffii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE",
+    "ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads",
+    "ptxas info    : Used 64 registers, used 0 barriers, 544 bytes cmem[0]",
+    "ptxas info    : Compile time = 53.160 ms",
+    "info    : 4 bytes gmem",
+    "info    : Function properties for '_Z6k_qf_Cfffffffffii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE':",
+    "info    : used 64 registers, used 14 barriers, 0 stack, 0 bytes smem, 544 bytes cmem[0], 0 bytes lmem"
+   ]
+  }
+ },
+ "nvJitLink -verbose -maxrregcount=32 dd/C sm_86": {
+  "ok": true,
+  "detail": [
+   "ptxas info    : Overriding maximum register limit 256 for '_Z6k_dd_Cdddddii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE' with  32 of maxrregcount option",
+   "ptxas info    : 0 bytes gmem",
+   "ptxas info    : Compiling entry function '_Z6k_dd_Cdddddii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE' for 'sm_86'",
+   "ptxas info    : Function properties for _Z6k_dd_Cdddddii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE",
+   "ptxas         .     152 bytes stack frame, 196 bytes spill stores, 212 bytes spill loads",
+   "ptxas info    : Used 32 registers, used 0 barriers, 544 bytes cmem[0], 8 bytes cmem[2]",
+   "ptxas info    : Compile time = 19.361 ms",
+   "info    : 4 bytes gmem",
+   "info    : Function properties for '_Z6k_dd_Cdddddii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE':",
+   "info    : used 32 registers, used 6 barriers, 152 stack, 0 bytes smem, 544 bytes cmem[0], 8 bytes cmem[2], 0 bytes lmem"
+  ]
+ },
+ "cuobjdump(wheel) --dump-resource-usage dd/C sm_86 cubin": {
+  "ok": true,
+  "detail": [
+   "Resource usage:",
+   "REG:58 STACK:0 SHARED:0 LOCAL:0 CONSTANT[2]:8 CONSTANT[0]:544 TEXTURE:0 SURFACE:0 SAMPLER:0"
+  ]
+ },
+ "nvdisasm(wheel) qf/C sm_120 cubin": {
+  "ok": true,
+  "detail": "1960 SASS lines"
+ },
+ "cuda.jit dispatcher .compile(sig) f32/A": {
+  "ok": true,
+  "detail": "compiled"
+ },
+ "cuda.jit(chip='sm_86') dispatcher .compile + inspect_asm f32/A": {
+  "ok": true,
+  "detail": "10478 chars"
+ },
+ "dispatcher.get_regs_per_thread() f32/A": {
+  "ok": true,
+  "detail": 20
+ },
+ "brotkit.backends.cuda.resource_usage f32/A + dd/C sm_86/100/120": {
+  "ok": false,
+  "error": "ModuleNotFoundError: No module named 'brotkit'",
+  "tb": "Traceback (most recent call last):\n  File \"/home/eoin/brotkit/spikes/S4_registers/q1_nogpu.py\", line 31, in deco\n    out = fn()\n  File \"/home/eoin/brotkit/spikes/S4_registers/q1_nogpu.py\", line 248, in _bk\n    from brotkit.backends.cuda import resource_usage\nModuleNotFoundError: No module named 'brotkit'\n"
+ }
+}

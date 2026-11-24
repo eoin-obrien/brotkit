@@ -1,0 +1,16 @@
+# Spike S4 (throwaway): register pressure, resource reporting, compiling without a GPU.
+# Never library code. Run from this directory; see README.md and docs/design/spikes/S4.md.
+[project]
+name = "s4-registers"
+version = "0"
+requires-python = ">=3.14"
+dependencies = [
+    "numba-cuda-mlir[cu13]==0.6.0",  # same exact pin as the root [cuda] extra (ADR-0005)
+    "cuda-toolkit[cuobjdump,nvdisasm]==13.5.0",  # SASS / resource dumps without a system toolkit
+    "numpy",
+    "mpmath",
+    "gmpy2",
+]
+
+[tool.uv]
+package = false

@@ -1,0 +1,38 @@
+[
+ {
+  "x": 32,
+  "y": 32,
+  "dd": 266,
+  "qf": 250,
+  "mpmath": 493,
+  "mpmath_at_dd_c": 280,
+  "mpmath_at_qf_c": 263
+ },
+ {
+  "x": 56,
+  "y": 35,
+  "dd": 211,
+  "qf": 212,
+  "mpmath": 211,
+  "mpmath_at_dd_c": 211,
+  "mpmath_at_qf_c": 212
+ },
+ {
+  "x": 39,
+  "y": 37,
+  "dd": 233,
+  "qf": 242,
+  "mpmath": 233,
+  "mpmath_at_dd_c": 233,
+  "mpmath_at_qf_c": 242
+ },
+ {
+  "x": 48,
+  "y": 44,
+  "dd": 229,
+  "qf": 232,
+  "mpmath": 229,
+  "mpmath_at_dd_c": 229,
+  "mpmath_at_qf_c": 232
+ }
+]

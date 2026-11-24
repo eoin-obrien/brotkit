@@ -1,0 +1,57 @@
+[guard q3 main] free VRAM 21798 MiB, free disk 24.0 GiB
+[guard qfb/C/default/256] free VRAM 21218 MiB, free disk 24.0 GiB
+qfb/C/default/256                            regs= 72 spill=0/0 occ=0.500     6.531 Giter/s  t=0.5554s mean_iter=437.28 clk=1875.0-1950.0 T=63
+[guard f32/A/default/128] free VRAM 21216 MiB, free disk 24.0 GiB
+f32/A/default/128                            regs= 20 spill=0/0 occ=1.000   998.234 Giter/s  t=0.0036s mean_iter=436.67 clk=2040-2040 T=60
+[guard f32/B/default/128] free VRAM 21216 MiB, free disk 24.0 GiB
+f32/B/default/128                            regs= 26 spill=0/0 occ=1.000   726.144 Giter/s  t=0.0050s mean_iter=436.67 clk=2040-2040 T=59
+[guard f32/C/default/128] free VRAM 21216 MiB, free disk 24.0 GiB
+f32/C/default/128                            regs= 34 spill=0/0 occ=1.000   535.617 Giter/s  t=0.0068s mean_iter=436.67 clk=2040-2040 T=61
+[guard f32/F6/default/128] free VRAM 21216 MiB, free disk 24.0 GiB
+f32/F6/default/128                           regs= 44 spill=0/0 occ=0.833   122.475 Giter/s  t=0.0296s mean_iter=436.69 clk=2040-2040 T=55
+[guard f32/S2/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+f32/S2/default/128                           regs= 40 spill=0/0 occ=1.000   130.256 Giter/s  t=0.0278s mean_iter=436.69 clk=2040-2040 T=64
+[guard df64/A/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+df64/A/default/128                           regs= 28 spill=0/0 occ=1.000   169.195 Giter/s  t=0.0214s mean_iter=437.28 clk=2040-2040 T=65
+[guard df64/B/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+df64/B/default/128                           regs= 37 spill=0/0 occ=1.000    87.204 Giter/s  t=0.0416s mean_iter=437.28 clk=2040-2040 T=61
+[guard df64/C/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+df64/C/default/128                           regs= 40 spill=0/0 occ=1.000    80.659 Giter/s  t=0.0450s mean_iter=437.28 clk=2010-2040 T=65
+[guard df64/F6/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+df64/F6/default/128                          regs= 54 spill=0/0 occ=0.750    52.142 Giter/s  t=0.0696s mean_iter=437.28 clk=2025-2025 T=67
+[guard df64/S2/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+df64/S2/default/128                          regs= 46 spill=0/0 occ=0.833    72.826 Giter/s  t=0.0498s mean_iter=437.28 clk=2025-2040 T=65
+[guard f64/A/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+f64/A/default/128                            regs= 25 spill=0/0 occ=1.000    29.020 Giter/s  t=0.1250s mean_iter=437.27 clk=2055-2055 T=55
+[guard f64/B/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+f64/B/default/128                            regs= 32 spill=0/0 occ=1.000    16.866 Giter/s  t=0.2150s mean_iter=437.27 clk=2055-2055 T=55
+[guard f64/C/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+f64/C/default/128                            regs= 34 spill=0/0 occ=1.000    14.527 Giter/s  t=0.2497s mean_iter=437.27 clk=2055-2055 T=54
+[guard f64/F6/default/128] free VRAM 21193 MiB, free disk 24.0 GiB
+f64/F6/default/128                           regs= 52 spill=0/0 occ=0.750    11.859 Giter/s  t=0.3059s mean_iter=437.27 clk=2055-2055 T=55
+[guard f64/S2/default/128] free VRAM 21192 MiB, free disk 24.0 GiB
+f64/S2/default/128                           regs= 45 spill=0/0 occ=0.833    16.754 Giter/s  t=0.2165s mean_iter=437.27 clk=2055-2055 T=55
+[guard dd/A/default/128] free VRAM 21192 MiB, free disk 24.0 GiB
+dd/A/default/128                             regs= 40 spill=0/0 occ=1.000     2.150 Giter/s  t=1.6870s mean_iter=437.27 clk=2055.0-2055.0 T=54.0
+[guard dd/B/default/128] free VRAM 21189 MiB, free disk 24.0 GiB
+dd/B/default/128                             regs= 58 spill=0/0 occ=0.667     1.171 Giter/s  t=3.0969s mean_iter=437.27 clk=2055.0-2055.0 T=55.0
+[guard dd/C/default/128] free VRAM 21189 MiB, free disk 24.0 GiB
+dd/C/default/128                             regs= 59 spill=0/0 occ=0.667     1.167 Giter/s  t=3.1079s mean_iter=437.27 clk=2055-2055 T=55.0
+[guard dd/F6/default/128] free VRAM 21200 MiB, free disk 24.0 GiB
+dd/F6/default/128                            regs= 72 spill=0/0 occ=0.583     1.175 Giter/s  t=3.0855s mean_iter=437.27 clk=2055-2055 T=55
+[guard dd/S2/default/128] free VRAM 21200 MiB, free disk 24.0 GiB
+dd/S2/default/128                            regs= 53 spill=0/0 occ=0.750     2.086 Giter/s  t=1.7383s mean_iter=437.27 clk=2055.0-2055.0 T=56.0
+[guard qf/A/default/128] free VRAM 21197 MiB, free disk 24.0 GiB
+qf/A/default/128                             regs= 47 spill=0/0 occ=0.833    26.680 Giter/s  t=0.1359s mean_iter=437.28 clk=2025-2040 T=65
+[guard qf/B/default/128] free VRAM 21197 MiB, free disk 24.0 GiB
+qf/B/default/128                             regs= 64 spill=0/0 occ=0.667    11.619 Giter/s  t=0.3122s mean_iter=437.28 clk=2025.0-2025.0 T=68.0
+[guard qf/C/default/128] free VRAM 21197 MiB, free disk 24.0 GiB
+qf/C/default/128                             regs= 64 spill=0/0 occ=0.667    11.510 Giter/s  t=0.3151s mean_iter=437.28 clk=2025.0-2040 T=68
+[guard qf/F6/default/128] free VRAM 21197 MiB, free disk 24.0 GiB
+qf/F6/default/128                            regs= 72 spill=0/0 occ=0.583    10.788 Giter/s  t=0.3362s mean_iter=437.28 clk=2025.0-2025.0 T=69
+[guard qf/S2/default/128] free VRAM 21197 MiB, free disk 24.0 GiB
+qf/S2/default/128                            regs= 60 spill=0/0 occ=0.667    22.233 Giter/s  t=0.1631s mean_iter=437.28 clk=2025-2025 T=66
+[guard f32rn/A/default/128] free VRAM 21197 MiB, free disk 24.0 GiB
+f32rn/A/default/128                          regs= 20 spill=0/0 occ=1.000   951.300 Giter/s  t=0.0038s mean_iter=436.67 clk=2040-2040 T=61
+[guard qfb/C/default/128] free VRAM 21197 MiB, free disk 24.0 GiB
+qfb/C/default/128                            regs= 72 spill=0/0 occ=0.583     6.859 Giter/s  t=0.5288s mean_iter=437.28 clk=1845-1875 T=67

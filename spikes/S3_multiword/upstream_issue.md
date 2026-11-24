@@ -1,4 +1,7 @@
-# DRAFT: not filed. For NVIDIA/numba-cuda-mlir; review before posting.
+# Draft for NVIDIA/numba-cuda-mlir
+
+Filed: problem 2 as [#486](https://github.com/NVIDIA/numba-cuda-mlir/issues/486), which also confirms problem 1 against the existing
+[#220](https://github.com/NVIDIA/numba-cuda-mlir/issues/220).
 
 **Title:** `fastmath=True` has no effect below sm_100, and FMA contraction can't be disabled
 

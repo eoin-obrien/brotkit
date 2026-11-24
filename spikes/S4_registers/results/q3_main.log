@@ -1,0 +1,14 @@
+f32/A/default/256                            regs= 20 spill=0/0 occ=1.000   963.492 Giter/s  t=0.0038s mean_iter=436.67 clk=2040-2040 T=62
+f32/B/default/256                            regs= 26 spill=0/0 occ=1.000   702.042 Giter/s  t=0.0052s mean_iter=436.67 clk=2055-2055 T=59
+f32/C/default/256                            regs= 34 spill=0/0 occ=1.000   522.866 Giter/s  t=0.0069s mean_iter=436.67 clk=2040-2055 T=60
+f32/F6/default/256                           regs= 44 spill=0/0 occ=0.833   119.503 Giter/s  t=0.0303s mean_iter=436.69 clk=2025-2040 T=66
+f32/S2/default/256                           regs= 40 spill=0/0 occ=1.000   133.095 Giter/s  t=0.0272s mean_iter=436.69 clk=2040-2040 T=65
+df64/A/default/256                           regs= 28 spill=0/0 occ=1.000   163.531 Giter/s  t=0.0222s mean_iter=437.28 clk=2025-2040 T=61
+df64/B/default/256                           regs= 37 spill=0/0 occ=1.000    82.306 Giter/s  t=0.0441s mean_iter=437.28 clk=2025-2025 T=66
+df64/C/default/256                           regs= 40 spill=0/0 occ=1.000    78.557 Giter/s  t=0.0462s mean_iter=437.28 clk=2025-2025 T=65
+df64/F6/default/256                          regs= 54 spill=0/0 occ=0.667    47.821 Giter/s  t=0.0759s mean_iter=437.28 clk=2040-2040 T=64
+df64/S2/default/256                          regs= 46 spill=0/0 occ=0.833    71.640 Giter/s  t=0.0506s mean_iter=437.28 clk=2040-2040 T=64
+f64/A/default/256                            regs= 25 spill=0/0 occ=1.000    27.683 Giter/s  t=0.1310s mean_iter=437.27 clk=2055-2055 T=54
+f64/B/default/256                            regs= 32 spill=0/0 occ=1.000    16.390 Giter/s  t=0.2213s mean_iter=437.27 clk=2055-2055 T=54.5
+PAUSED before f64/C/default/256: GPU busy (utilisation [0, 3, 10]%, memory used 3068 MiB, baseline 2483 MiB + ours ~916 MiB). Not measuring.
+exit=3

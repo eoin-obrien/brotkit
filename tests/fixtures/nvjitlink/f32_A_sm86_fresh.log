@@ -1,0 +1,9 @@
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z7k_f32_Afffii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE' for 'sm_86'
+ptxas info    : Function properties for _Z7k_f32_Afffii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE
+ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 20 registers, used 0 barriers, 520 bytes cmem[0]
+ptxas info    : Compile time = 7.155 ms
+info    : 4 bytes gmem
+info    : Function properties for '_Z7k_f32_Afffii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE':
+info    : used 20 registers, used 6 barriers, 0 stack, 0 bytes smem, 520 bytes cmem[0], 0 bytes lmem

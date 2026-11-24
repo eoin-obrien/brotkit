@@ -1,0 +1,4 @@
+# generated kernel modules and caches (spike S4)
+gen/
+probe/cache/
+probe/nvcache/

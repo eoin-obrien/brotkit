@@ -1,0 +1,18 @@
+[guard q3 main] free VRAM 21607 MiB, free disk 24.1 GiB
+[guard dd/F6/default/256] free VRAM 21130 MiB, free disk 24.1 GiB
+dd/F6/default/256                            regs= 72 spill=0/0 occ=0.500     1.137 Giter/s  t=3.1894s mean_iter=437.27 clk=2040.0-2040.0 T=61
+[guard dd/S2/default/256] free VRAM 21114 MiB, free disk 24.1 GiB
+dd/S2/default/256                            regs= 53 spill=0/0 occ=0.667     1.811 Giter/s  t=2.0022s mean_iter=437.27 clk=2040-2040 T=62
+[guard qf/A/default/256] free VRAM 21045 MiB, free disk 24.1 GiB
+qf/A/default/256                             regs= 47 spill=0/0 occ=0.833    24.867 Giter/s  t=0.1459s mean_iter=437.28 clk=2025.0-2025.0 T=72.5
+[guard qf/B/default/256] free VRAM 21091 MiB, free disk 24.1 GiB
+qf/B/default/256                             regs= 64 spill=0/0 occ=0.667    10.803 Giter/s  t=0.3357s mean_iter=437.28 clk=2010.0-2025.0 T=72.0
+[guard qf/C/default/256] free VRAM 21108 MiB, free disk 24.1 GiB
+qf/C/default/256                             regs= 64 spill=0/0 occ=0.667    10.822 Giter/s  t=0.3351s mean_iter=437.28 clk=2010.0-2025.0 T=72.0
+[guard qf/F6/default/256] free VRAM 21156 MiB, free disk 24.1 GiB
+qf/F6/default/256                            regs= 72 spill=0/0 occ=0.500    10.391 Giter/s  t=0.3491s mean_iter=437.28 clk=2010.0-2025.0 T=73.0
+[guard qf/S2/default/256] free VRAM 21210 MiB, free disk 24.1 GiB
+qf/S2/default/256                            regs= 60 spill=0/0 occ=0.667    20.598 Giter/s  t=0.1761s mean_iter=437.28 clk=2025-2025 T=70
+[guard f32rn/A/default/256] free VRAM 21008 MiB, free disk 24.1 GiB
+f32rn/A/default/256                          regs= 20 spill=0/0 occ=1.000   924.004 Giter/s  t=0.0039s mean_iter=436.67 clk=2040-2040 T=61
+PAUSED before qfb/C/default/256: GPU busy (utilisation [4, 5, 12, 10, 10, 10, 10, 11]%, memory used 3359 MiB, baseline 2710 MiB + ours ~916 MiB). Not measuring.

@@ -1,0 +1,126 @@
+sm_86/f32/Z              regs= 17 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f32/A              regs= 20 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f32/B              regs= 26 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f32/C              regs= 34 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f32/F6             regs= 44 spill=0/0 stack= 32 occ128=0.833 occ256=0.833
+sm_86/f32/S2             regs= 40 spill=0/0 stack= 32 occ128=1.000 occ256=1.000
+sm_86/f32rn/Z            regs= 18 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f32rn/A            regs= 20 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f32rn/B            regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f32rn/C            regs= 34 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f32rn/F6           regs= 44 spill=0/0 stack= 32 occ128=0.833 occ256=0.833
+sm_86/f32rn/S2           regs= 40 spill=0/0 stack= 32 occ128=1.000 occ256=1.000
+sm_86/f64/Z              regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f64/A              regs= 25 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f64/B              regs= 32 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f64/C              regs= 34 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/f64/F6             regs= 52 spill=0/0 stack= 32 occ128=0.750 occ256=0.667
+sm_86/f64/S2             regs= 45 spill=0/0 stack= 32 occ128=0.833 occ256=0.833
+sm_86/df64/Z             regs= 27 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/df64/A             regs= 28 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/df64/B             regs= 37 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/df64/C             regs= 40 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/df64/F6            regs= 54 spill=0/0 stack= 32 occ128=0.750 occ256=0.667
+sm_86/df64/S2            regs= 46 spill=0/0 stack= 32 occ128=0.833 occ256=0.833
+sm_86/dd/Z               regs= 36 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/dd/A               regs= 40 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_86/dd/B               regs= 58 spill=0/0 stack=  0 occ128=0.667 occ256=0.667
+sm_86/dd/C               regs= 59 spill=0/0 stack=  0 occ128=0.667 occ256=0.667
+sm_86/dd/F6              regs= 72 spill=0/0 stack= 32 occ128=0.583 occ256=0.500
+sm_86/dd/S2              regs= 53 spill=0/0 stack= 32 occ128=0.750 occ256=0.667
+sm_86/qf/Z               regs= 47 spill=0/0 stack=  0 occ128=0.833 occ256=0.833
+sm_86/qf/A               regs= 47 spill=0/0 stack=  0 occ128=0.833 occ256=0.833
+sm_86/qf/B               regs= 64 spill=0/0 stack=  0 occ128=0.667 occ256=0.667
+sm_86/qf/C               regs= 64 spill=0/0 stack=  0 occ128=0.667 occ256=0.667
+sm_86/qf/F6              regs= 72 spill=0/0 stack= 32 occ128=0.583 occ256=0.500
+sm_86/qf/S2              regs= 60 spill=0/0 stack= 32 occ128=0.667 occ256=0.667
+sm_86/qfb/Z              regs= 54 spill=0/0 stack= 16 occ128=0.750 occ256=0.667
+sm_86/qfb/A              regs= 55 spill=0/0 stack= 16 occ128=0.750 occ256=0.667
+sm_86/qfb/B              regs= 70 spill=0/0 stack=112 occ128=0.583 occ256=0.500
+sm_86/qfb/C              regs= 72 spill=0/0 stack=112 occ128=0.583 occ256=0.500
+sm_86/qfb/F6             regs= 77 spill=0/0 stack=128 occ128=0.500 occ256=0.500
+sm_86/qfb/S2             regs= 66 spill=0/0 stack= 40 occ128=0.583 occ256=0.500
+sm_100/f32/Z             regs= 18 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/f32/A             regs= 21 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/f32/B             regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/f32/C             regs= 34 spill=0/0 stack=  0 occ128=0.750 occ256=0.750
+sm_100/f32/F6            regs= 44 spill=0/0 stack= 32 occ128=0.625 occ256=0.625
+sm_100/f32/S2            regs= 40 spill=0/0 stack= 32 occ128=0.750 occ256=0.750
+sm_100/f32rn/Z           regs= 18 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/f32rn/A           regs= 21 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/f32rn/B           regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/f32rn/C           regs= 34 spill=0/0 stack=  0 occ128=0.750 occ256=0.750
+sm_100/f32rn/F6          regs= 44 spill=0/0 stack= 32 occ128=0.625 occ256=0.625
+sm_100/f32rn/S2          regs= 40 spill=0/0 stack= 32 occ128=0.750 occ256=0.750
+sm_100/f64/Z             regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/f64/A             regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/f64/B             regs= 31 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/f64/C             regs= 34 spill=0/0 stack=  0 occ128=0.750 occ256=0.750
+sm_100/f64/F6            regs= 56 spill=0/0 stack= 32 occ128=0.562 occ256=0.500
+sm_100/f64/S2            regs= 49 spill=0/0 stack= 32 occ128=0.562 occ256=0.500
+sm_100/df64/Z            regs= 27 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/df64/A            regs= 28 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_100/df64/B            regs= 38 spill=0/0 stack=  0 occ128=0.750 occ256=0.750
+sm_100/df64/C            regs= 40 spill=0/0 stack=  0 occ128=0.750 occ256=0.750
+sm_100/df64/F6           regs= 54 spill=0/0 stack= 32 occ128=0.562 occ256=0.500
+sm_100/df64/S2           regs= 48 spill=0/0 stack= 32 occ128=0.625 occ256=0.625
+sm_100/dd/Z              regs= 37 spill=0/0 stack=  0 occ128=0.750 occ256=0.750
+sm_100/dd/A              regs= 40 spill=0/0 stack=  0 occ128=0.750 occ256=0.750
+sm_100/dd/B              regs= 59 spill=0/0 stack=  0 occ128=0.500 occ256=0.500
+sm_100/dd/C              regs= 62 spill=0/0 stack=  0 occ128=0.500 occ256=0.500
+sm_100/dd/F6             regs= 71 spill=0/0 stack= 32 occ128=0.438 occ256=0.375
+sm_100/dd/S2             regs= 61 spill=0/0 stack= 32 occ128=0.500 occ256=0.500
+sm_100/qf/Z              regs= 48 spill=0/0 stack=  0 occ128=0.625 occ256=0.625
+sm_100/qf/A              regs= 48 spill=0/0 stack=  0 occ128=0.625 occ256=0.625
+sm_100/qf/B              regs= 64 spill=0/0 stack=  0 occ128=0.500 occ256=0.500
+sm_100/qf/C              regs= 64 spill=0/0 stack=  0 occ128=0.500 occ256=0.500
+sm_100/qf/F6             regs= 71 spill=0/0 stack= 32 occ128=0.438 occ256=0.375
+sm_100/qf/S2             regs= 58 spill=0/0 stack= 32 occ128=0.500 occ256=0.500
+sm_100/qfb/Z             regs= 53 spill=0/0 stack= 96 occ128=0.562 occ256=0.500
+sm_100/qfb/A             regs= 55 spill=0/0 stack= 96 occ128=0.562 occ256=0.500
+sm_100/qfb/B             regs= 64 spill=0/0 stack=208 occ128=0.500 occ256=0.500
+sm_100/qfb/C             regs= 64 spill=0/0 stack=208 occ128=0.500 occ256=0.500
+sm_100/qfb/F6            regs= 72 spill=0/0 stack=240 occ128=0.438 occ256=0.375
+sm_100/qfb/S2            regs= 66 spill=0/0 stack=128 occ128=0.438 occ256=0.375
+sm_120/f32/Z             regs= 20 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f32/A             regs= 22 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f32/B             regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f32/C             regs= 34 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f32/F6            regs= 45 spill=0/0 stack= 32 occ128=0.833 occ256=0.833
+sm_120/f32/S2            regs= 42 spill=0/0 stack= 32 occ128=0.833 occ256=0.833
+sm_120/f32rn/Z           regs= 18 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f32rn/A           regs= 22 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f32rn/B           regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f32rn/C           regs= 34 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f32rn/F6          regs= 45 spill=0/0 stack= 32 occ128=0.833 occ256=0.833
+sm_120/f32rn/S2          regs= 42 spill=0/0 stack= 32 occ128=0.833 occ256=0.833
+sm_120/f64/Z             regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f64/A             regs= 24 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f64/B             regs= 28 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f64/C             regs= 34 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/f64/F6            regs= 58 spill=0/0 stack= 32 occ128=0.667 occ256=0.667
+sm_120/f64/S2            regs= 50 spill=0/0 stack= 32 occ128=0.750 occ256=0.667
+sm_120/df64/Z            regs= 26 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/df64/A            regs= 27 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/df64/B            regs= 37 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/df64/C            regs= 40 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/df64/F6           regs= 56 spill=0/0 stack= 32 occ128=0.750 occ256=0.667
+sm_120/df64/S2           regs= 48 spill=0/0 stack= 32 occ128=0.833 occ256=0.833
+sm_120/dd/Z              regs= 36 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/dd/A              regs= 40 spill=0/0 stack=  0 occ128=1.000 occ256=1.000
+sm_120/dd/B              regs= 58 spill=0/0 stack=  0 occ128=0.667 occ256=0.667
+sm_120/dd/C              regs= 56 spill=0/0 stack=  0 occ128=0.750 occ256=0.667
+sm_120/dd/F6             regs= 72 spill=0/0 stack= 32 occ128=0.583 occ256=0.500
+sm_120/dd/S2             regs= 62 spill=0/0 stack= 32 occ128=0.667 occ256=0.667
+sm_120/qf/Z              regs= 46 spill=0/0 stack=  0 occ128=0.833 occ256=0.833
+sm_120/qf/A              regs= 46 spill=0/0 stack=  0 occ128=0.833 occ256=0.833
+sm_120/qf/B              regs= 63 spill=0/0 stack=  0 occ128=0.667 occ256=0.667
+sm_120/qf/C              regs= 71 spill=0/0 stack=  0 occ128=0.583 occ256=0.500
+sm_120/qf/F6             regs= 72 spill=0/0 stack= 32 occ128=0.583 occ256=0.500
+sm_120/qf/S2             regs= 63 spill=0/0 stack= 32 occ128=0.667 occ256=0.667
+sm_120/qfb/Z             regs= 55 spill=0/0 stack= 96 occ128=0.750 occ256=0.667
+sm_120/qfb/A             regs= 78 spill=0/0 stack=  0 occ128=0.500 occ256=0.500
+sm_120/qfb/B             regs= 70 spill=0/0 stack=208 occ128=0.583 occ256=0.500
+sm_120/qfb/C             regs= 64 spill=0/0 stack=208 occ128=0.667 occ256=0.667
+sm_120/qfb/F6            regs= 71 spill=0/0 stack=240 occ128=0.583 occ256=0.500
+sm_120/qfb/S2            regs= 64 spill=0/0 stack=128 occ128=0.667 occ256=0.667

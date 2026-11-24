@@ -1,0 +1,36 @@
+OK    env: {'CUDA_VISIBLE_DEVICES': None, '/dev/dxg': True, '/dev/nvidia0': False, '/usr/lib/wsl/lib': True, 'libcuda.so.1': True, 'nvidia-smi': '/usr/lib/wsl/lib/nvidia-s
+OK    import numba_cuda_mlir.cuda: 0.6.0
+OK    compile_ptx f32/A cc=86: 10478 chars, .target sm_86, restype=none
+OK    compile_ptx f32/A cc=100: 9645 chars, .target sm_100, restype=none
+OK    compile_ptx f32/A cc=120: 9650 chars, .target sm_120, restype=none
+OK    compile_ptx dd/C cc=86: 25543 chars, .target sm_86, restype=none
+OK    compile_ptx dd/C cc=100: 20922 chars, .target sm_100, restype=none
+OK    compile_ptx dd/C cc=120: 20922 chars, .target sm_120, restype=none
+OK    compile_ptx qf/C cc=86: 161497 chars, .target sm_86, restype=none
+OK    compile_ptx qf/C cc=100: 156807 chars, .target sm_100, restype=none
+OK    compile_ptx qf/C cc=120: 156807 chars, .target sm_120, restype=none
+OK    compile_ptx f32/A cc=None (current device): 10478 chars
+OK    compile_ptx dd/C cc=86 launch_bounds=(256, 2): ['.maxntid 256, 1, 1', '.minnctapersm 2']
+FAIL  cuda.compile output=ltoir f32/A cc=86: NotImplementedError: The C ABI is not supported for kernels
+FAIL  cuda.compile output=cubin f32/A cc=86: NotImplementedError: Unsupported output type: cubin
+OK    ptxas(wheel) -v f32/A sm_86: ['    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads', 'Used 20 registers, used 0 barriers, 520 bytes cmem[0]']
+OK    ptxas(wheel) -v f32/A sm_100: ['    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads', 'Used 21 registers, used 0 barriers']
+OK    ptxas(wheel) -v f32/A sm_120: ['    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads', 'Used 22 registers, used 0 barriers']
+OK    ptxas(wheel) -v dd/C sm_86: ['    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads', 'Used 58 registers, used 0 barriers, 544 bytes cmem[0], 8 bytes cmem[2]']
+OK    ptxas(wheel) -v dd/C sm_100: ['    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads', 'Used 62 registers, used 0 barriers']
+OK    ptxas(wheel) -v dd/C sm_120: ['    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads', 'Used 56 registers, used 0 barriers']
+OK    ptxas(wheel) -v qf/C sm_86: ['    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads', 'Used 64 registers, used 0 barriers, 544 bytes cmem[0]']
+OK    ptxas(wheel) -v qf/C sm_100: ['    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads', 'Used 64 registers, used 0 barriers']
+OK    ptxas(wheel) -v qf/C sm_120: ['    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads', 'Used 71 registers, used 0 barriers']
+OK    ptxas(wheel) -v -maxrregcount=32 dd/C sm_86: ['    144 bytes stack frame, 192 bytes spill stores, 208 bytes spill loads', 'Used 32 registers, used 0 barriers, 144 bytes cumulative stack size, 544 bytes cme
+OK    nvJitLink -verbose f32/A sm_86: {'cubin_bytes': 7584, 'info_log': ['info    : 4 bytes gmem', "info    : Function properties for '_Z7k_f32_Afffii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mu
+OK    nvJitLink -verbose dd/C sm_86: {'cubin_bytes': 17504, 'info_log': ['ptxas info    : 0 bytes gmem', "ptxas info    : Compiling entry function '_Z6k_dd_Cdddddii5ArrayIfLi3E1C7mutable7alignedE5A
+OK    nvJitLink -verbose qf/C sm_86: {'cubin_bytes': 37664, 'info_log': ['ptxas info    : 0 bytes gmem', 'ptxas info    : Function properties for _Z21w_mul_136297365407056ffffffff', 'ptxas
+OK    nvJitLink -verbose -maxrregcount=32 dd/C sm_86: ["ptxas info    : Overriding maximum register limit 256 for '_Z6k_dd_Cdddddii5ArrayIfLi3E1C7mutable7alignedE5ArrayIjLi3E1C7mutable7alignedE' with  32 of maxrreg
+OK    cuobjdump(wheel) --dump-resource-usage dd/C sm_86 cubin: ['Resource usage:', 'REG:58 STACK:0 SHARED:0 LOCAL:0 CONSTANT[2]:8 CONSTANT[0]:544 TEXTURE:0 SURFACE:0 SAMPLER:0']
+OK    nvdisasm(wheel) qf/C sm_120 cubin: 1960 SASS lines
+OK    cuda.jit dispatcher .compile(sig) f32/A: compiled
+OK    cuda.jit(chip='sm_86') dispatcher .compile + inspect_asm f32/A: 10478 chars
+OK    dispatcher.get_regs_per_thread() f32/A: 20
+FAIL  brotkit.backends.cuda.resource_usage f32/A + dd/C sm_86/100/120: ModuleNotFoundError: No module named 'brotkit'
+wrote results/q1_host.json

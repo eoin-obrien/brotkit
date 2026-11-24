@@ -1,0 +1,290 @@
+{
+ "df64/Z": {
+  "findings": 0,
+  "first": []
+ },
+ "df64/A": {
+  "findings": 0,
+  "first": []
+ },
+ "df64/B": {
+  "findings": 0,
+  "first": []
+ },
+ "df64/C": {
+  "findings": 0,
+  "first": []
+ },
+ "df64/F6": {
+  "findings": 0,
+  "first": []
+ },
+ "df64/S2": {
+  "findings": 0,
+  "first": []
+ },
+ "dd/Z": {
+  "findings": 0,
+  "first": []
+ },
+ "dd/A": {
+  "findings": 0,
+  "first": []
+ },
+ "dd/B": {
+  "findings": 0,
+  "first": []
+ },
+ "dd/C": {
+  "findings": 0,
+  "first": []
+ },
+ "dd/F6": {
+  "findings": 0,
+  "first": []
+ },
+ "dd/S2": {
+  "findings": 0,
+  "first": []
+ },
+ "qf/Z": {
+  "findings": 0,
+  "first": []
+ },
+ "qf/A": {
+  "findings": 0,
+  "first": []
+ },
+ "qf/B": {
+  "findings": 0,
+  "first": []
+ },
+ "qf/C": {
+  "findings": 0,
+  "first": []
+ },
+ "qf/F6": {
+  "findings": 0,
+  "first": []
+ },
+ "qf/S2": {
+  "findings": 0,
+  "first": []
+ },
+ "qfb/Z": {
+  "findings": 0,
+  "first": []
+ },
+ "qfb/A": {
+  "findings": 0,
+  "first": []
+ },
+ "qfb/B": {
+  "findings": 0,
+  "first": []
+ },
+ "qfb/C": {
+  "findings": 0,
+  "first": []
+ },
+ "qfb/F6": {
+  "findings": 0,
+  "first": []
+ },
+ "qfb/S2": {
+  "findings": 0,
+  "first": []
+ },
+ "f32/Z": {
+  "findings": 8,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f32/A": {
+  "findings": 11,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f32/B": {
+  "findings": 15,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f32/C": {
+  "findings": 20,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f32/F6": {
+  "findings": 32,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f32/S2": {
+  "findings": 20,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f64/Z": {
+  "findings": 8,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f64/A": {
+  "findings": 11,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f64/B": {
+  "findings": 15,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f64/C": {
+  "findings": 20,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f64/F6": {
+  "findings": 32,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f64/S2": {
+  "findings": 20,
+  "first": [
+   "line 27:11 in w_add(): bare float '+' in `a + b`",
+   "line 32:11 in w_sub(): bare float '-' in `a - b`"
+  ]
+ },
+ "f32rn/Z": {
+  "findings": 0,
+  "first": []
+ },
+ "f32rn/A": {
+  "findings": 0,
+  "first": []
+ },
+ "f32rn/B": {
+  "findings": 0,
+  "first": []
+ },
+ "f32rn/C": {
+  "findings": 0,
+  "first": []
+ },
+ "f32rn/F6": {
+  "findings": 0,
+  "first": []
+ },
+ "f32rn/S2": {
+  "findings": 0,
+  "first": []
+ },
+ "dd_naive/Z": {
+  "findings": 26,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "dd_naive/A": {
+  "findings": 29,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "dd_naive/B": {
+  "findings": 33,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "dd_naive/C": {
+  "findings": 38,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "dd_naive/F6": {
+  "findings": 50,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "dd_naive/S2": {
+  "findings": 38,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "qf_naive/Z": {
+  "findings": 48,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "qf_naive/A": {
+  "findings": 51,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "qf_naive/B": {
+  "findings": 55,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "qf_naive/C": {
+  "findings": 60,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "qf_naive/F6": {
+  "findings": 72,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ },
+ "qf_naive/S2": {
+  "findings": 60,
+  "first": [
+   "line 27:8 in two_sum(): bare float '+' in `a + b`",
+   "line 28:9 in two_sum(): bare float '-' in `s - a`"
+  ]
+ }
+}

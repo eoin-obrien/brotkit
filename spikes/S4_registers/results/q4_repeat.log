@@ -1,0 +1,13 @@
+waiting 20 s: PAUSED before f64/C/b: GPU busy (utilisation [8, 8, 6, 8, 14, 14, 11, 11]%, memory used 3413 MiB, baseline 2831 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f64/C/b: GPU busy (utilisation [12, 16, 26, 23, 19, 23, 18, 15]%, memory used 3410 MiB, baseline 2831 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f64/C/b: GPU busy (utilisation [14, 19, 12, 15, 18, 9, 22, 18]%, memory used 3362 MiB, baseline 2831 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f64/C/b: GPU busy (utilisation [4, 2, 4, 6, 14, 13, 9, 25]%, memory used 3510 MiB, baseline 2831 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f64/C/b: GPU busy (utilisation [12, 8, 10, 9, 8, 10, 7, 10]%, memory used 3454 MiB, baseline 2831 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f64/C/b: GPU busy (utilisation [6, 5, 6, 5, 4, 6, 6, 5]%, memory used 3339 MiB, baseline 2831 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f64/C/b: GPU busy (utilisation [8, 6, 6, 16, 9, 20, 8, 12]%, memory used 3468 MiB, baseline 2831 MiB + ours ~916 MiB). Not measuring.
+f64/C/{"max_registers": 64}          a=[14.557, 13.13, 13.198] b=[13.046, 13.21, 12.816] b/a=0.988
+dd/C/{"max_registers": 128}          a=[1.124, 1.128, 1.089] b=[1.181, 1.182, 1.182] b/a=1.052
+qf/C/{"max_registers": 128}          a=[11.268, 11.233, 11.492] b=[12.519, 12.621, 12.624] b/a=1.120
+qf/F6/{"max_registers": 128}         a=[10.888, 11.064, 10.902] b=[11.124, 11.193, 11.083] b/a=1.020
+dd/F6/{"max_registers": 64}          a=[1.177, 1.174, 1.176] b=[1.147, 1.101, 1.147] b/a=0.975
+df64/F6/{"max_registers": 32}        a=[53.542, 52.871, 52.766] b=[39.383, 39.23, 39.136] b/a=0.742

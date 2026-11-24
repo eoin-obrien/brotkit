@@ -1,0 +1,5077 @@
+[
+ {
+  "tier": "f32",
+  "kernel": "A",
+  "cap": null,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "A",
+  "cap": 32,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "A",
+  "cap": 64,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "A",
+  "cap": 96,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "A",
+  "cap": 128,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "B",
+  "cap": null,
+  "ours": {
+   "regs": 26,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 26,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "B",
+  "cap": 32,
+  "ours": {
+   "regs": 24,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 24,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "B",
+  "cap": 64,
+  "ours": {
+   "regs": 26,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 26,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "B",
+  "cap": 96,
+  "ours": {
+   "regs": 26,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 26,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "B",
+  "cap": 128,
+  "ours": {
+   "regs": 26,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 26,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "C",
+  "cap": null,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "C",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 32,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "C",
+  "cap": 64,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "C",
+  "cap": 96,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "C",
+  "cap": 128,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "F6",
+  "cap": null,
+  "ours": {
+   "regs": 44,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "F6",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 64,
+   "maxtpb": 1024,
+   "spill_st": 68,
+   "spill_ld": 56
+  },
+  "driver": {
+   "regs": 32,
+   "local": 64,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "F6",
+  "cap": 64,
+  "ours": {
+   "regs": 44,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "F6",
+  "cap": 96,
+  "ours": {
+   "regs": 44,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "F6",
+  "cap": 128,
+  "ours": {
+   "regs": 44,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "S2",
+  "cap": null,
+  "ours": {
+   "regs": 40,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "S2",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 48,
+   "maxtpb": 1024,
+   "spill_st": 12,
+   "spill_ld": 12
+  },
+  "driver": {
+   "regs": 32,
+   "local": 48,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "S2",
+  "cap": 64,
+  "ours": {
+   "regs": 40,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "S2",
+  "cap": 96,
+  "ours": {
+   "regs": 40,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32",
+  "kernel": "S2",
+  "cap": 128,
+  "ours": {
+   "regs": 40,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "A",
+  "cap": null,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "A",
+  "cap": 32,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "A",
+  "cap": 64,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "A",
+  "cap": 96,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "A",
+  "cap": 128,
+  "ours": {
+   "regs": 20,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 20,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "B",
+  "cap": null,
+  "ours": {
+   "regs": 24,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 24,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "B",
+  "cap": 32,
+  "ours": {
+   "regs": 24,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 24,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "B",
+  "cap": 64,
+  "ours": {
+   "regs": 24,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 24,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "B",
+  "cap": 96,
+  "ours": {
+   "regs": 24,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 24,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "B",
+  "cap": 128,
+  "ours": {
+   "regs": 24,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 24,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "C",
+  "cap": null,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "C",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 32,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "C",
+  "cap": 64,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "C",
+  "cap": 96,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "C",
+  "cap": 128,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "F6",
+  "cap": null,
+  "ours": {
+   "regs": 44,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "F6",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 64,
+   "maxtpb": 1024,
+   "spill_st": 68,
+   "spill_ld": 60
+  },
+  "driver": {
+   "regs": 32,
+   "local": 64,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "F6",
+  "cap": 64,
+  "ours": {
+   "regs": 44,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "F6",
+  "cap": 96,
+  "ours": {
+   "regs": 44,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "F6",
+  "cap": 128,
+  "ours": {
+   "regs": 44,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 44,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "S2",
+  "cap": null,
+  "ours": {
+   "regs": 40,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "S2",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 48,
+   "maxtpb": 1024,
+   "spill_st": 12,
+   "spill_ld": 12
+  },
+  "driver": {
+   "regs": 32,
+   "local": 48,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "S2",
+  "cap": 64,
+  "ours": {
+   "regs": 40,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "S2",
+  "cap": 96,
+  "ours": {
+   "regs": 40,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f32rn",
+  "kernel": "S2",
+  "cap": 128,
+  "ours": {
+   "regs": 40,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "A",
+  "cap": null,
+  "ours": {
+   "regs": 25,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 25,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "A",
+  "cap": 32,
+  "ours": {
+   "regs": 25,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 25,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "A",
+  "cap": 64,
+  "ours": {
+   "regs": 25,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 25,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "A",
+  "cap": 96,
+  "ours": {
+   "regs": 25,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 25,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "A",
+  "cap": 128,
+  "ours": {
+   "regs": 25,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 25,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "B",
+  "cap": null,
+  "ours": {
+   "regs": 32,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 32,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "B",
+  "cap": 32,
+  "ours": {
+   "regs": 28,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 28,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "B",
+  "cap": 64,
+  "ours": {
+   "regs": 32,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 32,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "B",
+  "cap": 96,
+  "ours": {
+   "regs": 32,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 32,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "B",
+  "cap": 128,
+  "ours": {
+   "regs": 32,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 32,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "C",
+  "cap": null,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "C",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 32,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "C",
+  "cap": 64,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "C",
+  "cap": 96,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "C",
+  "cap": 128,
+  "ours": {
+   "regs": 34,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 34,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "F6",
+  "cap": null,
+  "ours": {
+   "regs": 52,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 52,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "F6",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 96,
+   "maxtpb": 1024,
+   "spill_st": 100,
+   "spill_ld": 92
+  },
+  "driver": {
+   "regs": 32,
+   "local": 96,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "F6",
+  "cap": 64,
+  "ours": {
+   "regs": 52,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 52,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "F6",
+  "cap": 96,
+  "ours": {
+   "regs": 52,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 52,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "F6",
+  "cap": 128,
+  "ours": {
+   "regs": 52,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 52,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "S2",
+  "cap": null,
+  "ours": {
+   "regs": 45,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 45,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "S2",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 72,
+   "maxtpb": 1024,
+   "spill_st": 48,
+   "spill_ld": 40
+  },
+  "driver": {
+   "regs": 32,
+   "local": 72,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "S2",
+  "cap": 64,
+  "ours": {
+   "regs": 45,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 45,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "S2",
+  "cap": 96,
+  "ours": {
+   "regs": 45,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 45,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "f64",
+  "kernel": "S2",
+  "cap": 128,
+  "ours": {
+   "regs": 45,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 45,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "A",
+  "cap": null,
+  "ours": {
+   "regs": 28,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 28,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "A",
+  "cap": 32,
+  "ours": {
+   "regs": 30,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 30,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "A",
+  "cap": 64,
+  "ours": {
+   "regs": 28,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 28,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "A",
+  "cap": 96,
+  "ours": {
+   "regs": 28,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 28,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "A",
+  "cap": 128,
+  "ours": {
+   "regs": 28,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 28,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "B",
+  "cap": null,
+  "ours": {
+   "regs": 37,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 37,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "B",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 32,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "B",
+  "cap": 64,
+  "ours": {
+   "regs": 38,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 38,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "B",
+  "cap": 96,
+  "ours": {
+   "regs": 38,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 38,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "B",
+  "cap": 128,
+  "ours": {
+   "regs": 38,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 38,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "C",
+  "cap": null,
+  "ours": {
+   "regs": 40,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "C",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 8,
+   "maxtpb": 1024,
+   "spill_st": 4,
+   "spill_ld": 4
+  },
+  "driver": {
+   "regs": 32,
+   "local": 8,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "C",
+  "cap": 64,
+  "ours": {
+   "regs": 40,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "C",
+  "cap": 96,
+  "ours": {
+   "regs": 40,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "C",
+  "cap": 128,
+  "ours": {
+   "regs": 40,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "F6",
+  "cap": null,
+  "ours": {
+   "regs": 54,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 54,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "F6",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 104,
+   "maxtpb": 1024,
+   "spill_st": 136,
+   "spill_ld": 108
+  },
+  "driver": {
+   "regs": 32,
+   "local": 104,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "F6",
+  "cap": 64,
+  "ours": {
+   "regs": 54,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 54,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "F6",
+  "cap": 96,
+  "ours": {
+   "regs": 54,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 54,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "F6",
+  "cap": 128,
+  "ours": {
+   "regs": 54,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 54,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "S2",
+  "cap": null,
+  "ours": {
+   "regs": 46,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 46,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "S2",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 72,
+   "maxtpb": 1024,
+   "spill_st": 48,
+   "spill_ld": 44
+  },
+  "driver": {
+   "regs": 32,
+   "local": 72,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "S2",
+  "cap": 64,
+  "ours": {
+   "regs": 46,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 46,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "S2",
+  "cap": 96,
+  "ours": {
+   "regs": 46,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 46,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "df64",
+  "kernel": "S2",
+  "cap": 128,
+  "ours": {
+   "regs": 46,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 46,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "A",
+  "cap": null,
+  "ours": {
+   "regs": 40,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 40,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "A",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 16,
+   "maxtpb": 1024,
+   "spill_st": 16,
+   "spill_ld": 16
+  },
+  "driver": {
+   "regs": 32,
+   "local": 16,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "A",
+  "cap": 64,
+  "ours": {
+   "regs": 42,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 42,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "A",
+  "cap": 96,
+  "ours": {
+   "regs": 42,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 42,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "A",
+  "cap": 128,
+  "ours": {
+   "regs": 42,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 42,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "B",
+  "cap": null,
+  "ours": {
+   "regs": 58,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 58,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "B",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 136,
+   "maxtpb": 1024,
+   "spill_st": 176,
+   "spill_ld": 176
+  },
+  "driver": {
+   "regs": 32,
+   "local": 136,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "B",
+  "cap": 64,
+  "ours": {
+   "regs": 58,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 58,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "B",
+  "cap": 96,
+  "ours": {
+   "regs": 60,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 60,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "B",
+  "cap": 128,
+  "ours": {
+   "regs": 60,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 60,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "C",
+  "cap": null,
+  "ours": {
+   "regs": 59,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 59,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "C",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 152,
+   "maxtpb": 1024,
+   "spill_st": 196,
+   "spill_ld": 212
+  },
+  "driver": {
+   "regs": 32,
+   "local": 152,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "C",
+  "cap": 64,
+  "ours": {
+   "regs": 59,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 59,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "C",
+  "cap": 96,
+  "ours": {
+   "regs": 66,
+   "local": 0,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 66,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "C",
+  "cap": 128,
+  "ours": {
+   "regs": 66,
+   "local": 0,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 66,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "F6",
+  "cap": null,
+  "ours": {
+   "regs": 72,
+   "local": 32,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 72,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "F6",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 208,
+   "maxtpb": 1024,
+   "spill_st": 284,
+   "spill_ld": 300
+  },
+  "driver": {
+   "regs": 32,
+   "local": 208,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "F6",
+  "cap": 64,
+  "ours": {
+   "regs": 64,
+   "local": 40,
+   "maxtpb": 1024,
+   "spill_st": 16,
+   "spill_ld": 12
+  },
+  "driver": {
+   "regs": 64,
+   "local": 40,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "F6",
+  "cap": 96,
+  "ours": {
+   "regs": 72,
+   "local": 32,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 72,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "F6",
+  "cap": 128,
+  "ours": {
+   "regs": 72,
+   "local": 32,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 72,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "S2",
+  "cap": null,
+  "ours": {
+   "regs": 53,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 53,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "S2",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 96,
+   "maxtpb": 1024,
+   "spill_st": 100,
+   "spill_ld": 84
+  },
+  "driver": {
+   "regs": 32,
+   "local": 96,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "S2",
+  "cap": 64,
+  "ours": {
+   "regs": 53,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 53,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "S2",
+  "cap": 96,
+  "ours": {
+   "regs": 53,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 53,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "dd",
+  "kernel": "S2",
+  "cap": 128,
+  "ours": {
+   "regs": 53,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 53,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "A",
+  "cap": null,
+  "ours": {
+   "regs": 47,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 47,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 10,
+    "driver": 10
+   },
+   "256": {
+    "ours": 5,
+    "driver": 5
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "A",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 52,
+   "spill_ld": 52
+  },
+  "driver": {
+   "regs": 32,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "A",
+  "cap": 64,
+  "ours": {
+   "regs": 56,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 56,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "A",
+  "cap": 96,
+  "ours": {
+   "regs": 56,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 56,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "A",
+  "cap": 128,
+  "ours": {
+   "regs": 56,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 56,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "B",
+  "cap": null,
+  "ours": {
+   "regs": 64,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 64,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "B",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 152,
+   "maxtpb": 1024,
+   "spill_st": 336,
+   "spill_ld": 336
+  },
+  "driver": {
+   "regs": 32,
+   "local": 152,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "B",
+  "cap": 64,
+  "ours": {
+   "regs": 64,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 36,
+   "spill_ld": 36
+  },
+  "driver": {
+   "regs": 64,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "B",
+  "cap": 96,
+  "ours": {
+   "regs": 96,
+   "local": 0,
+   "maxtpb": 640,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 96,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 640
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 5,
+    "driver": 5
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "B",
+  "cap": 128,
+  "ours": {
+   "regs": 111,
+   "local": 0,
+   "maxtpb": 512,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 111,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 512
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 4,
+    "driver": 4
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "C",
+  "cap": null,
+  "ours": {
+   "regs": 64,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 64,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "C",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 160,
+   "maxtpb": 1024,
+   "spill_st": 364,
+   "spill_ld": 356
+  },
+  "driver": {
+   "regs": 32,
+   "local": 160,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "C",
+  "cap": 64,
+  "ours": {
+   "regs": 64,
+   "local": 0,
+   "maxtpb": 1024,
+   "spill_st": 36,
+   "spill_ld": 36
+  },
+  "driver": {
+   "regs": 64,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "C",
+  "cap": 96,
+  "ours": {
+   "regs": 96,
+   "local": 0,
+   "maxtpb": 640,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 96,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 640
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 5,
+    "driver": 5
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "C",
+  "cap": 128,
+  "ours": {
+   "regs": 117,
+   "local": 0,
+   "maxtpb": 512,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 117,
+   "local": 0,
+   "shared": 0,
+   "maxtpb": 512
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 4,
+    "driver": 4
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "F6",
+  "cap": null,
+  "ours": {
+   "regs": 72,
+   "local": 32,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 72,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "F6",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 216,
+   "maxtpb": 1024,
+   "spill_st": 448,
+   "spill_ld": 444
+  },
+  "driver": {
+   "regs": 32,
+   "local": 216,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "F6",
+  "cap": 64,
+  "ours": {
+   "regs": 64,
+   "local": 48,
+   "maxtpb": 1024,
+   "spill_st": 56,
+   "spill_ld": 48
+  },
+  "driver": {
+   "regs": 64,
+   "local": 48,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "F6",
+  "cap": 96,
+  "ours": {
+   "regs": 96,
+   "local": 32,
+   "maxtpb": 640,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 96,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 640
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 5,
+    "driver": 5
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "F6",
+  "cap": 128,
+  "ours": {
+   "regs": 118,
+   "local": 32,
+   "maxtpb": 512,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 118,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 512
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 4,
+    "driver": 4
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "S2",
+  "cap": null,
+  "ours": {
+   "regs": 60,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 60,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "S2",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 128,
+   "maxtpb": 1024,
+   "spill_st": 172,
+   "spill_ld": 156
+  },
+  "driver": {
+   "regs": 32,
+   "local": 128,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "S2",
+  "cap": 64,
+  "ours": {
+   "regs": 63,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 63,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "S2",
+  "cap": 96,
+  "ours": {
+   "regs": 64,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 64,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qf",
+  "kernel": "S2",
+  "cap": 128,
+  "ours": {
+   "regs": 64,
+   "local": 32,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 64,
+   "local": 32,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "A",
+  "cap": null,
+  "ours": {
+   "regs": 55,
+   "local": 16,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 55,
+   "local": 16,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "A",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 112,
+   "maxtpb": 1024,
+   "spill_st": 276,
+   "spill_ld": 192
+  },
+  "driver": {
+   "regs": 32,
+   "local": 112,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "A",
+  "cap": 64,
+  "ours": {
+   "regs": 56,
+   "local": 16,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 56,
+   "local": 16,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "A",
+  "cap": 96,
+  "ours": {
+   "regs": 56,
+   "local": 16,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 56,
+   "local": 16,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "A",
+  "cap": 128,
+  "ours": {
+   "regs": 56,
+   "local": 16,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 56,
+   "local": 16,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 9,
+    "driver": 9
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "B",
+  "cap": null,
+  "ours": {
+   "regs": 70,
+   "local": 112,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 70,
+   "local": 112,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "B",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 312,
+   "maxtpb": 1024,
+   "spill_st": 896,
+   "spill_ld": 884
+  },
+  "driver": {
+   "regs": 32,
+   "local": 312,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "B",
+  "cap": 64,
+  "ours": {
+   "regs": 64,
+   "local": 136,
+   "maxtpb": 1024,
+   "spill_st": 68,
+   "spill_ld": 48
+  },
+  "driver": {
+   "regs": 64,
+   "local": 136,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "B",
+  "cap": 96,
+  "ours": {
+   "regs": 83,
+   "local": 112,
+   "maxtpb": 640,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 83,
+   "local": 112,
+   "shared": 0,
+   "maxtpb": 640
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 5,
+    "driver": 5
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "B",
+  "cap": 128,
+  "ours": {
+   "regs": 83,
+   "local": 112,
+   "maxtpb": 640,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 83,
+   "local": 112,
+   "shared": 0,
+   "maxtpb": 640
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 5,
+    "driver": 5
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "C",
+  "cap": null,
+  "ours": {
+   "regs": 72,
+   "local": 112,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 72,
+   "local": 112,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "C",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 328,
+   "maxtpb": 1024,
+   "spill_st": 952,
+   "spill_ld": 924
+  },
+  "driver": {
+   "regs": 32,
+   "local": 328,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "C",
+  "cap": 64,
+  "ours": {
+   "regs": 64,
+   "local": 144,
+   "maxtpb": 1024,
+   "spill_st": 84,
+   "spill_ld": 60
+  },
+  "driver": {
+   "regs": 64,
+   "local": 144,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "C",
+  "cap": 96,
+  "ours": {
+   "regs": 86,
+   "local": 112,
+   "maxtpb": 640,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 86,
+   "local": 112,
+   "shared": 0,
+   "maxtpb": 640
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 5,
+    "driver": 5
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "C",
+  "cap": 128,
+  "ours": {
+   "regs": 86,
+   "local": 112,
+   "maxtpb": 640,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 86,
+   "local": 112,
+   "shared": 0,
+   "maxtpb": 640
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 5,
+    "driver": 5
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "F6",
+  "cap": null,
+  "ours": {
+   "regs": 77,
+   "local": 128,
+   "maxtpb": 768,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 77,
+   "local": 128,
+   "shared": 0,
+   "maxtpb": 768
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 6,
+    "driver": 6
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "F6",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 344,
+   "maxtpb": 1024,
+   "spill_st": 924,
+   "spill_ld": 796
+  },
+  "driver": {
+   "regs": 32,
+   "local": 344,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "F6",
+  "cap": 64,
+  "ours": {
+   "regs": 64,
+   "local": 168,
+   "maxtpb": 1024,
+   "spill_st": 116,
+   "spill_ld": 76
+  },
+  "driver": {
+   "regs": 64,
+   "local": 168,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "F6",
+  "cap": 96,
+  "ours": {
+   "regs": 86,
+   "local": 128,
+   "maxtpb": 640,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 86,
+   "local": 128,
+   "shared": 0,
+   "maxtpb": 640
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 5,
+    "driver": 5
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "F6",
+  "cap": 128,
+  "ours": {
+   "regs": 86,
+   "local": 128,
+   "maxtpb": 640,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 86,
+   "local": 128,
+   "shared": 0,
+   "maxtpb": 640
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 5,
+    "driver": 5
+   },
+   "256": {
+    "ours": 2,
+    "driver": 2
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "S2",
+  "cap": null,
+  "ours": {
+   "regs": 66,
+   "local": 40,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 66,
+   "local": 40,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "S2",
+  "cap": 32,
+  "ours": {
+   "regs": 32,
+   "local": 168,
+   "maxtpb": 1024,
+   "spill_st": 424,
+   "spill_ld": 320
+  },
+  "driver": {
+   "regs": 32,
+   "local": 168,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 12,
+    "driver": 12
+   },
+   "256": {
+    "ours": 6,
+    "driver": 6
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "S2",
+  "cap": 64,
+  "ours": {
+   "regs": 64,
+   "local": 40,
+   "maxtpb": 1024,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 64,
+   "local": 40,
+   "shared": 0,
+   "maxtpb": 1024
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 8,
+    "driver": 8
+   },
+   "256": {
+    "ours": 4,
+    "driver": 4
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "S2",
+  "cap": 96,
+  "ours": {
+   "regs": 66,
+   "local": 40,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 66,
+   "local": 40,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ },
+ {
+  "tier": "qfb",
+  "kernel": "S2",
+  "cap": 128,
+  "ours": {
+   "regs": 66,
+   "local": 40,
+   "maxtpb": 896,
+   "spill_st": 0,
+   "spill_ld": 0
+  },
+  "driver": {
+   "regs": 66,
+   "local": 40,
+   "shared": 0,
+   "maxtpb": 896
+  },
+  "blocks_per_sm": {
+   "128": {
+    "ours": 7,
+    "driver": 7
+   },
+   "256": {
+    "ours": 3,
+    "driver": 3
+   }
+  },
+  "match": true
+ }
+]
