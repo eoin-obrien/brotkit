@@ -1,0 +1,219 @@
+{
+ "u": "2^-96",
+ "n_eft_base": 1000000,
+ "n_comp": 200000,
+ "eft": [
+  {
+   "op": "two_sum",
+   "group": "uniform",
+   "n": 300000,
+   "failures": 0
+  },
+  {
+   "op": "two_sum",
+   "group": "mixed",
+   "n": 300000,
+   "failures": 0
+  },
+  {
+   "op": "two_sum",
+   "group": "cancel",
+   "n": 200000,
+   "failures": 0
+  },
+  {
+   "op": "two_sum",
+   "group": "subnormal",
+   "n": 200000,
+   "failures": 0
+  },
+  {
+   "op": "fast_two_sum",
+   "group": "uniform",
+   "n": 300000,
+   "failures": 0
+  },
+  {
+   "op": "fast_two_sum",
+   "group": "mixed",
+   "n": 300000,
+   "failures": 0
+  },
+  {
+   "op": "fast_two_sum",
+   "group": "cancel",
+   "n": 200000,
+   "failures": 0
+  },
+  {
+   "op": "fast_two_sum",
+   "group": "subnormal",
+   "n": 200000,
+   "failures": 0
+  },
+  {
+   "op": "two_prod",
+   "group": "uniform",
+   "n": 300000,
+   "in_domain": 300000,
+   "failures_in_domain": 0,
+   "inexact_out_of_domain": 0
+  },
+  {
+   "op": "two_prod",
+   "group": "mixed",
+   "n": 300000,
+   "in_domain": 300000,
+   "failures_in_domain": 0,
+   "inexact_out_of_domain": 0
+  },
+  {
+   "op": "two_prod",
+   "group": "cancel",
+   "n": 200000,
+   "in_domain": 200000,
+   "failures_in_domain": 0,
+   "inexact_out_of_domain": 0
+  },
+  {
+   "op": "two_prod",
+   "group": "subnormal",
+   "n": 200000,
+   "in_domain": 0,
+   "failures_in_domain": 0,
+   "inexact_out_of_domain": 200000
+  },
+  {
+   "op": "two_prod",
+   "group": "prod_edge",
+   "n": 200000,
+   "in_domain": 118941,
+   "failures_in_domain": 0,
+   "inexact_out_of_domain": 77974
+  }
+ ],
+ "composite": [
+  {
+   "tier": "qf",
+   "op": "add",
+   "n": 200000,
+   "max_u": 0.12428901088234387,
+   "median_u": 0.003416237964950777,
+   "p99_u": 0.0890250981917916,
+   "over_16u": 0,
+   "normwise_max_u": 0.12389657078228117,
+   "normwise_p99_u": 0.07701625131913042
+  },
+  {
+   "tier": "qf",
+   "op": "add_cancel",
+   "n": 200000,
+   "max_u": 0.12483152503995877,
+   "median_u": 0.0,
+   "p99_u": 0.07601833330208986,
+   "over_16u": 0,
+   "normwise_max_u": 0.124193963363184,
+   "normwise_p99_u": 0.06270426675897858
+  },
+  {
+   "tier": "qf",
+   "op": "mul",
+   "n": 200000,
+   "max_u": 3.735415106947231,
+   "median_u": 0.07751781269481957,
+   "p99_u": 0.8172753430761327,
+   "over_16u": 0
+  },
+  {
+   "tier": "qf",
+   "op": "sqr",
+   "n": 200000,
+   "max_u": 1.328081852510539,
+   "median_u": 0.030353936218889224,
+   "p99_u": 0.48574272928100554,
+   "over_16u": 0
+  },
+  {
+   "tier": "qf",
+   "op": "cmul",
+   "n": 200000,
+   "max_u": 3.0579712392030514,
+   "median_u": 0.10826863801134341,
+   "p99_u": 0.7207564570655502,
+   "over_16u": 0
+  },
+  {
+   "tier": "qfb",
+   "op": "add",
+   "n": 200000,
+   "max_u": 0.12428901088234387,
+   "median_u": 0.003416237964950777,
+   "p99_u": 0.0890250981917916,
+   "over_16u": 0,
+   "normwise_max_u": 0.12389657078228117,
+   "normwise_p99_u": 0.07701625131913042
+  },
+  {
+   "tier": "qfb",
+   "op": "add_cancel",
+   "n": 200000,
+   "max_u": 0.12483152503995877,
+   "median_u": 0.0,
+   "p99_u": 0.07601833330208986,
+   "over_16u": 0,
+   "normwise_max_u": 0.124193963363184,
+   "normwise_p99_u": 0.06270426675897858
+  },
+  {
+   "tier": "qfb",
+   "op": "mul",
+   "n": 200000,
+   "max_u": 3.735415106947231,
+   "median_u": 0.07751781269481957,
+   "p99_u": 0.8172753430761327,
+   "over_16u": 0
+  },
+  {
+   "tier": "qfb",
+   "op": "sqr",
+   "n": 200000,
+   "max_u": 1.328081852510539,
+   "median_u": 0.030353936218889224,
+   "p99_u": 0.48574272928100554,
+   "over_16u": 0
+  },
+  {
+   "tier": "qfb",
+   "op": "cmul",
+   "n": 200000,
+   "max_u": 3.0579712392030514,
+   "median_u": 0.10826863801134341,
+   "p99_u": 0.7207564570655502,
+   "over_16u": 0
+  }
+ ],
+ "deep": {
+  "qf_vs_dd": {
+   "identical": 4092,
+   "of": 4096,
+   "count_range": [
+    152,
+    250
+   ],
+   "distinct": 51
+  },
+  "qfb_vs_dd": {
+   "identical": 4092,
+   "of": 4096,
+   "count_range": [
+    152,
+    250
+   ],
+   "distinct": 51
+  },
+  "dd_count_range": [
+   152,
+   266
+  ]
+ }
+}

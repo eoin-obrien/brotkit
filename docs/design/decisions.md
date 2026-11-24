@@ -296,3 +296,68 @@ reassociation by default, and PTX/SASS inspection. All four pass.
   - the precision-tier note on AUTO and dd-vs-qf
   - the `Precision.fastmath_allowed` comment
 - **Agent rules:** the codegen `AGENTS.md` and root `AGENTS.md` invariant 4.
+
+## ADR-0007: Resource numbers come from nvJitLink; fuse features, split only on spills
+
+- **Status:** Proposed
+- **Date:** 2026-11-24
+- **Backlog:** S4 (completes the ADR-0005 gate; affects 1.3, 1.4, 0.3 and the phase 2
+  precision work)
+
+### Context
+Spec architecture-review item 3 ("Register pressure from fused features") says to report
+registers per thread from the compiled kernel and, above a threshold, split a render into two
+launches. The CI row says CPU CI adds a compile-only check if `numba-cuda-mlir` can compile to
+PTX with no GPU. ADR-0005 made S4 confirm on `numba-cuda-mlir` that register reporting works.
+Spike S4 ([`spikes/S4.md`](spikes/S4.md)) found on `numba-cuda-mlir` 0.6.0:
+
+- **Reporting works, through nvJitLink.** Compiling to PTX for a target cc and linking it with
+  nvJitLink (`-verbose -Xptxas=-v`, plus `-maxrregcount` for a cap) gives the driver's exact
+  registers, local memory, shared memory and max threads per block: 175 of 175
+  configurations on sm_86. Standalone `ptxas -v` is wrong in 18 of 35 kernels because it
+  ignores called subroutines. The driver's getters don't report spills and need a device.
+- **No tier spills.** f32, f64, df64, dd and a qf prototype, with 1 to 6 fused features, use
+  20–72 registers with zero spills on sm_86, sm_100 and sm_120. The fused 6-feature kernel is
+  13–71% faster than the same work split into two 3-feature passes, because a split re-runs
+  the escape loop.
+- **Caps don't pay below the default allocation.** Forcing occupancy up with
+  `max_registers` costs 3–70% once it spills. A loose cap (128) lets ptxas use more registers
+  than its default and speeds qf up 12%. `max_registers` applies per kernel and works on both
+  of numba-cuda-mlir's code paths. Its `cache=True` key ignores it.
+- **No PTX without a device.** `compile_ptx(..., cc=...)` creates a CUDA context, so hosted CI
+  can't compile kernels. Upstream issue drafted (`spikes/S4_registers/upstream_issue.md`).
+
+### Decision
+- **`brotkit.backends.cuda.resource_usage(kernel, signature, cc)` is the one source of
+  resource numbers.** It returns a frozen `ResourceUsage` (registers, spill bytes, stack,
+  static shared memory, max threads per block). `brotkit.backends.resources` turns that into
+  occupancy in pure Python, with per-architecture limit tables, and imports nothing from the
+  GPU stack. `CompiledKernel` gets its resource fields from here, not from the driver getters.
+- **Kernels are fused by default; the automatic split triggers on spills, not on a threshold.**
+  A render splits into core + orbit-statistics launches only when `resource_usage` reports
+  spills at the default build, and only if the split timing is faster. S4 found no such kernel
+  up to six features, so the split path isn't needed for phase 1.
+- **No default register cap.** Never cap a kernel below its default register count. qf starts
+  at `max_registers=128`, to be re-measured when qf lands (phase 2) and on another
+  architecture. Don't combine `cache=True` with a varying `max_registers` until upstream fixes
+  the cache key. brotkit's own kernel cache must include the cap in its key.
+- **CI:** PTX snapshot and resource tests are marked `gpu` until `compile_ptx` works without a
+  device. CPU CI runs `brotkit.codegen.checks.find_bare_float_ops` over generated multi-word
+  source. It's an AST heuristic for ADR-0006, and the PTX check remains authoritative.
+
+### Consequences
+- **ADR-0005's gate is met:** PTX inspection (S3) and register reporting (S4) both work on
+  `numba-cuda-mlir`.
+- Resource numbers need only `compile_ptx` + nvJitLink, so when upstream drops the host-cc
+  lookup they work on hosted CI unchanged. Exit condition for the `gpu` marker on
+  `tests/test_cuda_ptx.py`: a `numba-cuda-mlir` release where `compile_ptx(cc=...)` works with
+  `CUDA_VISIBLE_DEVICES=""`. The dispatcher-comparison test stays GPU-only.
+- **Every resource query costs one more compile and link per kernel.** It happens only when the
+  recipe changes, since results are cached with the kernel.
+- `resource_usage` salts the PTX with a comment, because nvJitLink's compute cache otherwise
+  drops the spill lines. The parser refuses a log without them rather than report zero.
+- **Spec edits** (by the maintainer, mirroring S4):
+  - architecture-review item 3: split on spills, threshold above six features
+  - the CI row: no compile-only CPU check yet
+  - the Toolchain bullet on the S4 gate
+  - the precision-tier note on qf vs dd: qf measured at 9–12× dd on an RTX 3090 Ti

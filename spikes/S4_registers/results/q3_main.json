@@ -1,0 +1,3146 @@
+{
+ "_env": {
+  "gpu": [
+   "NVIDIA GeForce RTX 3090 Ti",
+   "610.88",
+   "2115",
+   "480.00"
+  ],
+  "view": {
+   "centre": [
+    -0.743643887037151,
+    0.13182590420533
+   ],
+   "width": 0.05,
+   "W": 3840,
+   "H": 2160,
+   "max_iter": 1000
+  },
+  "method": "median of 5 renders after warm-up; Giter/s = sum(n)/time"
+ },
+ "f32/A/default/256": {
+  "tier": "f32",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 256,
+  "regs": 20,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 1,
+   "mem_used_mib": 3062,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.00376,
+  "seconds_all": [
+   0.0038,
+   0.00376,
+   0.00375,
+   0.00374,
+   0.00378
+  ],
+  "reps_per_run": 52,
+  "pixel_iterations": 3621927974,
+  "giter_s": 963.492,
+  "mean_iter": 436.67,
+  "interior_frac": 0.3958,
+  "band_rows": 2144,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   61,
+   61,
+   61,
+   62,
+   62
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f32/B/default/256": {
+  "tier": "f32",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 256,
+  "regs": 26,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "mem_used_mib": 3064,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.00516,
+  "seconds_all": [
+   0.00522,
+   0.00534,
+   0.00506,
+   0.00516,
+   0.00512
+  ],
+  "reps_per_run": 6,
+  "pixel_iterations": 3621927974,
+  "giter_s": 702.042,
+  "mean_iter": 436.67,
+  "interior_frac": 0.3958,
+  "band_rows": 2144,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2055,
+   2055,
+   2055
+  ],
+  "temp_c": [
+   48,
+   48,
+   48,
+   59,
+   59
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f32/C/default/256": {
+  "tier": "f32",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 34,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "mem_used_mib": 3064,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.00693,
+  "seconds_all": [
+   0.00681,
+   0.00696,
+   0.00759,
+   0.00669,
+   0.00693
+  ],
+  "reps_per_run": 4,
+  "pixel_iterations": 3621927974,
+  "giter_s": 522.866,
+  "mean_iter": 436.67,
+  "interior_frac": 0.3958,
+  "band_rows": 2144,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   60,
+   60,
+   60,
+   60,
+   60
+  ],
+  "clock_spread": 0.0073,
+  "clock_flag": false
+ },
+ "f32/F6/default/256": {
+  "tier": "f32",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 256,
+  "regs": 44,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.8333,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 2,
+   "mem_used_mib": 3046,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.03031,
+  "seconds_all": [
+   0.03018,
+   0.03042,
+   0.03027,
+   0.03062,
+   0.03031
+  ],
+  "reps_per_run": 2,
+  "pixel_iterations": 3622068488,
+  "giter_s": 119.503,
+  "mean_iter": 436.69,
+  "interior_frac": 0.3958,
+  "band_rows": 1184,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2025
+  ],
+  "temp_c": [
+   64,
+   64,
+   64,
+   64,
+   66
+  ],
+  "clock_spread": 0.0074,
+  "clock_flag": false
+ },
+ "f32/S2/default/256": {
+  "tier": "f32",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 40,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "mem_used_mib": 3044,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.02721,
+  "seconds_all": [
+   0.02684,
+   0.02729,
+   0.02721,
+   0.02827,
+   0.0268
+  ],
+  "reps_per_run": 2,
+  "pixel_iterations": 3622068488,
+  "giter_s": 133.095,
+  "mean_iter": 436.69,
+  "interior_frac": 0.3958,
+  "band_rows": 1312,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   59,
+   59,
+   59,
+   65,
+   65
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "df64/A/default/256": {
+  "tier": "df64",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 256,
+  "regs": 28,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "mem_used_mib": 3083,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.02218,
+  "seconds_all": [
+   0.02235,
+   0.02218,
+   0.02146,
+   0.02214,
+   0.0225
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626977890,
+  "giter_s": 163.531,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 1440,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2025,
+   2025
+  ],
+  "temp_c": [
+   61,
+   61,
+   61,
+   61,
+   61
+  ],
+  "clock_spread": 0.0074,
+  "clock_flag": false
+ },
+ "df64/B/default/256": {
+  "tier": "df64",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 256,
+  "regs": 37,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "mem_used_mib": 3034,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.04407,
+  "seconds_all": [
+   0.04504,
+   0.04371,
+   0.04407,
+   0.04523,
+   0.04381
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626977890,
+  "giter_s": 82.306,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 608,
+  "launches": 4,
+  "sm_clock_mhz": [
+   2025,
+   2025,
+   2025,
+   2025,
+   2025
+  ],
+  "temp_c": [
+   63,
+   63,
+   63,
+   63,
+   66
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "df64/C/default/256": {
+  "tier": "df64",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 40,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "mem_used_mib": 3034,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.04617,
+  "seconds_all": [
+   0.04645,
+   0.04596,
+   0.04565,
+   0.04617,
+   0.04636
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626977890,
+  "giter_s": 78.557,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 736,
+  "launches": 3,
+  "sm_clock_mhz": [
+   2025,
+   2025,
+   2025,
+   2025,
+   2025
+  ],
+  "temp_c": [
+   61,
+   61,
+   61,
+   61,
+   65
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "df64/F6/default/256": {
+  "tier": "df64",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 256,
+  "regs": 54,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "mem_used_mib": 3034,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.07585,
+  "seconds_all": [
+   0.07132,
+   0.06979,
+   0.09174,
+   0.07587,
+   0.07585
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626977890,
+  "giter_s": 47.821,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 480,
+  "launches": 5,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   64,
+   64,
+   64,
+   64,
+   64
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "df64/S2/default/256": {
+  "tier": "df64",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 46,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.8333,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "mem_used_mib": 3034,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.05063,
+  "seconds_all": [
+   0.05112,
+   0.05063,
+   0.04992,
+   0.05094,
+   0.05015
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626977890,
+  "giter_s": 71.64,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 704,
+  "launches": 4,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   64,
+   64,
+   64,
+   64,
+   64
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f64/A/default/256": {
+  "tier": "f64",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 256,
+  "regs": 25,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "mem_used_mib": 3034,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.13102,
+  "seconds_all": [
+   0.12941,
+   0.12905,
+   0.13517,
+   0.13545,
+   0.13102
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626893426,
+  "giter_s": 27.683,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 320,
+  "launches": 7,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2055,
+   2055,
+   2055
+  ],
+  "temp_c": [
+   54,
+   54,
+   54,
+   54,
+   54
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f64/B/default/256": {
+  "tier": "f64",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 256,
+  "regs": 32,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 1,
+   "mem_used_mib": 3105,
+   "baseline_mib": 2483
+  },
+  "seconds_median": 0.22128,
+  "seconds_all": [
+   0.22246,
+   0.22128,
+   0.22102,
+   0.22215,
+   0.22091
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626893426,
+  "giter_s": 16.39,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 224,
+  "launches": 10,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2055,
+   2055,
+   2055.0
+  ],
+  "temp_c": [
+   54,
+   54,
+   54,
+   54,
+   54.5
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f64/C/default/256": {
+  "tier": "f64",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 34,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 2,
+   "mem_used_mib": 2932,
+   "baseline_mib": 2333
+  },
+  "seconds_median": 0.23103,
+  "seconds_all": [
+   0.24233,
+   0.23103,
+   0.22756,
+   0.23174,
+   0.22971
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626893426,
+  "giter_s": 15.699,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 1440,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040.0,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   49,
+   49.5,
+   50,
+   50,
+   50
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f64/F6/default/256": {
+  "tier": "f64",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 256,
+  "regs": 52,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 1,
+   "util_median": 1.0,
+   "util_samples": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1
+   ],
+   "mem_used_mib": 2985,
+   "baseline_mib": 2434
+  },
+  "seconds_median": 0.28583,
+  "seconds_all": [
+   0.2838,
+   0.28924,
+   0.28561,
+   0.28779,
+   0.28583
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626906230,
+  "giter_s": 12.689,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 1152,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2055.0,
+   2055,
+   2055.0,
+   2055.0,
+   2055
+  ],
+  "temp_c": [
+   52.0,
+   52,
+   52.0,
+   53.0,
+   53
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f64/S2/default/256": {
+  "tier": "f64",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 45,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.8333,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.0,
+   "util_samples": [
+    0,
+    1,
+    1,
+    1,
+    3,
+    3,
+    1,
+    2
+   ],
+   "mem_used_mib": 3005,
+   "baseline_mib": 2434
+  },
+  "seconds_median": 0.23519,
+  "seconds_all": [
+   0.25555,
+   0.25735,
+   0.22453,
+   0.23519,
+   0.22922
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626906230,
+  "giter_s": 15.421,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 128,
+  "launches": 17,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2055,
+   2055.0,
+   2055
+  ],
+  "temp_c": [
+   52,
+   52,
+   52,
+   52.5,
+   53
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/A/default/256": {
+  "tier": "dd",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 256,
+  "regs": 40,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 1,
+   "util_median": 0.0,
+   "util_samples": [
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "mem_used_mib": 3012,
+   "baseline_mib": 2434
+  },
+  "seconds_median": 1.49287,
+  "seconds_all": [
+   1.45674,
+   1.47573,
+   1.52683,
+   1.49405,
+   1.49287
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 2.429,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 256,
+  "launches": 9,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2055,
+   2055,
+   2055.0
+  ],
+  "temp_c": [
+   53,
+   53,
+   53,
+   54,
+   54.0
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/B/default/256": {
+  "tier": "dd",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 256,
+  "regs": 58,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 8,
+   "util_median": 4.0,
+   "util_samples": [
+    1,
+    1,
+    0,
+    8,
+    4,
+    4,
+    5,
+    4
+   ],
+   "mem_used_mib": 3092,
+   "baseline_mib": 2434
+  },
+  "seconds_median": 3.37498,
+  "seconds_all": [
+   3.37498,
+   3.37135,
+   3.38482,
+   3.39204,
+   3.3741
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 1.075,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 96,
+  "launches": 23,
+  "sm_clock_mhz": [
+   2055.0,
+   2055.0,
+   2055.0,
+   2055.0,
+   2055
+  ],
+  "temp_c": [
+   55.0,
+   55.0,
+   56.0,
+   56.0,
+   57
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/C/default/256": {
+  "tier": "dd",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 59,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 11,
+   "util_median": 2.0,
+   "util_samples": [
+    4,
+    1,
+    1,
+    2,
+    2,
+    1,
+    11,
+    9
+   ],
+   "mem_used_mib": 3145,
+   "baseline_mib": 2434
+  },
+  "seconds_median": 3.45795,
+  "seconds_all": [
+   3.42664,
+   3.45271,
+   3.47401,
+   3.48374,
+   3.45795
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 1.049,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 96,
+  "launches": 23,
+  "sm_clock_mhz": [
+   2040.0,
+   2040,
+   2040.0,
+   2040.0,
+   2040.0
+  ],
+  "temp_c": [
+   58.0,
+   58,
+   58.0,
+   59.0,
+   59.0
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/F6/default/256": {
+  "tier": "dd",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 256,
+  "regs": 72,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.5,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 2.0,
+   "util_samples": [
+    3,
+    2,
+    3,
+    2,
+    1,
+    1,
+    2,
+    1
+   ],
+   "mem_used_mib": 3184,
+   "baseline_mib": 2710
+  },
+  "seconds_median": 3.18945,
+  "seconds_all": [
+   3.20768,
+   3.11582,
+   3.18945,
+   3.25459,
+   3.1829
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 1.137,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 128,
+  "launches": 17,
+  "sm_clock_mhz": [
+   2040.0,
+   2040,
+   2040.0,
+   2040,
+   2040.0
+  ],
+  "temp_c": [
+   60.0,
+   60,
+   60.0,
+   61,
+   61.0
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/S2/default/256": {
+  "tier": "dd",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 53,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 7,
+   "util_median": 2.5,
+   "util_samples": [
+    2,
+    2,
+    3,
+    1,
+    1,
+    3,
+    7,
+    6
+   ],
+   "mem_used_mib": 3200,
+   "baseline_mib": 2710
+  },
+  "seconds_median": 2.00216,
+  "seconds_all": [
+   2.01023,
+   2.04324,
+   2.00216,
+   1.95524,
+   1.97091
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 1.811,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 96,
+  "launches": 23,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040.0,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   62,
+   62,
+   62.0,
+   62,
+   62
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "qf/A/default/256": {
+  "tier": "qf",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 256,
+  "regs": 47,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.8333,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 16,
+   "util_median": 4.0,
+   "util_samples": [
+    4,
+    4,
+    2,
+    1,
+    1,
+    16,
+    14,
+    10
+   ],
+   "mem_used_mib": 3238,
+   "baseline_mib": 2710
+  },
+  "seconds_median": 0.14586,
+  "seconds_all": [
+   0.14094,
+   0.14501,
+   0.15363,
+   0.14586,
+   0.14731
+  ],
+  "reps_per_run": 2,
+  "pixel_iterations": 3626967360,
+  "giter_s": 24.867,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 224,
+  "launches": 10,
+  "sm_clock_mhz": [
+   2025.0,
+   2025.0,
+   2025,
+   2025.0,
+   2025.0
+  ],
+  "temp_c": [
+   69.0,
+   71.0,
+   71,
+   72.0,
+   72.5
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "qf/B/default/256": {
+  "tier": "qf",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 256,
+  "regs": 64,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 10,
+   "util_median": 5.0,
+   "util_samples": [
+    2,
+    5,
+    9,
+    3,
+    5,
+    8,
+    10,
+    5
+   ],
+   "mem_used_mib": 3223,
+   "baseline_mib": 2710
+  },
+  "seconds_median": 0.33573,
+  "seconds_all": [
+   0.34646,
+   0.33982,
+   0.33437,
+   0.33244,
+   0.33573
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 10.803,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 128,
+  "launches": 17,
+  "sm_clock_mhz": [
+   2025.0,
+   2025.0,
+   2025.0,
+   2025.0,
+   2010.0
+  ],
+  "temp_c": [
+   69.0,
+   70.0,
+   71.0,
+   71.5,
+   72.0
+  ],
+  "clock_spread": 0.0074,
+  "clock_flag": false
+ },
+ "qf/C/default/256": {
+  "tier": "qf",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 64,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 15,
+   "util_median": 3.5,
+   "util_samples": [
+    1,
+    1,
+    3,
+    4,
+    6,
+    15,
+    10,
+    2
+   ],
+   "mem_used_mib": 3210,
+   "baseline_mib": 2710
+  },
+  "seconds_median": 0.33514,
+  "seconds_all": [
+   0.337,
+   0.33434,
+   0.33404,
+   0.33735,
+   0.33514
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 10.822,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 128,
+  "launches": 17,
+  "sm_clock_mhz": [
+   2025.0,
+   2025.0,
+   2025.0,
+   2017.5,
+   2010.0
+  ],
+  "temp_c": [
+   69.0,
+   71.0,
+   71.5,
+   72.0,
+   72.0
+  ],
+  "clock_spread": 0.0074,
+  "clock_flag": false
+ },
+ "qf/F6/default/256": {
+  "tier": "qf",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 256,
+  "regs": 72,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.5,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 9,
+   "util_median": 4.5,
+   "util_samples": [
+    2,
+    1,
+    3,
+    5,
+    4,
+    6,
+    5,
+    9
+   ],
+   "mem_used_mib": 3158,
+   "baseline_mib": 2710
+  },
+  "seconds_median": 0.34906,
+  "seconds_all": [
+   0.34844,
+   0.34906,
+   0.34775,
+   0.35368,
+   0.35662
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 10.391,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 128,
+  "launches": 17,
+  "sm_clock_mhz": [
+   2025.0,
+   2025.0,
+   2025.0,
+   2010.0,
+   2010.0
+  ],
+  "temp_c": [
+   69.0,
+   70.0,
+   71.0,
+   72.0,
+   73.0
+  ],
+  "clock_spread": 0.0074,
+  "clock_flag": false
+ },
+ "qf/S2/default/256": {
+  "tier": "qf",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 60,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 6,
+   "util_median": 5.0,
+   "util_samples": [
+    1,
+    1,
+    5,
+    5,
+    3,
+    6,
+    6,
+    5
+   ],
+   "mem_used_mib": 3104,
+   "baseline_mib": 2710
+  },
+  "seconds_median": 0.17608,
+  "seconds_all": [
+   0.17062,
+   0.17501,
+   0.17797,
+   0.17674,
+   0.17608
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 20.598,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 160,
+  "launches": 14,
+  "sm_clock_mhz": [
+   2025,
+   2025,
+   2025,
+   2025,
+   2025
+  ],
+  "temp_c": [
+   65,
+   68,
+   68,
+   68,
+   70
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f32rn/A/default/256": {
+  "tier": "f32rn",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 256,
+  "regs": 20,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 5,
+   "util_median": 3.0,
+   "util_samples": [
+    1,
+    1,
+    1,
+    3,
+    3,
+    3,
+    4,
+    5
+   ],
+   "mem_used_mib": 3417,
+   "baseline_mib": 2710
+  },
+  "seconds_median": 0.00392,
+  "seconds_all": [
+   0.00392,
+   0.00392,
+   0.0038,
+   0.004,
+   0.0039
+  ],
+  "reps_per_run": 6,
+  "pixel_iterations": 3621910016,
+  "giter_s": 924.004,
+  "mean_iter": 436.67,
+  "interior_frac": 0.3958,
+  "band_rows": 2144,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   61,
+   61,
+   61,
+   61,
+   61
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "qfb/C/default/256": {
+  "tier": "qfb",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 256,
+  "regs": 72,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 112,
+  "occupancy": 0.5,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 1,
+   "util_median": 1.0,
+   "util_samples": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "mem_used_mib": 3096,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.55535,
+  "seconds_all": [
+   0.55974,
+   0.55519,
+   0.56236,
+   0.55374,
+   0.55535
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 6.531,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 96,
+  "launches": 23,
+  "sm_clock_mhz": [
+   1942.5,
+   1905,
+   1875.0,
+   1950.0,
+   1905
+  ],
+  "temp_c": [
+   60.5,
+   61,
+   62.0,
+   62.0,
+   63
+  ],
+  "clock_spread": 0.0385,
+  "clock_flag": false
+ },
+ "f32/A/default/128": {
+  "tier": "f32",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 128,
+  "regs": 20,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.0,
+   "util_samples": [
+    1,
+    0,
+    0,
+    1,
+    2,
+    3,
+    1,
+    1
+   ],
+   "mem_used_mib": 3098,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.00363,
+  "seconds_all": [
+   0.00363,
+   0.00346,
+   0.00418,
+   0.00353,
+   0.0037
+  ],
+  "reps_per_run": 7,
+  "pixel_iterations": 3621927974,
+  "giter_s": 998.234,
+  "mean_iter": 436.67,
+  "interior_frac": 0.3958,
+  "band_rows": 2144,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   60,
+   60,
+   60,
+   60,
+   60
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f32/B/default/128": {
+  "tier": "f32",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 128,
+  "regs": 26,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 6,
+   "util_median": 1.0,
+   "util_samples": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    2,
+    3,
+    6
+   ],
+   "mem_used_mib": 3098,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.00499,
+  "seconds_all": [
+   0.00499,
+   0.00501,
+   0.00497,
+   0.00494,
+   0.00503
+  ],
+  "reps_per_run": 6,
+  "pixel_iterations": 3621927974,
+  "giter_s": 726.144,
+  "mean_iter": 436.67,
+  "interior_frac": 0.3958,
+  "band_rows": 2144,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   46,
+   46,
+   46,
+   59,
+   59
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f32/C/default/128": {
+  "tier": "f32",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 34,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.0,
+   "util_samples": [
+    1,
+    1,
+    0,
+    1,
+    1,
+    2,
+    3,
+    2
+   ],
+   "mem_used_mib": 3098,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.00676,
+  "seconds_all": [
+   0.0067,
+   0.00698,
+   0.00687,
+   0.00676,
+   0.00665
+  ],
+  "reps_per_run": 4,
+  "pixel_iterations": 3621927974,
+  "giter_s": 535.617,
+  "mean_iter": 436.67,
+  "interior_frac": 0.3958,
+  "band_rows": 2144,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   61,
+   61,
+   61,
+   61,
+   61
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f32/F6/default/128": {
+  "tier": "f32",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 128,
+  "regs": 44,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.8333,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.0,
+   "util_samples": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    2,
+    2
+   ],
+   "mem_used_mib": 3098,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.02957,
+  "seconds_all": [
+   0.02929,
+   0.0291,
+   0.02957,
+   0.02982,
+   0.02969
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3622068488,
+  "giter_s": 122.475,
+  "mean_iter": 436.69,
+  "interior_frac": 0.3958,
+  "band_rows": 1184,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   55,
+   55,
+   55,
+   55,
+   55
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f32/S2/default/128": {
+  "tier": "f32",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 40,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 4,
+   "util_median": 1.5,
+   "util_samples": [
+    0,
+    0,
+    0,
+    3,
+    3,
+    2,
+    1,
+    4
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.02781,
+  "seconds_all": [
+   0.02852,
+   0.02638,
+   0.02781,
+   0.02628,
+   0.02788
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3622068488,
+  "giter_s": 130.256,
+  "mean_iter": 436.69,
+  "interior_frac": 0.3958,
+  "band_rows": 1216,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   55,
+   55,
+   64,
+   64,
+   64
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "df64/A/default/128": {
+  "tier": "df64",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 128,
+  "regs": 28,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 4,
+   "util_median": 1.0,
+   "util_samples": [
+    0,
+    0,
+    1,
+    2,
+    1,
+    1,
+    1,
+    4
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.02144,
+  "seconds_all": [
+   0.02128,
+   0.02121,
+   0.02162,
+   0.02172,
+   0.02144
+  ],
+  "reps_per_run": 2,
+  "pixel_iterations": 3626977890,
+  "giter_s": 169.195,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 2016,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   59,
+   65,
+   65,
+   65,
+   65
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "df64/B/default/128": {
+  "tier": "df64",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 128,
+  "regs": 37,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 2,
+   "util_median": 1.5,
+   "util_samples": [
+    0,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.04159,
+  "seconds_all": [
+   0.04156,
+   0.04269,
+   0.04136,
+   0.04159,
+   0.04257
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626977890,
+  "giter_s": 87.204,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 800,
+  "launches": 3,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   61,
+   61,
+   61,
+   61,
+   61
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "df64/C/default/128": {
+  "tier": "df64",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 40,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.0,
+   "util_samples": [
+    1,
+    0,
+    1,
+    2,
+    1,
+    3,
+    2,
+    1
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.04497,
+  "seconds_all": [
+   0.04483,
+   0.04509,
+   0.04553,
+   0.04497,
+   0.04393
+  ],
+  "reps_per_run": 2,
+  "pixel_iterations": 3626977890,
+  "giter_s": 80.659,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 960,
+  "launches": 3,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2010,
+   2010,
+   2010
+  ],
+  "temp_c": [
+   56,
+   65,
+   65,
+   65,
+   65
+  ],
+  "clock_spread": 0.0147,
+  "clock_flag": false
+ },
+ "df64/F6/default/128": {
+  "tier": "df64",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 128,
+  "regs": 54,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.75,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 4,
+   "util_median": 1.0,
+   "util_samples": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    4
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.06956,
+  "seconds_all": [
+   0.06956,
+   0.0701,
+   0.06921,
+   0.07006,
+   0.06895
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626977890,
+  "giter_s": 52.142,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 640,
+  "launches": 4,
+  "sm_clock_mhz": [
+   2025,
+   2025,
+   2025,
+   2025,
+   2025
+  ],
+  "temp_c": [
+   62,
+   62,
+   62,
+   67,
+   67
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "df64/S2/default/128": {
+  "tier": "df64",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 46,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.8333,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.5,
+   "util_samples": [
+    0,
+    1,
+    2,
+    1,
+    2,
+    1,
+    3,
+    3
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.0498,
+  "seconds_all": [
+   0.05004,
+   0.04863,
+   0.0498,
+   0.04821,
+   0.04981
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626977890,
+  "giter_s": 72.826,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 800,
+  "launches": 3,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2025
+  ],
+  "temp_c": [
+   65,
+   65,
+   65,
+   65,
+   65
+  ],
+  "clock_spread": 0.0074,
+  "clock_flag": false
+ },
+ "f64/A/default/128": {
+  "tier": "f64",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 128,
+  "regs": 25,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.0,
+   "util_samples": [
+    1,
+    0,
+    1,
+    1,
+    3,
+    1,
+    2,
+    2
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.12498,
+  "seconds_all": [
+   0.12834,
+   0.12465,
+   0.12498,
+   0.12468,
+   0.12506
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626893426,
+  "giter_s": 29.02,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 288,
+  "launches": 8,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2055,
+   2055,
+   2055
+  ],
+  "temp_c": [
+   53,
+   55,
+   55,
+   55,
+   55
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f64/B/default/128": {
+  "tier": "f64",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 128,
+  "regs": 32,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 4,
+   "util_median": 1.5,
+   "util_samples": [
+    0,
+    0,
+    1,
+    2,
+    4,
+    2,
+    1,
+    2
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.21504,
+  "seconds_all": [
+   0.21512,
+   0.21504,
+   0.21691,
+   0.21483,
+   0.21458
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626893426,
+  "giter_s": 16.866,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 224,
+  "launches": 10,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2055,
+   2055.0,
+   2055
+  ],
+  "temp_c": [
+   54,
+   54,
+   54,
+   54.0,
+   55
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f64/C/default/128": {
+  "tier": "f64",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 34,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.5,
+   "util_samples": [
+    1,
+    0,
+    2,
+    1,
+    2,
+    3,
+    1,
+    2
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.24967,
+  "seconds_all": [
+   0.25133,
+   0.24894,
+   0.24967,
+   0.2505,
+   0.24755
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626893426,
+  "giter_s": 14.527,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 192,
+  "launches": 12,
+  "sm_clock_mhz": [
+   2055,
+   2055.0,
+   2055,
+   2055.0,
+   2055
+  ],
+  "temp_c": [
+   54,
+   54.0,
+   54,
+   54.0,
+   54
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f64/F6/default/128": {
+  "tier": "f64",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 128,
+  "regs": 52,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.75,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 4,
+   "util_median": 1.5,
+   "util_samples": [
+    1,
+    1,
+    1,
+    2,
+    4,
+    1,
+    3,
+    2
+   ],
+   "mem_used_mib": 3121,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.30585,
+  "seconds_all": [
+   0.30435,
+   0.30585,
+   0.30584,
+   0.30609,
+   0.31087
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626906230,
+  "giter_s": 11.859,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 160,
+  "launches": 14,
+  "sm_clock_mhz": [
+   2055,
+   2055.0,
+   2055.0,
+   2055.0,
+   2055
+  ],
+  "temp_c": [
+   55,
+   55.0,
+   55.0,
+   55.0,
+   55
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f64/S2/default/128": {
+  "tier": "f64",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 45,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.8333,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 2,
+   "util_median": 1.5,
+   "util_samples": [
+    0,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    2
+   ],
+   "mem_used_mib": 3122,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.21648,
+  "seconds_all": [
+   0.21648,
+   0.21491,
+   0.21605,
+   0.21915,
+   0.21849
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626906230,
+  "giter_s": 16.754,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 160,
+  "launches": 14,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2055,
+   2055.0,
+   2055
+  ],
+  "temp_c": [
+   55,
+   55,
+   55,
+   55.0,
+   55
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/A/default/128": {
+  "tier": "dd",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 128,
+  "regs": 40,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 5,
+   "util_median": 1.5,
+   "util_samples": [
+    1,
+    1,
+    3,
+    3,
+    1,
+    2,
+    1,
+    5
+   ],
+   "mem_used_mib": 3122,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 1.68701,
+  "seconds_all": [
+   1.69412,
+   1.67565,
+   1.68429,
+   1.6949,
+   1.68701
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 2.15,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 64,
+  "launches": 34,
+  "sm_clock_mhz": [
+   2055.0,
+   2055,
+   2055.0,
+   2055.0,
+   2055.0
+  ],
+  "temp_c": [
+   54.0,
+   54,
+   54.0,
+   54.0,
+   54.0
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/B/default/128": {
+  "tier": "dd",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 128,
+  "regs": 58,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 2,
+   "util_median": 1.0,
+   "util_samples": [
+    1,
+    0,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2
+   ],
+   "mem_used_mib": 3125,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 3.09694,
+  "seconds_all": [
+   3.10465,
+   3.08096,
+   3.07851,
+   3.09694,
+   3.09818
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 1.171,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 128,
+  "launches": 17,
+  "sm_clock_mhz": [
+   2055.0,
+   2055.0,
+   2055.0,
+   2055.0,
+   2055
+  ],
+  "temp_c": [
+   54.0,
+   54.0,
+   55.0,
+   55.0,
+   55
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/C/default/128": {
+  "tier": "dd",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 59,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 4,
+   "util_median": 1.5,
+   "util_samples": [
+    0,
+    0,
+    2,
+    3,
+    1,
+    1,
+    3,
+    4
+   ],
+   "mem_used_mib": 3125,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 3.1079,
+  "seconds_all": [
+   3.10681,
+   3.11734,
+   3.09239,
+   3.14033,
+   3.1079
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 1.167,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 128,
+  "launches": 17,
+  "sm_clock_mhz": [
+   2055,
+   2055.0,
+   2055.0,
+   2055,
+   2055.0
+  ],
+  "temp_c": [
+   54,
+   55.0,
+   55.0,
+   55,
+   55.0
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/F6/default/128": {
+  "tier": "dd",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 128,
+  "regs": 72,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.5833,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.0,
+   "util_samples": [
+    0,
+    1,
+    1,
+    2,
+    1,
+    1,
+    3,
+    3
+   ],
+   "mem_used_mib": 3114,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 3.08553,
+  "seconds_all": [
+   3.09016,
+   3.08363,
+   3.08553,
+   3.08287,
+   3.08695
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 1.175,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 128,
+  "launches": 17,
+  "sm_clock_mhz": [
+   2055,
+   2055.0,
+   2055,
+   2055.0,
+   2055.0
+  ],
+  "temp_c": [
+   55,
+   55.0,
+   55,
+   55.0,
+   55.0
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "dd/S2/default/128": {
+  "tier": "dd",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 53,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.75,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 4,
+   "util_median": 1.5,
+   "util_samples": [
+    0,
+    1,
+    3,
+    1,
+    2,
+    1,
+    2,
+    4
+   ],
+   "mem_used_mib": 3114,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 1.73828,
+  "seconds_all": [
+   1.73275,
+   1.74175,
+   1.75501,
+   1.72946,
+   1.73828
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 2.086,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 224,
+  "launches": 10,
+  "sm_clock_mhz": [
+   2055.0,
+   2055.0,
+   2055.0,
+   2055,
+   2055.0
+  ],
+  "temp_c": [
+   55.0,
+   55.0,
+   56.0,
+   55,
+   56.0
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "qf/A/default/128": {
+  "tier": "qf",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 128,
+  "regs": 47,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.8333,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.5,
+   "util_samples": [
+    0,
+    1,
+    2,
+    3,
+    1,
+    1,
+    3,
+    2
+   ],
+   "mem_used_mib": 3117,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.13594,
+  "seconds_all": [
+   0.13588,
+   0.13388,
+   0.1363,
+   0.13594,
+   0.13597
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 26.68,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 256,
+  "launches": 9,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2025,
+   2025
+  ],
+  "temp_c": [
+   62,
+   65,
+   65,
+   65,
+   65
+  ],
+  "clock_spread": 0.0074,
+  "clock_flag": false
+ },
+ "qf/B/default/128": {
+  "tier": "qf",
+  "kernel": "B",
+  "features": 2,
+  "opts": null,
+  "block": 128,
+  "regs": 64,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.5,
+   "util_samples": [
+    0,
+    0,
+    2,
+    2,
+    1,
+    1,
+    3,
+    2
+   ],
+   "mem_used_mib": 3117,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.31216,
+  "seconds_all": [
+   0.30882,
+   0.31372,
+   0.31216,
+   0.31107,
+   0.31343
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 11.619,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 160,
+  "launches": 14,
+  "sm_clock_mhz": [
+   2025.0,
+   2025.0,
+   2025.0,
+   2025,
+   2025.0
+  ],
+  "temp_c": [
+   65.5,
+   66.0,
+   67.0,
+   67,
+   68.0
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "qf/C/default/128": {
+  "tier": "qf",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 64,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.0,
+   "util_samples": [
+    1,
+    0,
+    3,
+    1,
+    1,
+    1,
+    2,
+    2
+   ],
+   "mem_used_mib": 3117,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.31512,
+  "seconds_all": [
+   0.31608,
+   0.31234,
+   0.31512,
+   0.31746,
+   0.31412
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 11.51,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 160,
+  "launches": 14,
+  "sm_clock_mhz": [
+   2040,
+   2025.0,
+   2025.0,
+   2025,
+   2025.0
+  ],
+  "temp_c": [
+   66,
+   66.5,
+   67.0,
+   68,
+   68.0
+  ],
+  "clock_spread": 0.0074,
+  "clock_flag": false
+ },
+ "qf/F6/default/128": {
+  "tier": "qf",
+  "kernel": "F6",
+  "features": 6,
+  "opts": null,
+  "block": 128,
+  "regs": 72,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.5833,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 2,
+   "util_median": 1.5,
+   "util_samples": [
+    1,
+    0,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2
+   ],
+   "mem_used_mib": 3117,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.33619,
+  "seconds_all": [
+   0.3371,
+   0.33619,
+   0.33455,
+   0.33758,
+   0.33545
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 10.788,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 160,
+  "launches": 14,
+  "sm_clock_mhz": [
+   2025.0,
+   2025.0,
+   2025.0,
+   2025,
+   2025.0
+  ],
+  "temp_c": [
+   68.0,
+   68.0,
+   68.0,
+   69,
+   69.0
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "qf/S2/default/128": {
+  "tier": "qf",
+  "kernel": "S2",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 60,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 32,
+  "occupancy": 0.6667,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 1.5,
+   "util_samples": [
+    1,
+    1,
+    2,
+    2,
+    3,
+    1,
+    3,
+    1
+   ],
+   "mem_used_mib": 3117,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.16313,
+  "seconds_all": [
+   0.16317,
+   0.16313,
+   0.16234,
+   0.16088,
+   0.16511
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 22.233,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 192,
+  "launches": 12,
+  "sm_clock_mhz": [
+   2025,
+   2025,
+   2025,
+   2025,
+   2025
+  ],
+  "temp_c": [
+   64,
+   64,
+   66,
+   66,
+   66
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "f32rn/A/default/128": {
+  "tier": "f32rn",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 128,
+  "regs": 20,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 3,
+   "util_median": 2.0,
+   "util_samples": [
+    1,
+    0,
+    2,
+    1,
+    2,
+    3,
+    2,
+    3
+   ],
+   "mem_used_mib": 3117,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.00381,
+  "seconds_all": [
+   0.00381,
+   0.00397,
+   0.00366,
+   0.00376,
+   0.00382
+  ],
+  "reps_per_run": 7,
+  "pixel_iterations": 3621910016,
+  "giter_s": 951.3,
+  "mean_iter": 436.67,
+  "interior_frac": 0.3958,
+  "band_rows": 2144,
+  "launches": 2,
+  "sm_clock_mhz": [
+   2040,
+   2040,
+   2040,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   61,
+   61,
+   61,
+   61,
+   61
+  ],
+  "clock_spread": 0.0,
+  "clock_flag": false
+ },
+ "qfb/C/default/128": {
+  "tier": "qfb",
+  "kernel": "C",
+  "features": 3,
+  "opts": null,
+  "block": 128,
+  "regs": 72,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 112,
+  "occupancy": 0.5833,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 4,
+   "util_median": 1.5,
+   "util_samples": [
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    4,
+    3
+   ],
+   "mem_used_mib": 3117,
+   "baseline_mib": 2516,
+   "waits": []
+  },
+  "seconds_median": 0.52876,
+  "seconds_all": [
+   0.52884,
+   0.52838,
+   0.52876,
+   0.5273,
+   0.52908
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 6.859,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 800,
+  "launches": 3,
+  "sm_clock_mhz": [
+   1860,
+   1845,
+   1875,
+   1875,
+   1875
+  ],
+  "temp_c": [
+   65,
+   67,
+   66,
+   67,
+   67
+  ],
+  "clock_spread": 0.016,
+  "clock_flag": false
+ }
+}

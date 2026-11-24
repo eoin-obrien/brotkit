@@ -1,0 +1,168 @@
+{
+ "_env": {
+  "gpu": [
+   "NVIDIA GeForce RTX 3090 Ti",
+   "610.88",
+   "2115",
+   "480.00"
+  ],
+  "view": {
+   "centre": [
+    -0.743643887037151,
+    0.13182590420533
+   ],
+   "width": 0.05,
+   "W": 3840,
+   "H": 2160,
+   "max_iter": 1000
+  },
+  "method": "median of 5 renders after warm-up; Giter/s = sum(n)/time"
+ },
+ "f32/A/default/256": {
+  "tier": "f32",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 256,
+  "regs": 20,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 1,
+   "mem_used_mib": 3114,
+   "baseline_mib": 2485
+  },
+  "seconds_median": 0.00373,
+  "seconds_all": [
+   0.00418,
+   0.00413,
+   0.00373,
+   0.00368,
+   0.00369
+  ],
+  "reps_per_run": 38,
+  "pixel_iterations": 3621927974,
+  "giter_s": 970.456,
+  "mean_iter": 436.67,
+  "interior_frac": 0.3958,
+  "band_rows": 2144,
+  "launches": 2,
+  "sm_clock_mhz": [
+   1950,
+   1950,
+   1950,
+   2055,
+   2055
+  ],
+  "temp_c": [
+   47,
+   47,
+   47,
+   47,
+   54
+  ],
+  "clock_spread": 0.0511,
+  "clock_flag": true
+ },
+ "dd/A/default/256": {
+  "tier": "dd",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 256,
+  "regs": 40,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 1.0,
+  "occ_limiter": "warps",
+  "pre_check": {
+   "util_max": 0,
+   "mem_used_mib": 3216,
+   "baseline_mib": 2485
+  },
+  "seconds_median": 1.51326,
+  "seconds_all": [
+   1.51326,
+   1.50503,
+   1.53131,
+   1.51134,
+   1.53976
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626902260,
+  "giter_s": 2.397,
+  "mean_iter": 437.27,
+  "interior_frac": 0.3958,
+  "band_rows": 256,
+  "launches": 9,
+  "sm_clock_mhz": [
+   2040,
+   2055.0,
+   2055,
+   2055,
+   2055
+  ],
+  "temp_c": [
+   51,
+   51.0,
+   51,
+   52,
+   52
+  ],
+  "clock_spread": 0.0073,
+  "clock_flag": false
+ },
+ "qf/A/default/256": {
+  "tier": "qf",
+  "kernel": "A",
+  "features": 1,
+  "opts": null,
+  "block": 256,
+  "regs": 47,
+  "spill_st": 0,
+  "spill_ld": 0,
+  "stack": 0,
+  "occupancy": 0.8333,
+  "occ_limiter": "registers",
+  "pre_check": {
+   "util_max": 1,
+   "mem_used_mib": 3368,
+   "baseline_mib": 2485
+  },
+  "seconds_median": 0.15137,
+  "seconds_all": [
+   0.15394,
+   0.15015,
+   0.15024,
+   0.1531,
+   0.15137
+  ],
+  "reps_per_run": 1,
+  "pixel_iterations": 3626967360,
+  "giter_s": 23.962,
+  "mean_iter": 437.28,
+  "interior_frac": 0.3958,
+  "band_rows": 192,
+  "launches": 12,
+  "sm_clock_mhz": [
+   2055,
+   2055,
+   2055,
+   2040,
+   2040
+  ],
+  "temp_c": [
+   53,
+   53,
+   53,
+   60,
+   60
+  ],
+  "clock_spread": 0.0073,
+  "clock_flag": false
+ }
+}

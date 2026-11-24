@@ -1,0 +1,4 @@
+[guard q3 main] free VRAM 21981 MiB, free disk 24.4 GiB
+[guard f64/C/default/256] free VRAM 21382 MiB, free disk 24.4 GiB
+f64/C/default/256                            regs= 34 spill=0/0 occ=1.000    15.699 Giter/s  t=0.2310s mean_iter=437.27 clk=2040-2040 T=50
+PAUSED before f64/F6/default/256: GPU busy (utilisation [0, 1, 6]%, memory used 2979 MiB, baseline 2333 MiB + ours ~916 MiB). Not measuring.

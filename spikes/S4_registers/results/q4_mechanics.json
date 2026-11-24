@@ -1,0 +1,46 @@
+{
+ "two_kernels same module": {
+  "k_capped(max_registers=24)": 24,
+  "k_default": 30
+ },
+ "dd/F6 dispatcher regs by max_registers (sm_86, LLVM-7 bridge)": {
+  "None": 72,
+  "32": 32,
+  "64": 64,
+  "96": 72,
+  "128": 72
+ },
+ "dd/F6 dispatcher regs launch_bounds=(256,4)": 64,
+ "dispatcher chip=sm_100 max_registers=None: linked cubin resource usage": [
+  "REG:0 STACK:0 SHARED:0 LOCAL:0 TEXTURE:0 SURFACE:0 SAMPLER:0",
+  "REG:0 STACK:0 SHARED:0 LOCAL:0 TEXTURE:0 SURFACE:0 SAMPLER:0",
+  "REG:71 STACK:32 SHARED:0 LOCAL:0 CONSTANT[0]:1088 TEXTURE:0 SURFACE:0 SAMPLER:0"
+ ],
+ "dispatcher chip=sm_100 max_registers=48: linked cubin resource usage": [
+  "REG:0 STACK:0 SHARED:0 LOCAL:0 TEXTURE:0 SURFACE:0 SAMPLER:0",
+  "REG:0 STACK:0 SHARED:0 LOCAL:0 TEXTURE:0 SURFACE:0 SAMPLER:0",
+  "REG:48 STACK:128 SHARED:0 LOCAL:0 CONSTANT[0]:1088 TEXTURE:0 SURFACE:0 SAMPLER:0"
+ ],
+ "dispatcher chip=sm_120 max_registers=None: linked cubin resource usage": [
+  "REG:0 STACK:0 SHARED:0 LOCAL:0 TEXTURE:0 SURFACE:0 SAMPLER:0",
+  "REG:0 STACK:0 SHARED:0 LOCAL:0 TEXTURE:0 SURFACE:0 SAMPLER:0",
+  "REG:72 STACK:32 SHARED:0 LOCAL:0 CONSTANT[0]:1088 TEXTURE:0 SURFACE:0 SAMPLER:0"
+ ],
+ "dispatcher chip=sm_120 max_registers=48: linked cubin resource usage": [
+  "REG:0 STACK:0 SHARED:0 LOCAL:0 TEXTURE:0 SURFACE:0 SAMPLER:0",
+  "REG:0 STACK:0 SHARED:0 LOCAL:0 TEXTURE:0 SURFACE:0 SAMPLER:0",
+  "REG:48 STACK:136 SHARED:0 LOCAL:0 CONSTANT[0]:1088 TEXTURE:0 SURFACE:0 SAMPLER:0"
+ ],
+ "compile_ptx launch_bounds=(256,4) cc=(8, 6)": [
+  ".maxntid 256, 1, 1",
+  ".minnctapersm 4"
+ ],
+ "compile_ptx launch_bounds=(256,4) cc=(10, 0)": [
+  ".maxntid 256, 1, 1",
+  ".minnctapersm 4"
+ ],
+ "compile_ptx launch_bounds=(256,4) cc=(12, 0)": [
+  ".maxntid 256, 1, 1",
+  ".minnctapersm 4"
+ ]
+}

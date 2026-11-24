@@ -1,0 +1,84 @@
+[guard q3 caps] free VRAM 21779 MiB, free disk 24.0 GiB
+[guard dd/C/{"max_registers": 32}/256] free VRAM 21199 MiB, free disk 24.0 GiB
+dd/C/{"max_registers": 32}/256               regs= 32 spill=196/212 occ=1.000     1.027 Giter/s  t=3.5302s mean_iter=437.27 clk=2055.0-2055.0 T=57.0
+[guard dd/C/{"max_registers": 64}/256] free VRAM 21197 MiB, free disk 24.0 GiB
+dd/C/{"max_registers": 64}/256               regs= 59 spill=0/0 occ=0.667     1.083 Giter/s  t=3.3495s mean_iter=437.27 clk=2055-2055 T=56
+[guard dd/C/{"max_registers": 96}/256] free VRAM 21197 MiB, free disk 24.0 GiB
+dd/C/{"max_registers": 96}/256               regs= 66 spill=0/0 occ=0.500     1.173 Giter/s  t=3.0929s mean_iter=437.27 clk=2055-2055 T=56.0
+[guard dd/C/{"max_registers": 128}/256] free VRAM 21197 MiB, free disk 24.0 GiB
+dd/C/{"max_registers": 128}/256              regs= 66 spill=0/0 occ=0.500     1.174 Giter/s  t=3.0892s mean_iter=437.27 clk=2055.0-2055.0 T=56
+[guard dd/F6/{"max_registers": 32}/256] free VRAM 21197 MiB, free disk 24.0 GiB
+dd/F6/{"max_registers": 32}/256              regs= 32 spill=284/300 occ=1.000     1.000 Giter/s  t=3.6285s mean_iter=437.27 clk=2055-2055 T=59.0
+[guard dd/F6/{"max_registers": 64}/256] free VRAM 21118 MiB, free disk 24.0 GiB
+dd/F6/{"max_registers": 64}/256              regs= 64 spill=16/12 occ=0.667     1.081 Giter/s  t=3.3561s mean_iter=437.27 clk=2055.0-2055.0 T=57.0
+[guard dd/F6/{"max_registers": 96}/256] free VRAM 21181 MiB, free disk 24.0 GiB
+dd/F6/{"max_registers": 96}/256              regs= 72 spill=0/0 occ=0.500     1.129 Giter/s  t=3.2139s mean_iter=437.27 clk=2055.0-2055.0 T=57.0
+[guard dd/F6/{"max_registers": 128}/256] free VRAM 21181 MiB, free disk 24.0 GiB
+dd/F6/{"max_registers": 128}/256             regs= 72 spill=0/0 occ=0.500     1.160 Giter/s  t=3.1278s mean_iter=437.27 clk=2055-2055 T=57
+[guard dd/F6/{"launch_bounds": [256, 3]}/256] free VRAM 21123 MiB, free disk 24.0 GiB
+dd/F6/{"launch_bounds": [256, 3]}/256        regs= 70 spill=0/0 occ=0.500     1.166 Giter/s  t=3.1105s mean_iter=437.27 clk=2055.0-2055.0 T=57.0
+[guard dd/F6/{"launch_bounds": [256, 4]}/256] free VRAM 21140 MiB, free disk 24.0 GiB
+dd/F6/{"launch_bounds": [256, 4]}/256        regs= 64 spill=16/12 occ=0.667     1.073 Giter/s  t=3.3797s mean_iter=437.27 clk=2055.0-2055.0 T=57.0
+[guard qf/C/{"max_registers": 32}/256] free VRAM 21159 MiB, free disk 24.0 GiB
+qf/C/{"max_registers": 32}/256               regs= 32 spill=364/356 occ=1.000     5.031 Giter/s  t=0.7209s mean_iter=437.28 clk=2025-2040.0 T=66.5
+[guard qf/C/{"max_registers": 64}/256] free VRAM 21188 MiB, free disk 24.0 GiB
+qf/C/{"max_registers": 64}/256               regs= 64 spill=36/36 occ=0.667    11.107 Giter/s  t=0.3265s mean_iter=437.28 clk=2010.0-2025.0 T=70.5
+[guard qf/C/{"max_registers": 96}/256] free VRAM 21188 MiB, free disk 24.0 GiB
+qf/C/{"max_registers": 96}/256               regs= 96 spill=0/0 occ=0.333    12.195 Giter/s  t=0.2974s mean_iter=437.28 clk=2010.0-2025 T=71.5
+[guard qf/C/{"max_registers": 128}/256] free VRAM 21180 MiB, free disk 24.0 GiB
+qf/C/{"max_registers": 128}/256              regs=117 spill=0/0 occ=0.333    12.368 Giter/s  t=0.2933s mean_iter=437.28 clk=2010.0-2025 T=71.0
+[guard qf/F6/{"max_registers": 32}/256] free VRAM 21176 MiB, free disk 24.0 GiB
+qf/F6/{"max_registers": 32}/256              regs= 32 spill=448/444 occ=1.000     3.084 Giter/s  t=1.1759s mean_iter=437.28 clk=2025-2025 T=68.0
+[guard qf/F6/{"max_registers": 64}/256] free VRAM 21149 MiB, free disk 24.0 GiB
+qf/F6/{"max_registers": 64}/256              regs= 64 spill=56/48 occ=0.667     9.081 Giter/s  t=0.3994s mean_iter=437.28 clk=2025.0-2025.0 T=71.0
+[guard qf/F6/{"max_registers": 96}/256] free VRAM 21134 MiB, free disk 24.0 GiB
+qf/F6/{"max_registers": 96}/256              regs= 96 spill=0/0 occ=0.333    10.318 Giter/s  t=0.3515s mean_iter=437.28 clk=2010.0-2025.0 T=71.0
+[guard qf/F6/{"max_registers": 128}/256] free VRAM 21149 MiB, free disk 24.0 GiB
+qf/F6/{"max_registers": 128}/256             regs=118 spill=0/0 occ=0.333    10.674 Giter/s  t=0.3398s mean_iter=437.28 clk=2010.0-2025.0 T=71
+[guard qf/F6/{"launch_bounds": [256, 3]}/256] free VRAM 21133 MiB, free disk 24.0 GiB
+qf/F6/{"launch_bounds": [256, 3]}/256        regs= 80 spill=0/0 occ=0.500    10.203 Giter/s  t=0.3555s mean_iter=437.28 clk=2010.0-2025.0 T=72
+[guard qf/F6/{"launch_bounds": [256, 4]}/256] free VRAM 21121 MiB, free disk 23.9 GiB
+qf/F6/{"launch_bounds": [256, 4]}/256        regs= 64 spill=20/12 occ=0.667    10.027 Giter/s  t=0.3617s mean_iter=437.28 clk=2010.0-2025.0 T=71.0
+[guard df64/C/{"max_registers": 32}/256] free VRAM 21114 MiB, free disk 23.9 GiB
+df64/C/{"max_registers": 32}/256             regs= 32 spill=4/4 occ=1.000    72.486 Giter/s  t=0.0500s mean_iter=437.28 clk=2025-2025 T=62
+[guard df64/C/{"max_registers": 64}/256] free VRAM 21118 MiB, free disk 23.9 GiB
+df64/C/{"max_registers": 64}/256             regs= 40 spill=0/0 occ=1.000    80.338 Giter/s  t=0.0452s mean_iter=437.28 clk=2040-2040 T=66
+[guard df64/C/{"max_registers": 96}/256] free VRAM 21131 MiB, free disk 23.9 GiB
+df64/C/{"max_registers": 96}/256             regs= 40 spill=0/0 occ=1.000    82.395 Giter/s  t=0.0440s mean_iter=437.28 clk=2025-2025 T=68
+[guard df64/C/{"max_registers": 128}/256] free VRAM 20955 MiB, free disk 23.9 GiB
+df64/C/{"max_registers": 128}/256            regs= 40 spill=0/0 occ=1.000    77.902 Giter/s  t=0.0466s mean_iter=437.28 clk=2040-2040 T=66
+[guard df64/F6/{"max_registers": 32}/256] free VRAM 21264 MiB, free disk 23.9 GiB
+df64/F6/{"max_registers": 32}/256            regs= 32 spill=136/108 occ=1.000    38.450 Giter/s  t=0.0943s mean_iter=437.28 clk=1800-1800 T=66
+[guard df64/F6/{"max_registers": 64}/256] free VRAM 21244 MiB, free disk 23.9 GiB
+df64/F6/{"max_registers": 64}/256            regs= 54 spill=0/0 occ=0.667    51.737 Giter/s  t=0.0701s mean_iter=437.28 clk=2025-2025 T=68
+[guard df64/F6/{"max_registers": 96}/256] free VRAM 21244 MiB, free disk 23.9 GiB
+df64/F6/{"max_registers": 96}/256            regs= 54 spill=0/0 occ=0.667    51.198 Giter/s  t=0.0708s mean_iter=437.28 clk=2025-2025 T=68
+[guard df64/F6/{"max_registers": 128}/256] free VRAM 21267 MiB, free disk 23.9 GiB
+df64/F6/{"max_registers": 128}/256           regs= 54 spill=0/0 occ=0.667    51.248 Giter/s  t=0.0708s mean_iter=437.28 clk=2025-2025 T=68
+[guard df64/F6/{"launch_bounds": [256, 3]}/256] free VRAM 21226 MiB, free disk 23.9 GiB
+df64/F6/{"launch_bounds": [256, 3]}/256      regs= 52 spill=0/0 occ=0.667    51.134 Giter/s  t=0.0709s mean_iter=437.28 clk=2025-2025 T=68
+[guard df64/F6/{"launch_bounds": [256, 4]}/256] free VRAM 21252 MiB, free disk 23.9 GiB
+df64/F6/{"launch_bounds": [256, 4]}/256      regs= 52 spill=0/0 occ=0.667    51.334 Giter/s  t=0.0707s mean_iter=437.28 clk=2025-2025 T=67
+[guard f64/C/{"max_registers": 32}/256] free VRAM 21262 MiB, free disk 23.9 GiB
+f64/C/{"max_registers": 32}/256              regs= 32 spill=0/0 occ=1.000    13.049 Giter/s  t=0.2779s mean_iter=437.27 clk=2055-2055 T=56
+waiting 20 s: PAUSED before f64/C/{"max_registers": 64}/256: GPU busy (utilisation [1, 1, 2, 6, 7, 10, 9, 11]%, memory used 3071 MiB, baseline 2535 MiB + ours ~916 MiB). Not measuring.
+[guard f64/C/{"max_registers": 64}/256] free VRAM 21184 MiB, free disk 23.9 GiB
+f64/C/{"max_registers": 64}/256              regs= 34 spill=0/0 occ=1.000    12.272 Giter/s  t=0.2955s mean_iter=437.27 clk=2040.0-2055.0 T=53.0
+[guard f64/C/{"max_registers": 96}/256] free VRAM 21184 MiB, free disk 23.9 GiB
+f64/C/{"max_registers": 96}/256              regs= 34 spill=0/0 occ=1.000    13.129 Giter/s  t=0.2762s mean_iter=437.27 clk=2055-2055 T=53
+[guard f64/C/{"max_registers": 128}/256] free VRAM 21145 MiB, free disk 23.9 GiB
+f64/C/{"max_registers": 128}/256             regs= 34 spill=0/0 occ=1.000    13.582 Giter/s  t=0.2670s mean_iter=437.27 clk=2047.5-2055 T=53.0
+[guard f64/F6/{"max_registers": 32}/256] free VRAM 21185 MiB, free disk 23.9 GiB
+f64/F6/{"max_registers": 32}/256             regs= 32 spill=100/92 occ=1.000    10.353 Giter/s  t=0.3503s mean_iter=437.27 clk=2055.0-2055.0 T=56.0
+[guard f64/F6/{"max_registers": 64}/256] free VRAM 21119 MiB, free disk 23.9 GiB
+f64/F6/{"max_registers": 64}/256             regs= 52 spill=0/0 occ=0.667    10.726 Giter/s  t=0.3381s mean_iter=437.27 clk=2055.0-2055.0 T=54.0
+[guard f64/F6/{"max_registers": 96}/256] free VRAM 21026 MiB, free disk 23.9 GiB
+f64/F6/{"max_registers": 96}/256             regs= 52 spill=0/0 occ=0.667    12.083 Giter/s  t=0.3002s mean_iter=437.27 clk=2055.0-2055.0 T=55
+waiting 20 s: PAUSED before f64/F6/{"max_registers": 128}/256: GPU busy (utilisation [1, 1, 5, 3, 9, 7, 16, 15]%, memory used 3371 MiB, baseline 2535 MiB + ours ~916 MiB). Not measuring.
+[guard f64/F6/{"max_registers": 128}/256] free VRAM 20953 MiB, free disk 23.9 GiB
+f64/F6/{"max_registers": 128}/256            regs= 52 spill=0/0 occ=0.667    11.133 Giter/s  t=0.3258s mean_iter=437.27 clk=2040.0-2040.0 T=52.0
+[guard f64/F6/{"launch_bounds": [256, 3]}/256] free VRAM 20955 MiB, free disk 23.9 GiB
+f64/F6/{"launch_bounds": [256, 3]}/256       regs= 50 spill=0/0 occ=0.667    11.278 Giter/s  t=0.3216s mean_iter=437.27 clk=2040-2040 T=52
+waiting 20 s: PAUSED before f64/F6/{"launch_bounds": [256, 4]}/256: GPU busy (utilisation [10, 6, 2, 9, 6, 4, 21, 19]%, memory used 3413 MiB, baseline 2535 MiB + ours ~916 MiB). Not measuring.
+[guard f64/F6/{"launch_bounds": [256, 4]}/256] free VRAM 21002 MiB, free disk 23.9 GiB
+f64/F6/{"launch_bounds": [256, 4]}/256       regs= 50 spill=0/0 occ=0.667    10.825 Giter/s  t=0.3351s mean_iter=437.27 clk=2040.0-2040.0 T=50.0
