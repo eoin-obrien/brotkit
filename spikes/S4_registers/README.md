@@ -34,7 +34,7 @@ script calls `guard.check()` (aborts below 4 GB free VRAM or 5 GB free disk).
 | `analyze.py` | Renders `results/q3_*.json` into the markdown tables in S4.md (`results/tables.md`) |
 | `check_codegen.py` | Runs `brotkit.codegen.checks.find_bare_float_ops` over every generated module |
 | `ptx_patterns.py` | Diagnostic: float instruction mix in the PTX (used to design `tests/test_cuda_ptx.py`) |
-| `upstream_issue.md` | Draft upstream issue (not filed) |
+| `upstream_issue.md` | Upstream issue drafts (1 and 2 filed as numba-cuda-mlir#492 and #493) |
 | `results/` | Raw JSON/logs behind every number in S4.md |
 
 ## Reproduce

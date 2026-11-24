@@ -281,8 +281,8 @@ reassociation by default, and PTX/SASS inspection. All four pass.
 
 ### Consequences
 - Multi-word correctness no longer depends on numba-cuda-mlir's fastmath handling or its
-  contraction default. If upstream fixes either (issue drafted in
-  `spikes/S3_multiword/upstream_issue.md`), nothing here changes.
+  contraction default. If upstream fixes either ([numba-cuda-mlir#486](https://github.com/NVIDIA/numba-cuda-mlir/issues/486),
+  [#220](https://github.com/NVIDIA/numba-cuda-mlir/issues/220)), nothing here changes.
 - **Plain `f32`/`f64` kernels still contract**, since nothing turns it off. Their CPU/GPU
   parity stays tolerance-based (review item 9). Multi-word paths get exact parity.
 - **`_rn` intrinsics rule out fusions the compiler might otherwise pick.** S3 measured the
@@ -299,7 +299,7 @@ reassociation by default, and PTX/SASS inspection. All four pass.
 
 ## ADR-0007: Resource numbers come from nvJitLink; fuse features, split only on spills
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-24
 - **Backlog:** S4 (completes the ADR-0005 gate; affects 1.3, 1.4, 0.3 and the phase 2
   precision work)
@@ -323,9 +323,10 @@ Spike S4 ([`spikes/S4.md`](spikes/S4.md)) found on `numba-cuda-mlir` 0.6.0:
 - **Caps don't pay below the default allocation.** Forcing occupancy up with
   `max_registers` costs 3–70% once it spills. A loose cap (128) lets ptxas use more registers
   than its default and speeds qf up 12%. `max_registers` applies per kernel and works on both
-  of numba-cuda-mlir's code paths. Its `cache=True` key ignores it.
+  of numba-cuda-mlir's code paths. Its `cache=True` key ignores it
+  ([numba-cuda-mlir#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493)).
 - **No PTX without a device.** `compile_ptx(..., cc=...)` creates a CUDA context, so hosted CI
-  can't compile kernels. Upstream issue drafted (`spikes/S4_registers/upstream_issue.md`).
+  can't compile kernels. Filed upstream as [numba-cuda-mlir#492](https://github.com/NVIDIA/numba-cuda-mlir/issues/492).
 
 ### Decision
 - **`brotkit.backends.cuda.resource_usage(kernel, signature, cc)` is the one source of
@@ -339,8 +340,15 @@ Spike S4 ([`spikes/S4.md`](spikes/S4.md)) found on `numba-cuda-mlir` 0.6.0:
   up to six features, so the split path isn't needed for phase 1.
 - **No default register cap.** Never cap a kernel below its default register count. qf starts
   at `max_registers=128`, to be re-measured when qf lands (phase 2) and on another
-  architecture. Don't combine `cache=True` with a varying `max_registers` until upstream fixes
-  the cache key. brotkit's own kernel cache must include the cap in its key.
+  architecture.
+- **brotkit's kernel cache keys on every compile option and doesn't use Numba's
+  `cache=True`.** The `KernelCache` sha256 covers the source and every option that changes the
+  binary: backend, precision, target cc, fastmath, `max_registers`, launch bounds, ptxas
+  options and tool versions. numba-cuda-mlir's `cache=True` key ignores `max_registers` and
+  `ptxas_options`, so it silently serves a capped build to an uncapped dispatcher (#493).
+  brotkit doesn't rely on it at all, on either backend. S2 settles how warm starts store the
+  compiled artefact under brotkit's key, and adds a test that changing any one option misses
+  the cache.
 - **CI:** PTX snapshot and resource tests are marked `gpu` until `compile_ptx` works without a
   device. CPU CI runs `brotkit.codegen.checks.find_bare_float_ops` over generated multi-word
   source. It's an AST heuristic for ADR-0006, and the PTX check remains authoritative.
@@ -356,8 +364,16 @@ Spike S4 ([`spikes/S4.md`](spikes/S4.md)) found on `numba-cuda-mlir` 0.6.0:
   recipe changes, since results are cached with the kernel.
 - `resource_usage` salts the PTX with a comment, because nvJitLink's compute cache otherwise
   drops the spill lines. The parser refuses a log without them rather than report zero.
-- **Spec edits** (by the maintainer, mirroring S4):
-  - architecture-review item 3: split on spills, threshold above six features
+- **Benchmarks have to live with ±10% run-to-run drift on Xenon** (S4: identical SASS timed
+  13–22% apart in separate runs). A/B comparisons alternate the variants in one process,
+  every result records SM clock and temperature, and a regression check compares against a
+  baseline timed in the same run rather than a fixed threshold on stored numbers (backlog
+  1.24).
+- **Spec updated in the same PR:**
+  - architecture-review item 3: fuse by default, split only on spills
   - the CI row: no compile-only CPU check yet
-  - the Toolchain bullet on the S4 gate
-  - the precision-tier note on qf vs dd: qf measured at 9–12× dd on an RTX 3090 Ti
+  - the Toolchain bullet: the S4 half of the ADR-0005 gate passed
+  - the precision-tier note: qf measured at 9–12× dd on an RTX 3090 Ti
+  - pipeline step 5, the pipeline diagram, the cross-session caching row and `KernelSource`:
+    the cache key covers every compile option and doesn't rely on `cache=True`
+  - the Benchmarks row: alternating timing, clocks recorded, same-run baselines

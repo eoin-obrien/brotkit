@@ -1,6 +1,6 @@
 # brotkit backlog
 
-58 tasks in six stages, matching the Roadmap in `spec.md`. Phases 0 and 1 are issue-sized tasks; phases 2–4 are epics to split when you reach them. Acceptance criteria come from the spec's gates and decisions. Don't start phase 1a until every phase 0 spike has a written result.
+59 tasks in six stages, matching the Roadmap in `spec.md`. Phases 0 and 1 are issue-sized tasks; phases 2–4 are epics to split when you reach them. Acceptance criteria come from the spec's gates and decisions. Don't start phase 1a until every phase 0 spike has a written result.
 
 Status is tracked in GitHub issues (one per row), not in this file.
 
@@ -14,7 +14,7 @@ Status is tracked in GitHub issues (one per row), not in this file.
 | 0.5 | Release workflow | Manually triggered: `cz bump` (version, `CHANGELOG.md`, tag) → `uv build` → TestPyPI → PyPI via Trusted Publishing and `pypa/gh-action-pypi-publish` with attestations, from a protected `pypi` environment; a 0.0.2 dry run succeeds end to end | 0.2 |
 | 0.6 | README, community files and agent instructions (skeleton) | README skeleton with badge rows and install section; AGENTS.md with setup, commands and architecture invariants; CLAUDE.md as `@AGENTS.md` bridge; `.agents/skills/` with `.claude/skills` symlink; CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, CITATION.cff, issue and PR templates, CODEOWNERS, Dependabot. Hero images, quickstart output and llms.txt come in 1.23 | 0.2, 0.5 |
 | S1 | Install spike | `uv sync --extra cuda` on WSL2 gives a working kernel on Python 3.14 and 3.15 (or 3.15 blocker recorded); exact NVIDIA wheel names pinned in the spec. Result: `docs/design/spikes/S1.md`, ADR-0005 | 0.2 |
-| S2 | Kernel cache spike | Generated `.py` + `cache=True` loads a compiled kernel in a fresh notebook session; cold and warm times recorded | S1 |
+| S2 | Kernel cache spike | Generated `.py` loads a compiled kernel in a fresh notebook session without recompiling; cold and warm times recorded. The cache key is a sha256 over the source and every compile option, and doesn't rely on Numba's `cache=True`, whose key ignores `max_registers` and `ptxas_options` (ADR-0007, numba-cuda-mlir#493). A cache-key test shows that changing any one option (backend, precision, target cc, fastmath, `max_registers`, launch bounds, ptxas options) misses the cache and repeating the same options hits it | S1 |
 | S3 | Multi-word arithmetic spike | df64 and dd two-sum/two-product with `fastmath=False` on GPU match an mpmath reference at a 1e-20 coordinate within expected error; `fastmath=True` shown to break it. Run on numba-cuda-mlir; this gates ADR-0005, so if fastmath on/off doesn't behave as the policy needs, stop and report rather than work around it | S1 |
 | S4 | Register-pressure spike | Table of registers/thread and occupancy for f32 and dd with 1, 3 and 6 fused features; split threshold decided and written into the spec. Run on numba-cuda-mlir: PTX inspection and register-count reporting must work there, and record whether it can compile a kernel to PTX with no GPU present (if so, CPU CI gets a compile-only check). This gates ADR-0005, so if either fails, stop and report rather than work around it | S1 |
 | S5 | Chunked-launch spike | Chunk overhead under 1% at 4K; Ctrl-C in Jupyter stops within one chunk with no corrupted state | S1 |
@@ -51,6 +51,7 @@ Status is tracked in GitHub issues (one per row), not in this file.
 | 1.20 | Typer CLI | `render`, `colour`, `estimate`, `doctor`; JSON to stdout, progress to stderr; `doctor` reports driver vs runtime CUDA version (flag runtime > driver), CUDA library paths from `cuda-pathfinder`, compute capability, FP64:FP32 ratio and the kernel cache directory, and runs a smoke kernel (see S1.md) | 1.19 |
 | 1.21 | Spawn worker pool | `get_context("spawn")`, per-process GPU context; recipes only across processes | 1.19 |
 | 1.22 | Recipe files, PNG metadata, Zarr | `.recipe.json`, PNG iTXt with recipe + palette + layer hash, Zarr above 4 GB, semver schema + migrations | 1.7, 1.16 |
+| 1.24 | Benchmark harness | Giter/s per device logged in metadata; A/B comparisons alternate the variants in one process (S4's `q4_repeat.py` method): warm-up, median of at least five runs per variant, SM clock and temperature recorded with every result, clock variation above 5% flagged; regressions judged against a baseline timed in the same run with a threshold above the measured noise (about ±10% on Xenon), never a fixed threshold on stored numbers; runs nightly on Xenon behind the GPU busy check | 1.8, 0.3 |
 | 1.23 | Docs site and gallery-as-tests | Sphinx + PyData theme + MyST-NB with executed notebooks; sphinx-llms-txt generates llms.txt; gallery built from recipes and checked against golden images; README finished with CI-rendered hero strip and quickstart, README code tested by pytest-markdown-docs; phase 1 gate passes | 1.20, 1.22 |
 
 ## Phase 2: more families and precision (epics)
@@ -59,7 +60,7 @@ Status is tracked in GitHub issues (one per row), not in this file.
 | --- | --- | --- | --- |
 | 2.1 | Convergent family | Newton/Halley/Nova/Magnet, root identification, smooth convergence, outcome layer, multiple-root handling | 1.23 |
 | 2.2 | Interior layers | Brent period detection, multiplier, atom domains, interior DE, `Lyapunov` | 1.23 |
-| 2.3 | Multi-word precision | df64, dd, qf printers on GPU; per-device dd vs qf benchmark cached; AUTO tier selection; dd still matches mpmath reference | 1.23, S3 |
+| 2.3 | Multi-word precision | df64, dd, qf printers on GPU; per-device dd vs qf benchmark cached; AUTO tier selection; dd still matches mpmath reference; qf forms the pixel offset in qf precision (S4: the f32 offset made 3 of 4096 pixels differ from dd at 1e-20 spacing) and handles the DE derivative's f32 exponent range | 1.23, S3 |
 | 2.4 | Density family: Buddhabrot | Escape windows, `SampleDomain`, uniform/importance/MH samplers, resumable `Histograms`; Nebulabrot resume gate | 1.23 |
 | 2.5 | MIIM and strange attractors | Inverse iteration with visit caps; Clifford, de Jong, Hénon point maps | 2.4 |
 | 2.6 | Sequence iteration | `FormulaSequence` periodic and random; composite compile; degree-product mu; holomorphic check and `rendering_only` flag | 1.23 |

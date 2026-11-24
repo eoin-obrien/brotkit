@@ -1,4 +1,7 @@
-# Draft upstream issue for NVIDIA/numba-cuda-mlir (NOT FILED)
+# Draft upstream issues for NVIDIA/numba-cuda-mlir
+
+Filed: 1 as [#492](https://github.com/NVIDIA/numba-cuda-mlir/issues/492) (with the low-priority notes at the end), 2 as [#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493),
+with fresh standalone repros. 3 is for NVIDIA and isn't filed yet.
 
 Drafted in spike S4 (docs/design/spikes/S4.md). Three independent problems; they may be better
 filed as three issues. Versions: numba-cuda-mlir 0.6.0, cuda-bindings 13.5.0,
