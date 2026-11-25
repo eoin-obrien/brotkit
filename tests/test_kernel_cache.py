@@ -509,6 +509,136 @@ def test_threads_different_keys_dont_serialise(tmp_path: Path) -> None:
     assert time.perf_counter() - t0 < 0.3 * 2.5
 
 
+# --- perf records ------------------------------------------------------------------------------
+
+DEV_A, DEV_B = "sm_86 GPU A", "sm_86 GPU B"
+
+
+def test_perf_record_round_trips_per_device(tmp_path: Path) -> None:
+    c, _ = make_cache(tmp_path)
+    assert c.read_perf(BASE, DEV_A) is None
+    c.write_perf(BASE, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    c.write_perf(BASE, DEV_B, {"tau": 2e-6, "rate": 5e9})
+    c2, _ = make_cache(tmp_path)  # another process
+    assert c2.read_perf(BASE, DEV_A) == {"tau": 1e-6, "rate": 1e10}
+    assert c2.read_perf(BASE, DEV_B) == {"tau": 2e-6, "rate": 5e9}
+    c2.write_perf(BASE, DEV_A, {"tau": 3e-6, "rate": 1e9})
+    assert c.read_perf(BASE, DEV_A) == {"tau": 3e-6, "rate": 1e9}
+    assert c.read_perf(BASE, DEV_B) == {"tau": 2e-6, "rate": 5e9}  # kept
+
+
+def test_perf_record_is_per_key(tmp_path: Path) -> None:
+    c, _ = make_cache(tmp_path)
+    c.write_perf(BASE, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    assert c.read_perf(VARIANTS["max_registers"], DEV_A) is None
+
+
+def test_perf_record_leaves_the_entry_alone(tmp_path: Path) -> None:
+    c, _ = make_cache(tmp_path)
+    c.get(BASE)
+    d, _ = c.key(BASE)
+    before = c.store.entry_path(d).read_bytes()
+    c.write_perf(BASE, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    assert c.store.entry_path(d).read_bytes() == before
+    assert [e.digest for e in c.store.entries()] == [d]  # not listed as an entry
+    c2, be2 = make_cache(tmp_path)
+    c2.get(BASE)
+    assert be2.builds == 0
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        b"",
+        b"{not json",
+        b"\xff\xfe",
+        b"[]",
+        b'{"format": 2, "devices": {}}',
+        b'{"format": 1}',
+        b'{"format": 1, "devices": []}',
+        b'{"format": 1, "devices": {"sm_86 GPU A": 3}}',
+    ],
+)
+def test_damaged_perf_record_reads_as_none_and_is_replaced(tmp_path: Path, content: bytes) -> None:
+    c, _ = make_cache(tmp_path)
+    d, _ = c.key(BASE)
+    path = c.store.perf_path(d)
+    path.parent.mkdir(parents=True)
+    path.write_bytes(content)
+    assert c.read_perf(BASE, DEV_A) is None
+    c.write_perf(BASE, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    assert c.read_perf(BASE, DEV_A) == {"tau": 1e-6, "rate": 1e10}
+
+
+def test_perf_record_with_a_changed_value_reads_as_none(tmp_path: Path) -> None:
+    """A record is checksummed, so a damaged number can't pass for a real measurement."""
+    c, _ = make_cache(tmp_path)
+    c.write_perf(BASE, DEV_A, {"tau": 1.5e-06, "rate": 13000000000.0})
+    path = c.store.perf_path(c.key(BASE)[0])
+    text = path.read_text()
+    assert "13000000000" in text
+    path.write_text(text.replace("13000000000", "93000000000"))
+    assert c.read_perf(BASE, DEV_A) is None
+
+
+A_REC = {"tau": 1e-6, "rate": 1e10}
+B_REC = {"tau": 2e-6, "rate": 5e9}
+
+
+def _perf_writer(root: str, device: str, rec: dict[str, float], n: int) -> None:
+    c: KernelCache[FakeKernel] = KernelCache(FakeBackend(), KernelStore(root))
+    for _ in range(n):
+        c.write_perf(BASE, device, rec)
+
+
+@pytest.mark.parametrize("devices", [(DEV_A, DEV_A), (DEV_A, DEV_B)], ids=["same", "other"])
+def test_racing_perf_writers_leave_a_whole_record_or_none(
+    tmp_path: Path, devices: tuple[str, str]
+) -> None:
+    """Two processes write records while this one reads: every read is one of the written
+    records or None (a lost update), never a mix or a damaged value."""
+    ctx = mp.get_context("spawn")
+    root = str(tmp_path / "cache")
+    recs = (A_REC, B_REC)
+    ps = [
+        ctx.Process(target=_perf_writer, args=(root, dev, rec, 300))
+        for dev, rec in zip(devices, recs, strict=True)
+    ]
+    for p in ps:
+        p.start()
+    c: KernelCache[FakeKernel] = KernelCache(FakeBackend(), KernelStore(root))
+    seen: list[object] = []
+    while any(p.is_alive() for p in ps):
+        seen.extend(c.read_perf(BASE, dev) for dev in set(devices))
+    for p in ps:
+        p.join(60)
+        assert p.exitcode == 0
+    assert all(r is None or r in recs for r in seen)
+    final = [c.read_perf(BASE, dev) for dev in devices]
+    assert all(r is None or r in recs for r in final)
+    assert any(r is not None for r in final)
+    assert not list(c.store.dir.glob("??/.*.tmp"))
+
+
+def test_oversized_perf_record_is_ignored(tmp_path: Path) -> None:
+    c, _ = make_cache(tmp_path)
+    d, _ = c.key(BASE)
+    path = c.store.perf_path(d)
+    path.parent.mkdir(parents=True)
+    path.write_text('{"format": 1, "devices": {"x": "' + "a" * 70000 + '"}}')
+    assert c.read_perf(BASE, "x") is None
+
+
+def test_eviction_removes_the_perf_record(tmp_path: Path) -> None:
+    store = KernelStore(tmp_path / "cache", max_bytes=1)
+    c: KernelCache[FakeKernel] = KernelCache(FakeBackend(), store)
+    old = spec(options={"max_registers": 40})
+    c.get(old)
+    c.write_perf(old, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    c.get(spec(options={"max_registers": 41}))  # evicts `old`
+    assert not store.perf_path(c.key(old)[0]).exists()
+
+
 # --- eviction -----------------------------------------------------------------------------------
 
 

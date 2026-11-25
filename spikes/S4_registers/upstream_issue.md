@@ -1,8 +1,12 @@
 # Draft upstream issues for NVIDIA/numba-cuda-mlir
 
 Filed: 1 as [#492](https://github.com/NVIDIA/numba-cuda-mlir/issues/492) (with the low-priority notes at the end), 2 as [#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493),
-with fresh standalone repros. 2 has since been rewritten with S2's confirmed cases (more options,
-function constants) and isn't posted yet. 3 is for NVIDIA and isn't filed yet.
+with fresh standalone repros. 2 was then rewritten with S2's confirmed cases (more options,
+function constants) and posted as a comment on #493:
+<https://github.com/NVIDIA/numba-cuda-mlir/issues/493#issuecomment-7160800477>. Compiling
+without a GPU (S4's bug 1) is covered by #492, so it has no issue of its own. 3 is NVIDIA's bug,
+not numba-cuda-mlir's: the report below is ready for NVIDIA's bug portal (filed by the
+maintainer), with the standalone repro in `nvjitlink_cache_repro.py`.
 
 Drafted in spike S4 (docs/design/spikes/S4.md). Three independent problems; they may be better
 filed as three issues. Versions: numba-cuda-mlir 0.6.0, cuda-bindings 13.5.0,
@@ -79,9 +83,9 @@ toolchain runs with no GPU: `compile_ptx` for sm_86/100/120, nvJitLink linking w
 
 ## 2. `cache=True` serves stale builds: the index key misses most target options and function constants
 
-*Combined S4 + S2 write-up, replacing the original #493 text and the S2 follow-up. Not posted:
-either post it as an update/comment on [#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493)
-or as a new issue that supersedes it (maintainer's call).*
+*Combined S4 + S2 write-up, replacing the original #493 text and the S2 follow-up. Posted as
+[a comment on #493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493#issuecomment-7160800477),
+led by the standalone repro.*
 
 **Versions.** numba-cuda-mlir 0.6.0 (`[cu13]`), cuda-bindings 13.5.0, nvidia-nvjitlink /
 nvidia-nvvm 13.5.37, CPython 3.15.2, Linux x86-64 (WSL2), RTX 3090 Ti (sm_86).
@@ -189,6 +193,67 @@ nvJitLink caches ptxas results in the CUDA compute cache (`~/.nv/ComputeCache`, 
 `N bytes spill stores, N bytes spill loads`. `CUDA_CACHE_DISABLE=1` restores the block, but only
 if it's set before the library loads; setting it at runtime has no effect. brotkit works around
 this by appending a unique comment to the PTX before linking.
+
+Report for NVIDIA's bug portal (repro: `nvjitlink_cache_repro.py` in this directory, needs only
+`cuda-bindings` and `nvidia-nvjitlink`, no GPU):
+
+> **Title:** nvJitLink: `-verbose -Xptxas=-v` info log omits the ptxas function-properties block (spill stores/loads) on a compute-cache hit
+>
+> **Product / component:** CUDA Toolkit, nvJitLink (libnvJitLink)
+>
+> **Environment**
+> - nvJitLink 13.5 (pip wheel `nvidia-nvjitlink` 13.5.37), via `cuda-bindings` 13.5.0
+> - Linux x86-64 (Ubuntu under WSL2, kernel 6.18), driver 610.88; no GPU needed to reproduce
+> - Target sm_86 (reproduces with any target)
+>
+> **Description**
+>
+> With `-verbose -Xptxas=-v`, nvJitLink's info log includes ptxas's per-function block:
+>
+> ```
+> ptxas info    : Function properties for k
+> ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+> ptxas info    : Used 8 registers, ...
+> ```
+>
+> When the same input is linked again and the ptxas result is served from the CUDA compute cache
+> (`~/.nv/ComputeCache`), the whole `ptxas info` block is missing. Only nvJitLink's own summary
+> remains (`used N registers, ... N stack, ...`), and it has no spill counts. So a tool that reads
+> spill counts from the link log gets nothing on a hit, and could easily report 0 by mistake.
+>
+> Setting `CUDA_CACHE_DISABLE=1` brings the block back, but only if it's set before the library
+> loads. Changing it at runtime has no effect. The only workaround we found is to make every input
+> unique (we append a random comment to the PTX), which defeats the cache.
+>
+> **Expected:** the info log is the same whether ptxas ran or its result came from the compute
+> cache, including the spill stores and loads. Alternatively, the summary line could carry the
+> spill counts.
+>
+> **Steps to reproduce:** `pip install cuda-bindings nvidia-nvjitlink`, then run the attached
+> `nvjitlink_cache_repro.py`. It links the same small PTX kernel twice in one process. Output:
+>
+> ```
+> nvJitLink (13, 5) arch sm_86
+> --- first link (cache miss): spill line present = True
+> ptxas info    : 0 bytes gmem
+> ptxas info    : Compiling entry function 'k' for 'sm_86'
+> ptxas info    : Function properties for k
+> ptxas         .     0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+> ptxas info    : Used 8 registers, used 0 barriers, 360 bytes cmem[0]
+> ptxas info    : Compile time = 3.784 ms
+> info    : 0 bytes gmem
+> info    : Function properties for 'k':
+> info    : used 8 registers, used 6 barriers, 0 stack, 0 bytes smem, 360 bytes cmem[0], 0 bytes lmem
+>
+> --- second link, same PTX (cache hit): spill line present = False
+> info    : 0 bytes gmem
+> info    : Function properties for 'k':
+> info    : used 8 registers, used 6 barriers, 0 stack, 0 bytes smem, 360 bytes cmem[0], 0 bytes lmem
+> ```
+>
+> **Impact:** register and spill reporting built on nvJitLink (for example, deciding whether to
+> split a fused kernel when it spills) silently loses the spill numbers whenever the compute cache
+> hits.
 
 ---
 

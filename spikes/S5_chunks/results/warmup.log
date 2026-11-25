@@ -1,0 +1,20 @@
+prep {'emit_source_ms': 9.79, 'lookup_memory_hit_ms': 0.084, 'lookup_disk_hit_ms': 0.517, 'alloc_4k_layers_ms': 5.376}
+load clock 1950 MHz, warm probe 0.9103 ms, warm iters/ms at idle 10423
+rep 0 H=  0 ms  mhz0=210 warmk=0.0 ms first=8.64x first10=8.8x until<1.2x=326.9 ms penalty=291.6 ms
+rep 0 H=  5 ms  mhz0=210 warmk=4.716 ms first=8.65x first10=8.65x until<1.2x=323.3 ms penalty=282.5 ms
+rep 0 H= 20 ms  mhz0=210 warmk=18.816 ms first=8.65x first10=8.8x until<1.2x=311.7 ms penalty=283.1 ms
+rep 0 H= 50 ms  mhz0=210 warmk=47.003 ms first=10.18x first10=8.49x until<1.2x=247.9 ms penalty=225.5 ms
+rep 0 H=100 ms  mhz0=210 warmk=96.802 ms first=8.66x first10=8.65x until<1.2x=183.1 ms penalty=170.0 ms
+rep 0 H=200 ms  mhz0=210 warmk=182.708 ms first=4.68x first10=4.68x until<1.2x=151.6 ms penalty=127.6 ms
+rep 1 H=  0 ms  mhz0=210 warmk=0.0 ms first=8.65x first10=8.8x until<1.2x=308.9 ms penalty=274.8 ms
+rep 1 H=  5 ms  mhz0=210 warmk=4.716 ms first=12.98x first10=10.47x until<1.2x=306.7 ms penalty=280.6 ms
+rep 1 H= 20 ms  mhz0=210 warmk=18.811 ms first=8.66x first10=9.35x until<1.2x=323.6 ms penalty=281.6 ms
+rep 1 H= 50 ms  mhz0=210 warmk=49.893 ms first=8.65x first10=8.8x until<1.2x=311.9 ms penalty=265.2 ms
+rep 1 H=100 ms  mhz0=210 warmk=99.259 ms first=8.66x first10=7.9x until<1.2x=258.8 ms penalty=219.0 ms
+rep 1 H=200 ms  mhz0=210 warmk=170.4 ms first=1.05x first10=1.05x until<1.2x=1.0 ms penalty=10.9 ms
+rep 2 H=  0 ms  mhz0=210 warmk=0.0 ms first=8.65x first10=9.06x until<1.2x=307.7 ms penalty=278.5 ms
+rep 2 H=  5 ms  mhz0=210 warmk=4.718 ms first=10.09x first10=9.12x until<1.2x=216.9 ms penalty=201.6 ms
+rep 2 H= 20 ms  mhz0=210 warmk=18.822 ms first=8.83x first10=8.98x until<1.2x=233.6 ms penalty=215.9 ms
+rep 2 H= 50 ms  mhz0=210 warmk=48.631 ms first=10.15x first10=9.12x until<1.2x=134.2 ms penalty=129.3 ms
+rep 2 H=100 ms  mhz0=210 warmk=95.447 ms first=10.15x first10=8.17x until<1.2x=75.4 ms penalty=76.3 ms
+rep 2 H=200 ms  mhz0=210 warmk=187.009 ms first=1.13x first10=1.05x until<1.2x=1.0 ms penalty=10.9 ms

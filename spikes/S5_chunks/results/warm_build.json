@@ -1,0 +1,70 @@
+[
+ {
+  "rep": 0,
+  "warm_on_miss": false,
+  "mhz_before": 210,
+  "queue_warm_ms": 0.0,
+  "prep_s": 4.777,
+  "wall_s": 2.7551,
+  "kernel_s": 2.6094,
+  "calibration_s": 0.11032,
+  "gpu_s": 2.7197,
+  "first_chunks_s": [
+   0.000118,
+   0.096035,
+   0.077241
+  ],
+  "chunks": 31
+ },
+ {
+  "rep": 0,
+  "warm_on_miss": true,
+  "mhz_before": 210,
+  "queue_warm_ms": 3.4,
+  "prep_s": 2.695,
+  "wall_s": 2.5824,
+  "kernel_s": 2.5039,
+  "calibration_s": 0.04881,
+  "gpu_s": 2.5527,
+  "first_chunks_s": [
+   0.000208,
+   0.089074,
+   0.06
+  ],
+  "chunks": 29
+ },
+ {
+  "rep": 1,
+  "warm_on_miss": false,
+  "mhz_before": 210,
+  "queue_warm_ms": 0.0,
+  "prep_s": 2.993,
+  "wall_s": 2.6813,
+  "kernel_s": 2.5925,
+  "calibration_s": 0.05653,
+  "gpu_s": 2.649,
+  "first_chunks_s": [
+   0.000116,
+   0.139413,
+   0.047539
+  ],
+  "chunks": 34
+ },
+ {
+  "rep": 1,
+  "warm_on_miss": true,
+  "mhz_before": 210,
+  "queue_warm_ms": 4.7,
+  "prep_s": 3.038,
+  "wall_s": 2.6139,
+  "kernel_s": 2.5319,
+  "calibration_s": 0.05433,
+  "gpu_s": 2.5862,
+  "first_chunks_s": [
+   8.7e-05,
+   0.103434,
+   0.064527
+  ],
+  "chunks": 29
+ }
+]

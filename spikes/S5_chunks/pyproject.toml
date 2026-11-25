@@ -1,0 +1,18 @@
+# Spike S5 (throwaway): chunked launches. Never library code. Run from this directory;
+# see README.md and docs/design/spikes/S5.md.
+[project]
+name = "s5-chunks"
+version = "0"
+requires-python = ">=3.14"
+dependencies = [
+    "numba-cuda-mlir[cu13]==0.6.0",  # same exact pin as the root [cuda] extra (ADR-0005)
+    "cuda-toolkit[cuobjdump,nvdisasm]==13.5.0",
+    "numpy",
+    "platformdirs",
+    "filelock",
+    "jupyter_client",  # headless kernel driving for the interrupt tests
+    "ipykernel",
+]
+
+[tool.uv]
+package = false

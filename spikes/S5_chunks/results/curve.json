@@ -1,0 +1,447 @@
+{
+ "f32": {
+  "max_iter": 2000,
+  "registers": 36,
+  "blocks_per_sm": 6,
+  "sms": 84,
+  "wave_pixels": 129024,
+  "rows": [
+   {
+    "pixels": 256,
+    "waves": 0.002,
+    "s": 0.000146,
+    "per_thread_iter_ns": 72.96,
+    "giter_s": 3.51,
+    "sm_mhz": 1950
+   },
+   {
+    "pixels": 1024,
+    "waves": 0.008,
+    "s": 0.00017,
+    "per_thread_iter_ns": 84.99,
+    "giter_s": 12.05,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 4096,
+    "waves": 0.032,
+    "s": 0.00015,
+    "per_thread_iter_ns": 74.75,
+    "giter_s": 54.79,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 16128,
+    "waves": 0.125,
+    "s": 0.000117,
+    "per_thread_iter_ns": 58.62,
+    "giter_s": 275.15,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 16384,
+    "waves": 0.127,
+    "s": 0.000149,
+    "per_thread_iter_ns": 74.5,
+    "giter_s": 219.93,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 30720,
+    "waves": 0.238,
+    "s": 0.000239,
+    "per_thread_iter_ns": 119.3,
+    "giter_s": 257.51,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 61440,
+    "waves": 0.476,
+    "s": 0.000336,
+    "per_thread_iter_ns": 168.19,
+    "giter_s": 365.3,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 122880,
+    "waves": 0.952,
+    "s": 0.00054,
+    "per_thread_iter_ns": 270.08,
+    "giter_s": 454.98,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 245760,
+    "waves": 1.905,
+    "s": 0.000916,
+    "per_thread_iter_ns": 457.98,
+    "giter_s": 536.61,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 491520,
+    "waves": 3.81,
+    "s": 0.001594,
+    "per_thread_iter_ns": 796.93,
+    "giter_s": 616.77,
+    "sm_mhz": 2055
+   }
+  ]
+ },
+ "df64": {
+  "max_iter": 2000,
+  "registers": 38,
+  "blocks_per_sm": 6,
+  "sms": 84,
+  "wave_pixels": 129024,
+  "rows": [
+   {
+    "pixels": 256,
+    "waves": 0.002,
+    "s": 0.000493,
+    "per_thread_iter_ns": 246.51,
+    "giter_s": 1.04,
+    "sm_mhz": 405
+   },
+   {
+    "pixels": 1024,
+    "waves": 0.008,
+    "s": 0.000532,
+    "per_thread_iter_ns": 265.98,
+    "giter_s": 3.85,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 4096,
+    "waves": 0.032,
+    "s": 0.000525,
+    "per_thread_iter_ns": 262.4,
+    "giter_s": 15.61,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 16128,
+    "waves": 0.125,
+    "s": 0.000533,
+    "per_thread_iter_ns": 266.74,
+    "giter_s": 60.46,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 16384,
+    "waves": 0.127,
+    "s": 0.000545,
+    "per_thread_iter_ns": 272.64,
+    "giter_s": 60.09,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 30720,
+    "waves": 0.238,
+    "s": 0.001039,
+    "per_thread_iter_ns": 519.68,
+    "giter_s": 59.11,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 61440,
+    "waves": 0.476,
+    "s": 0.001462,
+    "per_thread_iter_ns": 731.07,
+    "giter_s": 84.04,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 122880,
+    "waves": 0.952,
+    "s": 0.002794,
+    "per_thread_iter_ns": 1397.25,
+    "giter_s": 87.94,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 245760,
+    "waves": 1.905,
+    "s": 0.005378,
+    "per_thread_iter_ns": 2689.2,
+    "giter_s": 91.39,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 491520,
+    "waves": 3.81,
+    "s": 0.010103,
+    "per_thread_iter_ns": 5051.38,
+    "giter_s": 97.3,
+    "sm_mhz": 2055
+   }
+  ]
+ },
+ "f64": {
+  "max_iter": 2000,
+  "registers": 36,
+  "blocks_per_sm": 6,
+  "sms": 84,
+  "wave_pixels": 129024,
+  "rows": [
+   {
+    "pixels": 256,
+    "waves": 0.002,
+    "s": 0.002471,
+    "per_thread_iter_ns": 1235.46,
+    "giter_s": 0.21,
+    "sm_mhz": 420
+   },
+   {
+    "pixels": 1024,
+    "waves": 0.008,
+    "s": 0.002513,
+    "per_thread_iter_ns": 1256.41,
+    "giter_s": 0.82,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 4096,
+    "waves": 0.032,
+    "s": 0.002567,
+    "per_thread_iter_ns": 1283.58,
+    "giter_s": 3.19,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 16128,
+    "waves": 0.125,
+    "s": 0.002534,
+    "per_thread_iter_ns": 1267.2,
+    "giter_s": 12.73,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 16384,
+    "waves": 0.127,
+    "s": 0.002506,
+    "per_thread_iter_ns": 1252.84,
+    "giter_s": 13.08,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 30720,
+    "waves": 0.238,
+    "s": 0.005007,
+    "per_thread_iter_ns": 2503.68,
+    "giter_s": 12.27,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 61440,
+    "waves": 0.476,
+    "s": 0.007295,
+    "per_thread_iter_ns": 3647.49,
+    "giter_s": 16.84,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 122880,
+    "waves": 0.952,
+    "s": 0.014281,
+    "per_thread_iter_ns": 7140.35,
+    "giter_s": 17.21,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 245760,
+    "waves": 1.905,
+    "s": 0.0283,
+    "per_thread_iter_ns": 14150.14,
+    "giter_s": 17.37,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 491520,
+    "waves": 3.81,
+    "s": 0.0547,
+    "per_thread_iter_ns": 27350.02,
+    "giter_s": 17.97,
+    "sm_mhz": 2040
+   }
+  ]
+ },
+ "dd": {
+  "max_iter": 2000,
+  "registers": 62,
+  "blocks_per_sm": 4,
+  "sms": 84,
+  "wave_pixels": 86016,
+  "rows": [
+   {
+    "pixels": 256,
+    "waves": 0.003,
+    "s": 0.029468,
+    "per_thread_iter_ns": 14733.82,
+    "giter_s": 0.02,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 1024,
+    "waves": 0.012,
+    "s": 0.029278,
+    "per_thread_iter_ns": 14638.84,
+    "giter_s": 0.07,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 4096,
+    "waves": 0.048,
+    "s": 0.029368,
+    "per_thread_iter_ns": 14684.16,
+    "giter_s": 0.28,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 10752,
+    "waves": 0.125,
+    "s": 0.029276,
+    "per_thread_iter_ns": 14638.08,
+    "giter_s": 0.73,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 16384,
+    "waves": 0.19,
+    "s": 0.029299,
+    "per_thread_iter_ns": 14649.6,
+    "giter_s": 1.12,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 21504,
+    "waves": 0.25,
+    "s": 0.029294,
+    "per_thread_iter_ns": 14646.78,
+    "giter_s": 1.47,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 30720,
+    "waves": 0.357,
+    "s": 0.058573,
+    "per_thread_iter_ns": 29286.66,
+    "giter_s": 1.05,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 61440,
+    "waves": 0.714,
+    "s": 0.088142,
+    "per_thread_iter_ns": 44071.17,
+    "giter_s": 1.39,
+    "sm_mhz": 2040
+   },
+   {
+    "pixels": 153600,
+    "waves": 1.786,
+    "s": 0.207168,
+    "per_thread_iter_ns": 103584.0,
+    "giter_s": 1.48,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 337920,
+    "waves": 3.929,
+    "s": 0.465497,
+    "per_thread_iter_ns": 232748.28,
+    "giter_s": 1.45,
+    "sm_mhz": 2055
+   }
+  ]
+ },
+ "qf": {
+  "max_iter": 2000,
+  "registers": 64,
+  "blocks_per_sm": 4,
+  "sms": 84,
+  "wave_pixels": 86016,
+  "rows": [
+   {
+    "pixels": 256,
+    "waves": 0.003,
+    "s": 0.003251,
+    "per_thread_iter_ns": 1625.3,
+    "giter_s": 0.16,
+    "sm_mhz": 1950
+   },
+   {
+    "pixels": 1024,
+    "waves": 0.012,
+    "s": 0.003294,
+    "per_thread_iter_ns": 1646.85,
+    "giter_s": 0.62,
+    "sm_mhz": 1950
+   },
+   {
+    "pixels": 4096,
+    "waves": 0.048,
+    "s": 0.003213,
+    "per_thread_iter_ns": 1606.66,
+    "giter_s": 2.55,
+    "sm_mhz": 1950
+   },
+   {
+    "pixels": 10752,
+    "waves": 0.125,
+    "s": 0.003216,
+    "per_thread_iter_ns": 1608.15,
+    "giter_s": 6.69,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 16384,
+    "waves": 0.19,
+    "s": 0.003169,
+    "per_thread_iter_ns": 1584.38,
+    "giter_s": 10.34,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 21504,
+    "waves": 0.25,
+    "s": 0.003214,
+    "per_thread_iter_ns": 1607.17,
+    "giter_s": 13.38,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 30720,
+    "waves": 0.357,
+    "s": 0.006032,
+    "per_thread_iter_ns": 3016.19,
+    "giter_s": 10.19,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 61440,
+    "waves": 0.714,
+    "s": 0.008867,
+    "per_thread_iter_ns": 4433.66,
+    "giter_s": 13.86,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 153600,
+    "waves": 1.786,
+    "s": 0.02245,
+    "per_thread_iter_ns": 11224.8,
+    "giter_s": 13.68,
+    "sm_mhz": 2055
+   },
+   {
+    "pixels": 337920,
+    "waves": 3.929,
+    "s": 0.045604,
+    "per_thread_iter_ns": 22801.92,
+    "giter_s": 14.82,
+    "sm_mhz": 2055
+   }
+  ]
+ }
+}

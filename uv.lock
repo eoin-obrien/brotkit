@@ -128,6 +128,7 @@ video = [
 dev = [
     { name = "commitizen" },
     { name = "hypothesis" },
+    { name = "numpy" },
     { name = "packaging" },
     { name = "pre-commit" },
     { name = "pyright" },
@@ -156,6 +157,7 @@ provides-extras = ["cuda", "video"]
 dev = [
     { name = "commitizen", specifier = ">=4.20" },
     { name = "hypothesis", specifier = ">=6.170" },
+    { name = "numpy", specifier = ">=2.5" },
     { name = "packaging", specifier = ">=25" },
     { name = "pre-commit", specifier = ">=4.7" },
     { name = "pyright", specifier = ">=1.1.414" },

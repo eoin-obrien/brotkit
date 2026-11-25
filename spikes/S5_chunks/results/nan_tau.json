@@ -1,0 +1,82 @@
+[
+ {
+  "tier": "f32",
+  "kernel": "C",
+  "tau_real_ns": 53.8,
+  "tau_nan_ns": 52.5,
+  "nan_over_real": 0.976,
+  "real_tile_max_n": 2000
+ },
+ {
+  "tier": "df64",
+  "kernel": "C",
+  "tau_real_ns": 330.2,
+  "tau_nan_ns": 310.5,
+  "nan_over_real": 0.94,
+  "real_tile_max_n": 2000
+ },
+ {
+  "tier": "f64",
+  "kernel": "C",
+  "tau_real_ns": 1285.1,
+  "tau_nan_ns": 1228.0,
+  "nan_over_real": 0.956,
+  "real_tile_max_n": 2000
+ },
+ {
+  "tier": "dd",
+  "kernel": "C",
+  "tau_real_ns": 14657.2,
+  "tau_nan_ns": 14638.8,
+  "nan_over_real": 0.999,
+  "real_tile_max_n": 2000
+ },
+ {
+  "tier": "qf",
+  "kernel": "C",
+  "tau_real_ns": 1600.3,
+  "tau_nan_ns": 1590.0,
+  "nan_over_real": 0.994,
+  "real_tile_max_n": 2000
+ },
+ {
+  "tier": "f32",
+  "kernel": "F6",
+  "tau_real_ns": 342.8,
+  "tau_nan_ns": 568.3,
+  "nan_over_real": 1.658,
+  "real_tile_max_n": 2000
+ },
+ {
+  "tier": "df64",
+  "kernel": "F6",
+  "tau_real_ns": 565.2,
+  "tau_nan_ns": 753.4,
+  "nan_over_real": 1.333,
+  "real_tile_max_n": 2000
+ },
+ {
+  "tier": "f64",
+  "kernel": "F6",
+  "tau_real_ns": 1523.2,
+  "tau_nan_ns": 1561.1,
+  "nan_over_real": 1.025,
+  "real_tile_max_n": 2000
+ },
+ {
+  "tier": "dd",
+  "kernel": "F6",
+  "tau_real_ns": 14591.0,
+  "tau_nan_ns": 14620.4,
+  "nan_over_real": 1.002,
+  "real_tile_max_n": 2000
+ },
+ {
+  "tier": "qf",
+  "kernel": "F6",
+  "tau_real_ns": 1844.2,
+  "tau_nan_ns": 2045.7,
+  "nan_over_real": 1.109,
+  "real_tile_max_n": 2000
+ }
+]

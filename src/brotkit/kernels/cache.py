@@ -15,6 +15,12 @@ Pieces:
   keeps it under a size cap.
 - `KernelCache`: the process-wide front end. It checks memory, then disk, then builds under
   the key's lock, and hands entries to the backend's `load`.
+- Perf records: a small JSON file beside each entry holding what renders measured with that
+  kernel, per device (spike S5: the chunk planner's prior, so a render needs no calibration
+  launches). The entry itself stays write-once. A perf record is a hint: each device's record
+  carries a sha256 of its canonical JSON, so a damaged one reads as None, as does a missing one.
+  Writes are atomic (temp file and `os.replace`), so a reader sees a whole file, old or new;
+  two processes racing to update the file may lose one update, which also reads as None.
 
 Nothing here imports a GPU stack. The CUDA build and load adapter lives in
 `brotkit.backends.cuda`.
@@ -107,6 +113,8 @@ _MAGIC: Final = b"BKKC"
 _HEAD: Final = struct.Struct("<4sIQ32s")  # magic, format, header length, header sha256
 _STRIPES: Final = 256  # lock files; never deleted, so the lock inode is stable
 _MAX_HEADER: Final = 1 << 24
+_PERF_FORMAT: Final = 1
+_MAX_PERF_BYTES: Final = 1 << 16
 
 
 class KernelCacheWarning(UserWarning):
@@ -423,6 +431,54 @@ class KernelStore:
     def entry_path(self, digest_: str) -> Path:
         return self.dir / digest_[:2] / f"{digest_}.bkk"
 
+    def perf_path(self, digest_: str) -> Path:
+        """The entry's perf record: `{"format": 1, "devices": {device: {...}}}`."""
+        return self.dir / digest_[:2] / f"{digest_}.perf.json"
+
+    def _perf_devices(self, digest_: str) -> dict[str, JSON]:
+        try:
+            path = self.perf_path(digest_)
+            if path.stat().st_size > _MAX_PERF_BYTES:
+                return {}
+            doc = json.loads(path.read_bytes())
+        except OSError, UnicodeDecodeError, json.JSONDecodeError:
+            return {}
+        if not isinstance(doc, dict) or doc.get("format") != _PERF_FORMAT:  # pyright: ignore[reportUnknownMemberType]
+            return {}
+        devices = doc.get("devices")  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+        return devices if isinstance(devices, dict) else {}  # pyright: ignore[reportUnknownVariableType]
+
+    def read_perf(self, digest_: str, device: str) -> dict[str, JSON] | None:
+        """What was recorded for `digest_` on `device`, or None (missing, or damaged: its
+        checksum doesn't match)."""
+        slot = self._perf_devices(digest_).get(device)
+        if not isinstance(slot, dict):
+            return None
+        rec, check = slot.get("record"), slot.get("sha256")  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+        if not isinstance(rec, dict) or not isinstance(check, str):
+            return None
+        canon = canonical_json(rec)  # pyright: ignore[reportUnknownArgumentType]
+        if hashlib.sha256(canon.encode()).hexdigest() != check:
+            return None
+        return rec  # pyright: ignore[reportUnknownVariableType]
+
+    def write_perf(self, digest_: str, device: str, record: Mapping[str, JSON]) -> None:
+        """Replace `device`'s record for `digest_`, keeping other devices'. Atomic per file."""
+        devices = self._perf_devices(digest_)
+        rec: dict[str, JSON] = dict(record)
+        check = hashlib.sha256(canonical_json(rec).encode()).hexdigest()
+        devices[device] = {"record": rec, "sha256": check}
+        doc: dict[str, JSON] = {"format": _PERF_FORMAT, "devices": devices}
+        path = self.perf_path(digest_)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_name(f".{digest_[:16]}.{os.getpid()}.{uuid.uuid4().hex}.tmp")
+        try:
+            tmp.write_text(canonical_json(doc))
+            os.replace(tmp, path)
+        finally:
+            with suppress(FileNotFoundError):
+                tmp.unlink()
+
     def source_path(self, digest_: str) -> Path:
         """Where a backend writes the generated `.py` it compiles (for tracebacks)."""
         return self.dir / "src" / f"k_{digest_[:32]}.py"
@@ -525,8 +581,8 @@ class KernelStore:
                     continue
                 with suppress(FileNotFoundError):
                     e.path.unlink()
-                    src = self.source_path(e.digest)
-                    src.unlink(missing_ok=True)
+                    self.source_path(e.digest).unlink(missing_ok=True)
+                    self.perf_path(e.digest).unlink(missing_ok=True)
                 total -= e.size
                 evicted.append(e.digest)
             return evicted
@@ -681,6 +737,13 @@ class KernelCache[K]:
             self.stats.builds += 1
         self.store.evict(keep=d)
         return entry
+
+    def read_perf(self, spec: KernelSpec, device: str) -> dict[str, JSON] | None:
+        """The perf record stored for `spec`'s entry on `device` (see `KernelStore.read_perf`)."""
+        return self.store.read_perf(self.key(spec)[0], device)
+
+    def write_perf(self, spec: KernelSpec, device: str, record: Mapping[str, JSON]) -> None:
+        self.store.write_perf(self.key(spec)[0], device, record)
 
     def clear_memory(self) -> None:
         with self._lock:
