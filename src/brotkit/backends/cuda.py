@@ -32,13 +32,12 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-
 from brotkit.backends.resources import ResourceUsage, parse_nvjitlink_log
 from brotkit.kernels.cache import Build, CacheEntry, KernelSpec
 
 try:
     import cuda.core as cuda_core
+    import numpy as np  # comes with the [cuda] extra (numba-cuda-mlir); not a base dependency
     from cuda.bindings import nvjitlink, nvvm
     from cuda.core.utils import StridedMemoryView
 except ImportError as e:  # pragma: no cover - exercised by the no-extra import test

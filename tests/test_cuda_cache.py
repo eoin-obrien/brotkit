@@ -8,6 +8,7 @@ tested in `tests/test_kernel_cache.py`.
 # pyright: reportUnknownMemberType=false, reportUnknownVariableType=false
 # pyright: reportUnknownLambdaType=false, reportUnknownArgumentType=false
 # pyright: reportMissingTypeStubs=false, reportAttributeAccessIssue=false
+# pyright: reportMissingImports=false
 
 from __future__ import annotations
 
@@ -21,13 +22,17 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-import numpy as np
 import pytest
 
 pytestmark = pytest.mark.gpu
 
-cuda_backend = pytest.importorskip("brotkit.backends.cuda")
+# Skip on the third-party module: brotkit's own guard raises ImportError, which importorskip
+# doesn't treat as a skip.
+pytest.importorskip("numba_cuda_mlir")
 
+import numpy as np  # noqa: E402  (installed with the [cuda] extra)
+
+import brotkit.backends.cuda as cuda_backend  # noqa: E402
 from brotkit.kernels.cache import (  # noqa: E402
     KernelCache,
     KernelCacheWarning,
@@ -63,7 +68,6 @@ SOURCE = textwrap.dedent(
                          + a13 + a14 + a15)
     """
 )
-HERE = Path(__file__).parent
 SIGNATURE = ("float64*", "int64", "int64", "int64", "float64", "int64")
 H, W, PITCH = 37, 50, 64
 GRID, BLOCK = ((W + 15) // 16, (H + 15) // 16), (16, 16)
@@ -103,7 +107,7 @@ class Device2D:
             "stream": None,
         }
 
-    def to_host(self, backend: Any) -> np.ndarray[Any, Any]:
+    def to_host(self, backend: Any) -> Any:
         from cuda.bindings import driver
 
         backend.stream.sync()
@@ -113,7 +117,7 @@ class Device2D:
         return out
 
 
-def run(kernel: Any, backend: Any) -> np.ndarray[Any, Any]:
+def run(kernel: Any, backend: Any) -> Any:
     out = Device2D(backend, (H, PITCH))
     kernel.launch(GRID, BLOCK, out, H, W, PITCH, 0.01, 200)
     return out.to_host(backend)[:, :W]
@@ -171,8 +175,8 @@ CHILD = textwrap.dedent(
     from brotkit.kernels.cache import KernelCache, KernelStore
     be = CudaCacheBackend()
     t1 = time.perf_counter()
-    sys.path.insert(0, sys.argv[3])
-    from test_cuda_cache import SOURCE, SIGNATURE
+    kernel = json.loads(open(sys.argv[3]).read())  # not the test module: it imports Numba
+    SOURCE, SIGNATURE = kernel["source"], kernel["signature"]
     c = KernelCache(be, KernelStore(sys.argv[1]))
     s = be.spec(source=SOURCE, entry="kern", signature=SIGNATURE, options=json.loads(sys.argv[2]))
     t2 = time.perf_counter()
@@ -189,6 +193,8 @@ CHILD = textwrap.dedent(
 
 
 def fresh_process_load(root: Path, options: Mapping[str, object]) -> dict[str, Any]:
+    kernel_file = root.parent / "kernel.json"
+    kernel_file.write_text(json.dumps({"source": SOURCE, "signature": list(SIGNATURE)}))
     r = subprocess.run(
         [
             sys.executable,
@@ -196,7 +202,7 @@ def fresh_process_load(root: Path, options: Mapping[str, object]) -> dict[str, A
             CHILD,
             str(root),
             json.dumps(dict(options)),
-            str(Path(__file__).parent),
+            str(kernel_file),
         ],
         capture_output=True,
         text=True,
