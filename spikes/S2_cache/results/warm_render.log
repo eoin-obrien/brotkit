@@ -1,0 +1,10 @@
+b f32/C {'one_time': 0.6583, 'spec': 0.006, 'get': 0.0168, 'first_launch': 0.0033, 'render': 0.0112, 'in_process_total': 0.8227, 'wall': 1.08, 'get_max': 0.01949, 'numba_imported': False, 'n': 5}
+a f32/C {'one_time': 0.8711, 'spec': 0.0413, 'get': 0.322, 'first_launch': 0.0069, 'render': 0.013, 'in_process_total': 1.35, 'wall': 1.9798, 'get_max': 0.34203, 'numba_imported': True, 'n': 5}
+b df64/C {'one_time': 0.6667, 'spec': 0.0069, 'get': 0.0153, 'first_launch': 0.0034, 'render': 0.0522, 'in_process_total': 0.8715, 'wall': 1.1367, 'get_max': 0.02031, 'numba_imported': False, 'n': 5}
+a df64/C {'one_time': 0.8989, 'spec': 0.0442, 'get': 0.3129, 'first_launch': 0.0066, 'render': 0.0529, 'in_process_total': 1.4058, 'wall': 2.0205, 'get_max': 0.36527, 'numba_imported': True, 'n': 5}
+b f64/C {'one_time': 0.6504, 'spec': 0.0064, 'get': 0.0157, 'first_launch': 0.0029, 'render': 0.3245, 'in_process_total': 1.1373, 'wall': 1.3879, 'get_max': 0.01936, 'numba_imported': False, 'n': 5}
+a f64/C {'one_time': 0.868, 'spec': 0.0393, 'get': 0.3208, 'first_launch': 0.0126, 'render': 0.325, 'in_process_total': 1.6414, 'wall': 2.2487, 'get_max': 0.33366, 'numba_imported': True, 'n': 5}
+b dd/C {'one_time': 0.6342, 'spec': 0.0058, 'get': 0.0145, 'first_launch': 0.0056, 'render': 3.5113, 'in_process_total': 4.3066, 'wall': 4.5564, 'get_max': 0.0165, 'numba_imported': False, 'n': 5}
+a dd/C {'one_time': 0.8612, 'spec': 0.041, 'get': 0.3257, 'first_launch': 0.0052, 'render': 3.5092, 'in_process_total': 4.851, 'wall': 5.4632, 'get_max': 0.37892, 'numba_imported': True, 'n': 5}
+b qf/C {'one_time': 0.6516, 'spec': 0.0078, 'get': 0.0134, 'first_launch': 0.0026, 'render': 0.355, 'in_process_total': 1.1576, 'wall': 1.4072, 'get_max': 0.01555, 'numba_imported': False, 'n': 5}
+a qf/C {'one_time': 0.8635, 'spec': 0.0393, 'get': 0.3212, 'first_launch': 0.0097, 'render': 0.3585, 'in_process_total': 1.7102, 'wall': 2.3185, 'get_max': 0.33689, 'numba_imported': True, 'n': 5}

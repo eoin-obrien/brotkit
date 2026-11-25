@@ -1,7 +1,8 @@
 # Draft upstream issues for NVIDIA/numba-cuda-mlir
 
 Filed: 1 as [#492](https://github.com/NVIDIA/numba-cuda-mlir/issues/492) (with the low-priority notes at the end), 2 as [#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493),
-with fresh standalone repros. 3 is for NVIDIA and isn't filed yet.
+with fresh standalone repros. 2 has since been rewritten with S2's confirmed cases (more options,
+function constants) and isn't posted yet. 3 is for NVIDIA and isn't filed yet.
 
 Drafted in spike S4 (docs/design/spikes/S4.md). Three independent problems; they may be better
 filed as three issues. Versions: numba-cuda-mlir 0.6.0, cuda-bindings 13.5.0,
@@ -76,31 +77,106 @@ toolchain runs with no GPU: `compile_ptx` for sm_86/100/120, nvJitLink linking w
 
 ---
 
-## 2. `cache=True` ignores `max_registers` (and other link options) in the index key
+## 2. `cache=True` serves stale builds: the index key misses most target options and function constants
 
-**Expected.** Changing `max_registers` changes the cached artefact.
+*Combined S4 + S2 write-up, replacing the original #493 text and the S2 follow-up. Not posted:
+either post it as an update/comment on [#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493)
+or as a new issue that supersedes it (maintainer's call).*
 
-**Actual.** The cache key (`caching.py:MLIRCache._index_key`) includes `lto`, `chip` and
-`launch_bounds` but not `max_registers` (nor `ptxas_options`). A dispatcher without a cap
-loads a capped build from cache:
+**Versions.** numba-cuda-mlir 0.6.0 (`[cu13]`), cuda-bindings 13.5.0, nvidia-nvjitlink /
+nvidia-nvvm 13.5.37, CPython 3.15.2, Linux x86-64 (WSL2), RTX 3090 Ti (sm_86).
+
+**Expected.** With `cache=True`, a dispatcher whose target options or function differ from a
+cached build misses the cache and compiles.
+
+**Actual.** The index key (`caching.py: MLIRCache._index_key` plus `Cache._index_key`) is the
+signature, `codegen.magic_tuple()` (CUDA runtime version and cc), `sha256(co_code)`, a hash of
+the closure variables, and `option_key` = (`_lto_explicit`, `lto`, `chip`, `launch_bounds`).
+Every other target option is left out, and so are the function's constants. A process that asks
+for a different build gets the cached one.
+
+**Repro.** For each row, three fresh interpreters share one kernel file (a 60-register f64
+kernel):
+
+1. build variant X with `cache=True`, which writes the cache;
+2. build variant Y with `cache=True`, which should miss;
+3. build Y with `cache=False`, which is the reference.
+
+"Stale" means process 2 reported a cache hit and its build differs from process 3's.
+
+| Changed between X and Y | Process 2 | Stale? |
+| --- | --- | --- |
+| `max_registers=32` | cache hit | **yes**: 60 registers, reference 32 |
+| `ptxas_options="--maxrregcount=40"` | cache hit | **yes**: 60 registers, reference 40 |
+| `lineinfo=True` | cache hit | **yes**: PTX without `.loc`, reference has line info |
+| `opt=False` | cache hit | **yes**: 60 registers, reference 73 (unoptimised) |
+| `fastmath=True` | cache hit | not on sm_86, where fastmath doesn't change the build (#486); the key ignores it, so on sm_100+, where fastmath does change codegen, it would be stale |
+| `launch_bounds=(256, 4)` (control) | miss | no: in the key |
+| a constant in the function body, file size and mtime unchanged | cache hit | **yes**: the kernel writes the old constant. `co_code` doesn't include `co_consts`, and the source stamp (mtime, size) didn't change |
+
+S4's original two-dispatcher repro shows the same thing for `max_registers` within one file: a
+cached `max_registers=24` build served to an undecorated dispatcher, 24 registers instead of 30.
+
+The scripts and raw results are in brotkit's repo. The S2 scripts are
+`spikes/S2_cache/a_keybugs.py` and `a_consts.py`, with results in
+`spikes/S2_cache/results/a_keybugs.json` and `a_consts.json`; S4's is
+`spikes/S4_registers/probe_caps.py`. A minimal standalone repro for the issue:
 
 ```python
-# two_kernels.py
-@cuda.jit(cache=True, max_registers=24)
-def capped(x, out): ...  # body B
-@cuda.jit(cache=True)
-def uncapped(x, out): ...  # same function object as above, re-decorated
+# kmod.py
+import numpy as np
+from numba_cuda_mlir import cuda
+
+
+def k(out, n):  # 8 live f64 accumulators: 33 registers uncapped on sm_86
+    i = cuda.grid(1)
+    a0 = a1 = a2 = a3 = a4 = a5 = a6 = a7 = np.float64(i)
+    for j in range(n):
+        t = np.float64(j)
+        a0 = a0 * 0.99 + t
+        a1 = a1 * 0.98 + t
+        a2 = a2 * 0.97 + t
+        a3 = a3 * 0.96 + t
+        a4 = a4 * 0.95 + t
+        a5 = a5 * 0.94 + t
+        a6 = a6 * 0.93 + t
+        a7 = a7 * 0.92 + t
+    out[i] = a0 + a1 + a2 + a3 + a4 + a5 + a6 + a7
 ```
 
-```text
-process 1: capped.compile(sig)    -> regs 24, cache miss (written)
-process 2: uncapped.compile(sig)  -> regs 24, cache HIT   # expected: 30, a miss
+```python
+# run.py; run as `python run.py none`, then `python run.py capped`, in fresh processes
+import sys
+from numba_cuda_mlir import cuda, types
+import kmod
+
+sig = (types.float64[::1], types.int64)
+opts = {"max_registers": 24} if sys.argv[1] == "capped" else {}
+d = cuda.jit(cache=True, **opts)(kmod.k)
+d.compile(sig)
+print(sys.argv[1], "regs", d.get_regs_per_thread(sig), "cache hits", sum(d._cache_hits.values()))
+# none   regs 33 cache hits 0
+# capped regs 33 cache hits 1    <- the uncapped build; expected a miss and <= 24
+# (the same capped dispatcher with cache=False: 24 registers)
 ```
 
-(Full script: `spikes/S4_registers/probe_caps.py cache_write` then `cache_read`.)
+**Checked and not a problem:** the index records `numba_cuda_mlir.__version__` and discards
+itself on a version change. A changed constant imported from *another module* is also served
+stale, but that is Numba's documented limitation (cache invalidation tracks only the function's
+own file), so it isn't part of this report.
 
-**Suggested fix.** Add `max_registers` and `ptxas_options` (and anything else passed to the
-`Linker`) to `option_key`.
+**Suggested fix.**
+
+1. Build `option_key` from every target option that reaches `compile_mlir`, `optimize` or the
+   `Linker`, as an allowlist that fails closed: an option the key doesn't know about disables
+   caching rather than being ignored. Today that means at least `max_registers`,
+   `ptxas_options`, `lineinfo`, `debug`, `opt`, `fastmath`, `forceinline`, `inline`,
+   `opt_level`, `features` and `experimental_ast_transforms`.
+2. Hash `co_consts` (recursively, for nested code objects) alongside `co_code`.
+
+**Impact for us.** brotkit doesn't use `cache=True` at all (it stores and keys its own cubins),
+so nothing here blocks us. The report is for other users, who get a silently wrong build: a
+capped kernel where they asked for none, unoptimised code, or an old constant.
 
 ---
 

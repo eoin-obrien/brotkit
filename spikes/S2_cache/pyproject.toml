@@ -1,0 +1,18 @@
+# Spike S2 (throwaway): kernel cache. Never library code. Run from this directory;
+# see README.md and docs/design/spikes/S2.md.
+[project]
+name = "s2-cache"
+version = "0"
+requires-python = ">=3.14"
+dependencies = [
+    "numba-cuda-mlir[cu13]==0.6.0",  # same exact pin as the root [cuda] extra (ADR-0005)
+    "cuda-toolkit[cuobjdump,nvdisasm]==13.5.0",  # SASS dumps without a system toolkit
+    "numpy",
+    "platformdirs",
+    "filelock",
+    "mpmath>=1.4.1",
+    "gmpy2>=2.3.2",
+]
+
+[tool.uv]
+package = false

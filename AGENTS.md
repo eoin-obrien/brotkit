@@ -39,6 +39,10 @@ Python `>=3.14` (3.15 is the target). `dev` and `docs` are PEP 735 dependency gr
 | All hooks | `uv run pre-commit run --all-files` |
 | Docs build | `uv run --group docs sphinx-build -W -b html docs docs/_build/html` (from backlog 1.23) |
 
+Lint, typecheck and tests always run through `uv run` (`uv run pre-commit run -a`,
+`uv run pytest`): ruff, pyright and pytest live only in the uv-managed venv, not on `PATH`, so a
+bare `ruff` or `pytest` (including gstack's `/build-check`) fails with a missing-binary error.
+
 Test markers: `gpu` (needs a GPU; excluded from CPU CI) and `slow`. Markers are strict, so
 register new ones in `pyproject.toml`.
 

@@ -111,6 +111,10 @@ wheels = [
 name = "brotkit"
 version = "0.0.2"
 source = { editable = "." }
+dependencies = [
+    { name = "filelock" },
+    { name = "platformdirs" },
+]
 
 [package.optional-dependencies]
 cuda = [
@@ -142,7 +146,9 @@ docs = [
 [package.metadata]
 requires-dist = [
     { name = "av", marker = "extra == 'video'" },
+    { name = "filelock", specifier = ">=3.20" },
     { name = "numba-cuda-mlir", extras = ["cu13"], marker = "extra == 'cuda'", specifier = "==0.6.0" },
+    { name = "platformdirs", specifier = ">=4.5" },
 ]
 provides-extras = ["cuda", "video"]
 

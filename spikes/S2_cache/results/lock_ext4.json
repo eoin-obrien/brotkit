@@ -1,0 +1,47 @@
+{
+ "dir": "/tmp/claude-1000/-home-eoin-brotkit/41a33af4-c943-4b73-b155-3b6a21cf5f8e/scratchpad/lock_ext4",
+ "fs": "ext4 on / (/dev/sdd)",
+ "none": {
+  "expected": 1200,
+  "final": 360,
+  "ok": false,
+  "seconds": 0.318,
+  "errors": []
+ },
+ "flock": {
+  "expected": 1200,
+  "final": 1200,
+  "ok": true,
+  "seconds": 0.52,
+  "errors": []
+ },
+ "lockf": {
+  "expected": 1200,
+  "final": 1200,
+  "ok": true,
+  "seconds": 0.557,
+  "errors": []
+ },
+ "filelock": {
+  "expected": 1200,
+  "final": 1200,
+  "ok": true,
+  "seconds": 0.711,
+  "errors": []
+ },
+ "replace": {
+  "reads_good": 23373,
+  "reads_torn": 0,
+  "reads_missing": 0,
+  "writer_seconds_300": 4.12,
+  "ok": true
+ },
+ "dirswap": {
+  "rename_onto_nonempty_dir": "OSError errno=39"
+ },
+ "unlink_open": {
+  "unlink_while_open": "ok",
+  "recreate": "ok",
+  "old_handle_reads": "x"
+ }
+}

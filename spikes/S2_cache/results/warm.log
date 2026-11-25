@@ -1,0 +1,45 @@
+setup f32/A: regs 17
+setup df64/A: regs 29
+setup f64/A: regs 25
+setup dd/A: regs 40
+setup qf/A: regs 47
+setup f32/C: regs 36
+setup df64/C: regs 40
+setup f64/C: regs 36
+setup dd/C: regs 60
+setup qf/C: regs 64
+setup f32/F6: regs 48
+setup df64/F6: regs 54
+setup f64/F6: regs 52
+setup dd/F6: regs 72
+setup qf/F6: regs 72
+b f32/A {'one_time': 0.5334, 'spec': 0.0054, 'get': 0.0153, 'first_launch': 0.0014, 'in_process_total': 0.6567, 'wall': 0.9243, 'get_max': 0.01805, 'numba_imported': False, 'n': 7}
+a f32/A {'one_time': 0.755, 'spec': 0.0357, 'get': 0.3335, 'first_launch': 0.0029, 'in_process_total': 1.2366, 'wall': 1.8352, 'get_max': 0.34943, 'numba_imported': True, 'n': 7}
+b df64/A {'one_time': 0.5419, 'spec': 0.0074, 'get': 0.014, 'first_launch': 0.0016, 'in_process_total': 0.6447, 'wall': 0.8904, 'get_max': 0.01868, 'numba_imported': False, 'n': 7}
+a df64/A {'one_time': 0.7608, 'spec': 0.0402, 'get': 0.332, 'first_launch': 0.0034, 'in_process_total': 1.2081, 'wall': 1.8145, 'get_max': 0.35008, 'numba_imported': True, 'n': 7}
+b f64/A {'one_time': 0.527, 'spec': 0.0054, 'get': 0.0145, 'first_launch': 0.0015, 'in_process_total': 0.631, 'wall': 0.8992, 'get_max': 0.0163, 'numba_imported': False, 'n': 7}
+a f64/A {'one_time': 0.7406, 'spec': 0.04, 'get': 0.3291, 'first_launch': 0.0045, 'in_process_total': 1.2152, 'wall': 1.823, 'get_max': 0.3532, 'numba_imported': True, 'n': 7}
+b dd/A {'one_time': 0.5095, 'spec': 0.0055, 'get': 0.0145, 'first_launch': 0.0019, 'in_process_total': 0.6623, 'wall': 0.9118, 'get_max': 0.01526, 'numba_imported': False, 'n': 7}
+a dd/A {'one_time': 0.7411, 'spec': 0.0387, 'get': 0.3159, 'first_launch': 0.0034, 'in_process_total': 1.2083, 'wall': 1.8126, 'get_max': 0.33868, 'numba_imported': True, 'n': 7}
+b qf/A {'one_time': 0.5163, 'spec': 0.005, 'get': 0.0141, 'first_launch': 0.0015, 'in_process_total': 0.6177, 'wall': 0.8597, 'get_max': 0.01892, 'numba_imported': False, 'n': 7}
+a qf/A {'one_time': 0.7208, 'spec': 0.0415, 'get': 0.3179, 'first_launch': 0.0041, 'in_process_total': 1.1826, 'wall': 1.8294, 'get_max': 0.35679, 'numba_imported': True, 'n': 7}
+b f32/C {'one_time': 0.522, 'spec': 0.0063, 'get': 0.0141, 'first_launch': 0.0015, 'in_process_total': 0.6608, 'wall': 0.911, 'get_max': 0.01515, 'numba_imported': False, 'n': 7}
+a f32/C {'one_time': 0.7587, 'spec': 0.0394, 'get': 0.3096, 'first_launch': 0.0033, 'in_process_total': 1.2259, 'wall': 1.8428, 'get_max': 0.37167, 'numba_imported': True, 'n': 7}
+b df64/C {'one_time': 0.5482, 'spec': 0.0059, 'get': 0.0147, 'first_launch': 0.0017, 'in_process_total': 0.6682, 'wall': 0.9192, 'get_max': 0.01967, 'numba_imported': False, 'n': 7}
+a df64/C {'one_time': 0.7631, 'spec': 0.0407, 'get': 0.33, 'first_launch': 0.0033, 'in_process_total': 1.2307, 'wall': 1.8246, 'get_max': 0.35936, 'numba_imported': True, 'n': 7}
+b f64/C {'one_time': 0.5202, 'spec': 0.0057, 'get': 0.0162, 'first_launch': 0.0016, 'in_process_total': 0.6253, 'wall': 0.8778, 'get_max': 0.018, 'numba_imported': False, 'n': 7}
+a f64/C {'one_time': 0.7404, 'spec': 0.0389, 'get': 0.3165, 'first_launch': 0.0042, 'in_process_total': 1.1991, 'wall': 1.7994, 'get_max': 0.36062, 'numba_imported': True, 'n': 7}
+b dd/C {'one_time': 0.5119, 'spec': 0.005, 'get': 0.0143, 'first_launch': 0.0023, 'in_process_total': 0.6283, 'wall': 0.8758, 'get_max': 0.01907, 'numba_imported': False, 'n': 7}
+a dd/C {'one_time': 0.7489, 'spec': 0.0386, 'get': 0.3188, 'first_launch': 0.0038, 'in_process_total': 1.1991, 'wall': 1.7756, 'get_max': 0.34279, 'numba_imported': True, 'n': 7}
+b qf/C {'one_time': 0.5317, 'spec': 0.0074, 'get': 0.0146, 'first_launch': 0.0017, 'in_process_total': 0.6631, 'wall': 0.9204, 'get_max': 0.01681, 'numba_imported': False, 'n': 7}
+a qf/C {'one_time': 0.7315, 'spec': 0.0407, 'get': 0.324, 'first_launch': 0.0039, 'in_process_total': 1.2098, 'wall': 1.8171, 'get_max': 0.3466, 'numba_imported': True, 'n': 7}
+b f32/F6 {'one_time': 0.5476, 'spec': 0.0058, 'get': 0.0134, 'first_launch': 0.0015, 'in_process_total': 0.6452, 'wall': 0.9038, 'get_max': 0.01845, 'numba_imported': False, 'n': 7}
+a f32/F6 {'one_time': 0.7397, 'spec': 0.0374, 'get': 0.3366, 'first_launch': 0.0034, 'in_process_total': 1.2182, 'wall': 1.8435, 'get_max': 0.34859, 'numba_imported': True, 'n': 7}
+b df64/F6 {'one_time': 0.5184, 'spec': 0.0071, 'get': 0.0144, 'first_launch': 0.0016, 'in_process_total': 0.6247, 'wall': 0.8692, 'get_max': 0.01777, 'numba_imported': False, 'n': 7}
+a df64/F6 {'one_time': 0.7464, 'spec': 0.044, 'get': 0.3157, 'first_launch': 0.0038, 'in_process_total': 1.2182, 'wall': 1.7964, 'get_max': 0.37671, 'numba_imported': True, 'n': 7}
+b f64/F6 {'one_time': 0.5307, 'spec': 0.008, 'get': 0.0148, 'first_launch': 0.0016, 'in_process_total': 0.6324, 'wall': 0.882, 'get_max': 0.02063, 'numba_imported': False, 'n': 7}
+a f64/F6 {'one_time': 0.7746, 'spec': 0.0418, 'get': 0.3273, 'first_launch': 0.0038, 'in_process_total': 1.2504, 'wall': 1.8632, 'get_max': 0.35522, 'numba_imported': True, 'n': 7}
+b dd/F6 {'one_time': 0.5213, 'spec': 0.0055, 'get': 0.0145, 'first_launch': 0.0024, 'in_process_total': 0.6426, 'wall': 0.8931, 'get_max': 0.01671, 'numba_imported': False, 'n': 7}
+a dd/F6 {'one_time': 0.7536, 'spec': 0.0386, 'get': 0.3372, 'first_launch': 0.0038, 'in_process_total': 1.1905, 'wall': 1.8281, 'get_max': 0.38818, 'numba_imported': True, 'n': 7}
+b qf/F6 {'one_time': 0.5398, 'spec': 0.0056, 'get': 0.0156, 'first_launch': 0.0016, 'in_process_total': 0.6546, 'wall': 0.9108, 'get_max': 0.01702, 'numba_imported': False, 'n': 7}
+a qf/F6 {'one_time': 0.7415, 'spec': 0.0426, 'get': 0.3213, 'first_launch': 0.0037, 'in_process_total': 1.2046, 'wall': 1.8175, 'get_max': 0.34235, 'numba_imported': True, 'n': 7}

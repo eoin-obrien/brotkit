@@ -377,3 +377,107 @@ Spike S4 ([`spikes/S4.md`](spikes/S4.md)) found on `numba-cuda-mlir` 0.6.0:
   - pipeline step 5, the pipeline diagram, the cross-session caching row and `KernelSource`:
     the cache key covers every compile option and doesn't rely on `cache=True`
   - the Benchmarks row: alternating timing, clocks recorded, same-run baselines
+
+## ADR-0008: brotkit stores cubins and loads them with cuda.core; raw-pointer kernel ABI
+
+- **Status:** Accepted
+- **Date:** 2026-11-24
+- **Backlog:** S2 (affects 1.3, 1.4, 1.24 and every backend)
+
+### Context
+The spec's pipeline step 5 writes generated source to a `.py` file, compiles it with Numba, and
+left open how a warm start reloads the compiled kernel (ADR-0007). Notebooks are the main use,
+so a fresh kernel session must reach a launchable kernel fast. Spike S2
+([`spikes/S2.md`](spikes/S2.md)) found on numba-cuda-mlir 0.6.0, sm_86:
+
+- **Numba's `cache=True` can't be trusted with brotkit's options.** Its index key ignores
+  `max_registers`, `ptxas_options`, `lineinfo` and `opt` (each served a stale build in a test),
+  and `fastmath` (a hit; the build is the same only because fastmath does nothing below
+  sm_100). It hashes the function's bytecode but not its constants, relying on the file's
+  mtime and size. It also unpickles its index and data files.
+- **A stored cubin loads without Numba.** `cuda.core` (in the `[cuda]` wheels already) loads a
+  cubin (`ObjectCode.from_cubin`), gets the kernel by its mangled symbol and launches it.
+  nvJitLink's single link of `compile_ptx` output gives the cubin and the resource log at once.
+- **Numba's array arguments tie the loader to Numba's private struct layout.** With
+  `cuda.carray` (public) a kernel takes typed device pointers and rebuilds its arrays inside.
+  The PTX then has one parameter per argument, which `cuda.core` marshals from NumPy scalars.
+- **The pointer ABI does the same work.** Kernels A, C and F6 in f32, df64, f64, dd and qf
+  (S4's kernels) have the same escape-loop instruction count and the same address and memory
+  instructions as with Numba arrays, zero spills, and registers in the same warp allocation
+  (f32/F6: one `MOV` more, in `sinf`'s slow path). Alternating throughput is within the
+  run-to-run noise. An `int32` shape version scheduled f32/C's 29-instruction loop differently
+  and ran 7.8% slower with identical instructions; the `int64` version ran −2.4%.
+- **Warm loads take milliseconds.** A fresh process gets kernel C from the store in 14–16 ms
+  (median, every tier; at most 20 ms), against 0.2–2.5 s cold, and never imports Numba. Numba's
+  `cache=True` takes 310–340 ms.
+- **WSL2 locks don't cover Windows.** On `/mnt/c` (9p), `flock` and `lockf` serialise Linux
+  processes (about 45× slower than ext4), but a Windows process took a lock on the same file
+  while Linux held one.
+
+### Decision
+- **Mechanism: brotkit stores the cubin and loads it with `cuda.core`.** Numba is used only to
+  compile (`compile_ptx`), and nvJitLink links the cubin. A warm start never imports Numba and
+  never reads a Numba cache. `cache=True` is not used anywhere.
+- **Kernel ABI: typed device pointers and `int64` integers.** Every array argument is a typed
+  pointer (`float32*`); every shape, stride, pitch and count is `int64` (byte offsets and
+  counts pass 2³¹ for large stills and Buddhabrot histograms). Kernels rebuild C-contiguous
+  views with `cuda.carray`. The Numba dev path (`CudaCacheBackend.dev_dispatcher`) compiles the
+  same source with the same signature, so there's one ABI and two launchers.
+- **The manifest carries the launch contract.** Each entry stores the mangled entry symbol,
+  the argument signature, the PTX parameter types and the `ResourceUsage` from the build's own
+  nvJitLink log. None is re-derived on load (nvJitLink drops the spill lines on a compute-cache
+  hit, S4).
+- **One stream owner: `cuda.core`.** Each `CudaCacheBackend` owns one `cuda.core` stream per
+  device, and every brotkit kernel launches on it. Foreign arrays arrive through
+  `__cuda_array_interface__` or DLPack via `cuda.core`'s `StridedMemoryView`, which orders the
+  producer's stream before brotkit's.
+- **Key.** sha256 of canonical JSON over: entry format; codegen version; Python implementation,
+  minor version and free-threading flag; backend; target (`sm_XY`); entry name; argument
+  signature; every compile option that differs from its default (fastmath, `max_registers`,
+  launch bounds, lineinfo, debug, opt, ptxas options, nvJitLink options); the source's sha256;
+  and toolchain versions (numba-cuda-mlir, libNVVM and IR version, nvJitLink, NumPy
+  major.minor, and the nvidia-nvvm and nvidia-nvjitlink wheel versions). A backend reads options
+  only through `KernelSpec`, which accepts only those names, so nothing reaches the compiler
+  unkeyed. Driver and cuda-core versions are not in the key: a cubin for one cc loads on any
+  driver that runs that cc, and cuda-core only loads it. A different GPU always misses.
+- **Store.** One file per entry at `<root>/v1/<d[:2]>/<d>.bkk`: a fixed preamble (magic,
+  format, header length, header sha256), the JSON manifest (key components, metadata, blob
+  sizes and sha256s, creation time) and the blobs (cubin, PTX). Written to a temp file in the
+  same directory, fsynced and published with `os.replace`. The root is
+  `platformdirs.user_cache_path("brotkit") / "kernels"`, overridable with `BROTKIT_CACHE_DIR`.
+  The file's mtime is its last-used time (bumped on each hit; the entry is never rewritten).
+- **Locking.** A build holds a cross-process `filelock` on one of 256 striped lock files (never
+  deleted, so the inode is stable) and re-checks the store once it has the lock. A
+  process-wide `KernelCache` serialises threads per key. Eviction takes its own lock and skips
+  if another process holds it.
+- **Corruption.** Any failed check (preamble, header checksum, JSON, blob sizes or checksums,
+  file name, or stored key components that differ from the requested ones) deletes the entry,
+  warns once per key per process (`KernelCacheWarning`) and rebuilds.
+- **Load failures are misses.** If the backend can't load a stored entry (for example, a driver
+  that rejects the cubin), the entry is deleted, warned about once and rebuilt. Only a fresh
+  build that won't load raises.
+- **Size cap.** 1 GiB by default; least-recently-used entries are evicted after each build, and
+  temp files older than an hour are removed.
+- **Refused locations.** A root on 9p/drvfs (a Windows drive under WSL2) raises
+  `CacheLocationError` naming the path and suggesting a Linux-side location.
+
+### Consequences
+- **Performance-test rule for short f32 loops.** ptxas scheduling alone moves short f32 loops
+  by ±5–8% (identical instructions, different order). A throughput regression on f32 needs a
+  SASS diff showing changed instructions before it counts as a regression. The template isn't
+  tuned to win back a schedule.
+- **Plain f32 results can differ in the last bits between builds.** Contraction is on for plain
+  f32 (ADR-0006), and ptxas chose `FADD` against `FFMA` in one f32/F6 build: total escape
+  counts differed by 3.9 × 10⁻⁵. Multi-word tiers were identical. Plain f32/f64 parity stays
+  tolerance-based.
+- **`brotkit` gains two small pure-Python dependencies:** `platformdirs` and `filelock`.
+- **CPU CI covers the cache with a fake backend** (key, store, locking across processes,
+  corruption, eviction, location). The CUDA adapter's tests are `gpu`-marked.
+- **`CompiledKernel.__reduce__` rebuilds from the `KernelSpec`** through the process's
+  `KernelCache`; in a worker that is a disk hit, a few milliseconds.
+- **Upstream:** S2 confirmed more options missing from Numba's cache key; a follow-up comment
+  for numba-cuda-mlir#493 is drafted in `spikes/S4_registers/upstream_issue.md`. Nothing here
+  depends on it being fixed.
+- **Spec edits in the same PR:** pipeline step 5, the cross-session caching row, architecture
+  review item 2 (variant explosion), the `KernelSource` / `CompiledKernel` / `KernelCache`
+  sketch, and the codegen `AGENTS.md` note on the cache key.

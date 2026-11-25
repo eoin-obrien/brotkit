@@ -1,0 +1,90 @@
+[0] f32/A cold=0.16s
+[0] df64/A cold=0.53s
+[0] f64/A cold=0.18s
+[0] dd/A cold=0.55s
+[0] qf/A cold=1.66s
+[0] f32/C cold=0.29s
+[0] df64/C cold=0.90s
+[0] f64/C cold=0.27s
+[0] dd/C cold=0.98s
+[0] qf/C cold=2.31s
+[0] f32/F6 cold=0.34s
+[0] df64/F6 cold=1.07s
+[0] f64/F6 cold=0.36s
+[0] dd/F6 cold=1.07s
+[0] qf/F6 cold=2.50s
+[1] f32/A cold=0.17s
+[1] df64/A cold=0.53s
+[1] f64/A cold=0.19s
+[1] dd/A cold=0.56s
+[1] qf/A cold=1.89s
+[1] f32/C cold=0.26s
+[1] df64/C cold=0.91s
+[1] f64/C cold=0.28s
+[1] dd/C cold=0.96s
+[1] qf/C cold=2.38s
+[1] f32/F6 cold=0.35s
+[1] df64/F6 cold=1.06s
+[1] f64/F6 cold=0.36s
+[1] dd/F6 cold=1.33s
+[1] qf/F6 cold=2.52s
+[2] f32/A cold=0.18s
+[2] df64/A cold=0.51s
+[2] f64/A cold=0.18s
+[2] dd/A cold=0.56s
+[2] qf/A cold=1.98s
+[2] f32/C cold=0.29s
+[2] df64/C cold=1.02s
+[2] f64/C cold=0.28s
+[2] dd/C cold=1.09s
+[2] qf/C cold=2.43s
+[2] f32/F6 cold=0.36s
+[2] df64/F6 cold=1.04s
+[2] f64/F6 cold=0.36s
+[2] dd/F6 cold=1.12s
+[2] qf/F6 cold=2.63s
+[3] f32/A cold=0.19s
+[3] df64/A cold=0.50s
+[3] f64/A cold=0.19s
+[3] dd/A cold=0.61s
+[3] qf/A cold=1.91s
+[3] f32/C cold=0.26s
+[3] df64/C cold=0.98s
+[3] f64/C cold=0.28s
+[3] dd/C cold=1.02s
+[3] qf/C cold=2.34s
+[3] f32/F6 cold=0.34s
+[3] df64/F6 cold=1.05s
+[3] f64/F6 cold=0.40s
+[3] dd/F6 cold=1.18s
+[3] qf/F6 cold=2.50s
+[4] f32/A cold=0.18s
+[4] df64/A cold=0.53s
+[4] f64/A cold=0.17s
+[4] dd/A cold=0.54s
+[4] qf/A cold=1.89s
+[4] f32/C cold=0.25s
+[4] df64/C cold=0.91s
+[4] f64/C cold=0.28s
+[4] dd/C cold=1.05s
+[4] qf/C cold=2.37s
+[4] f32/F6 cold=0.32s
+[4] df64/F6 cold=1.02s
+[4] f64/F6 cold=0.33s
+[4] dd/F6 cold=1.08s
+[4] qf/F6 cold=2.51s
+f32/A {'exec': 0.0026, 'frontend': 0.1, 'optimize': 0.0398, 'ptx': 0.0176, 'compile_other': 0.0004, 'link': 0.0134, 'load': 0.0001, 'first_launch': 0.002, 'per_kernel_cold': 0.1801, 'import_numba': 0.4748, 'import_core': 0.4831, 'compiler_init': 0.4547}
+df64/A {'exec': 0.0038, 'frontend': 0.4156, 'optimize': 0.0497, 'ptx': 0.0241, 'compile_other': 0.0004, 'link': 0.0204, 'load': 0.0001, 'first_launch': 0.0088, 'per_kernel_cold': 0.5276, 'import_numba': 0.5011, 'import_core': 0.4236, 'compiler_init': 0.4487}
+f64/A {'exec': 0.0022, 'frontend': 0.1103, 'optimize': 0.0372, 'ptx': 0.0136, 'compile_other': 0.0004, 'link': 0.0158, 'load': 0.0001, 'first_launch': 0.0036, 'per_kernel_cold': 0.1808, 'import_numba': 0.4714, 'import_core': 0.4429, 'compiler_init': 0.4559}
+dd/A {'exec': 0.0025, 'frontend': 0.4452, 'optimize': 0.0619, 'ptx': 0.0268, 'compile_other': 0.0003, 'link': 0.0204, 'load': 0.0001, 'first_launch': 0.0029, 'per_kernel_cold': 0.5602, 'import_numba': 0.4766, 'import_core': 0.4524, 'compiler_init': 0.4577}
+qf/A {'exec': 0.0043, 'frontend': 1.6488, 'optimize': 0.126, 'ptx': 0.0767, 'compile_other': 0.0004, 'link': 0.0423, 'load': 0.0001, 'first_launch': 0.0029, 'per_kernel_cold': 1.8948, 'import_numba': 0.4763, 'import_core': 0.4276, 'compiler_init': 0.4636}
+f32/C {'exec': 0.0029, 'frontend': 0.1763, 'optimize': 0.0427, 'ptx': 0.0184, 'compile_other': 0.0006, 'link': 0.0263, 'load': 0.0001, 'first_launch': 0.0022, 'per_kernel_cold': 0.2642, 'import_numba': 0.4715, 'import_core': 0.437, 'compiler_init': 0.4539}
+df64/C {'exec': 0.0037, 'frontend': 0.7814, 'optimize': 0.062, 'ptx': 0.0332, 'compile_other': 0.0004, 'link': 0.0334, 'load': 0.0001, 'first_launch': 0.0024, 'per_kernel_cold': 0.9145, 'import_numba': 0.4757, 'import_core': 0.4378, 'compiler_init': 0.4525}
+f64/C {'exec': 0.0019, 'frontend': 0.1781, 'optimize': 0.0478, 'ptx': 0.0201, 'compile_other': 0.0004, 'link': 0.0257, 'load': 0.0001, 'first_launch': 0.003, 'per_kernel_cold': 0.2818, 'import_numba': 0.4749, 'import_core': 0.4333, 'compiler_init': 0.4539}
+dd/C {'exec': 0.004, 'frontend': 0.8588, 'optimize': 0.0801, 'ptx': 0.0352, 'compile_other': 0.0004, 'link': 0.0348, 'load': 0.0001, 'first_launch': 0.0033, 'per_kernel_cold': 1.0181, 'import_numba': 0.4837, 'import_core': 0.4638, 'compiler_init': 0.4665}
+qf/C {'exec': 0.0059, 'frontend': 1.8788, 'optimize': 0.2444, 'ptx': 0.1459, 'compile_other': 0.0004, 'link': 0.1054, 'load': 0.0001, 'first_launch': 0.0035, 'per_kernel_cold': 2.3667, 'import_numba': 0.484, 'import_core': 0.4501, 'compiler_init': 0.4505}
+f32/F6 {'exec': 0.0029, 'frontend': 0.2052, 'optimize': 0.0511, 'ptx': 0.0346, 'compile_other': 0.0004, 'link': 0.0361, 'load': 0.0001, 'first_launch': 0.0047, 'per_kernel_cold': 0.3381, 'import_numba': 0.4622, 'import_core': 0.4519, 'compiler_init': 0.4584}
+df64/F6 {'exec': 0.0039, 'frontend': 0.8575, 'optimize': 0.0894, 'ptx': 0.0517, 'compile_other': 0.0004, 'link': 0.0442, 'load': 0.0001, 'first_launch': 0.0033, 'per_kernel_cold': 1.053, 'import_numba': 0.4569, 'import_core': 0.4358, 'compiler_init': 0.4671}
+f64/F6 {'exec': 0.0022, 'frontend': 0.2193, 'optimize': 0.0607, 'ptx': 0.0393, 'compile_other': 0.0004, 'link': 0.0382, 'load': 0.0001, 'first_launch': 0.0031, 'per_kernel_cold': 0.3607, 'import_numba': 0.466, 'import_core': 0.4355, 'compiler_init': 0.4638}
+dd/F6 {'exec': 0.0043, 'frontend': 0.8926, 'optimize': 0.0958, 'ptx': 0.0584, 'compile_other': 0.0005, 'link': 0.0502, 'load': 0.0001, 'first_launch': 0.0036, 'per_kernel_cold': 1.1174, 'import_numba': 0.4645, 'import_core': 0.4204, 'compiler_init': 0.4705}
+qf/F6 {'exec': 0.0046, 'frontend': 1.9327, 'optimize': 0.2833, 'ptx': 0.1795, 'compile_other': 0.0003, 'link': 0.1272, 'load': 0.0001, 'first_launch': 0.0052, 'per_kernel_cold': 2.5071, 'import_numba': 0.4997, 'import_core': 0.4601, 'compiler_init': 0.4666}
