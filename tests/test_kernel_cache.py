@@ -509,6 +509,86 @@ def test_threads_different_keys_dont_serialise(tmp_path: Path) -> None:
     assert time.perf_counter() - t0 < 0.3 * 2.5
 
 
+# --- perf records ------------------------------------------------------------------------------
+
+DEV_A, DEV_B = "sm_86 GPU A", "sm_86 GPU B"
+
+
+def test_perf_record_round_trips_per_device(tmp_path: Path) -> None:
+    c, _ = make_cache(tmp_path)
+    assert c.read_perf(BASE, DEV_A) is None
+    c.write_perf(BASE, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    c.write_perf(BASE, DEV_B, {"tau": 2e-6, "rate": 5e9})
+    c2, _ = make_cache(tmp_path)  # another process
+    assert c2.read_perf(BASE, DEV_A) == {"tau": 1e-6, "rate": 1e10}
+    assert c2.read_perf(BASE, DEV_B) == {"tau": 2e-6, "rate": 5e9}
+    c2.write_perf(BASE, DEV_A, {"tau": 3e-6, "rate": 1e9})
+    assert c.read_perf(BASE, DEV_A) == {"tau": 3e-6, "rate": 1e9}
+    assert c.read_perf(BASE, DEV_B) == {"tau": 2e-6, "rate": 5e9}  # kept
+
+
+def test_perf_record_is_per_key(tmp_path: Path) -> None:
+    c, _ = make_cache(tmp_path)
+    c.write_perf(BASE, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    assert c.read_perf(VARIANTS["max_registers"], DEV_A) is None
+
+
+def test_perf_record_leaves_the_entry_alone(tmp_path: Path) -> None:
+    c, _ = make_cache(tmp_path)
+    c.get(BASE)
+    d, _ = c.key(BASE)
+    before = c.store.entry_path(d).read_bytes()
+    c.write_perf(BASE, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    assert c.store.entry_path(d).read_bytes() == before
+    assert [e.digest for e in c.store.entries()] == [d]  # not listed as an entry
+    c2, be2 = make_cache(tmp_path)
+    c2.get(BASE)
+    assert be2.builds == 0
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        b"",
+        b"{not json",
+        b"\xff\xfe",
+        b"[]",
+        b'{"format": 2, "devices": {}}',
+        b'{"format": 1}',
+        b'{"format": 1, "devices": []}',
+        b'{"format": 1, "devices": {"sm_86 GPU A": 3}}',
+    ],
+)
+def test_damaged_perf_record_reads_as_none_and_is_replaced(tmp_path: Path, content: bytes) -> None:
+    c, _ = make_cache(tmp_path)
+    d, _ = c.key(BASE)
+    path = c.store.perf_path(d)
+    path.parent.mkdir(parents=True)
+    path.write_bytes(content)
+    assert c.read_perf(BASE, DEV_A) is None
+    c.write_perf(BASE, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    assert c.read_perf(BASE, DEV_A) == {"tau": 1e-6, "rate": 1e10}
+
+
+def test_oversized_perf_record_is_ignored(tmp_path: Path) -> None:
+    c, _ = make_cache(tmp_path)
+    d, _ = c.key(BASE)
+    path = c.store.perf_path(d)
+    path.parent.mkdir(parents=True)
+    path.write_text('{"format": 1, "devices": {"x": "' + "a" * 70000 + '"}}')
+    assert c.read_perf(BASE, "x") is None
+
+
+def test_eviction_removes_the_perf_record(tmp_path: Path) -> None:
+    store = KernelStore(tmp_path / "cache", max_bytes=1)
+    c: KernelCache[FakeKernel] = KernelCache(FakeBackend(), store)
+    old = spec(options={"max_registers": 40})
+    c.get(old)
+    c.write_perf(old, DEV_A, {"tau": 1e-6, "rate": 1e10})
+    c.get(spec(options={"max_registers": 41}))  # evicts `old`
+    assert not store.perf_path(c.key(old)[0]).exists()
+
+
 # --- eviction -----------------------------------------------------------------------------------
 
 

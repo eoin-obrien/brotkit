@@ -514,6 +514,12 @@ Ti, sm_86):
 - **Chunk length doesn't decide other apps' latency.** A second process's tiny kernels took
   about 0.6 ms during a render for chunk targets from 10 to 400 ms: WDDM time-slices contexts.
 - **Bands beat tiles** at 4K: 512 px tiles tie or cost 4%, 256 px tiles cost up to 27%.
+- **Calibration launches were the overhead.** The first sweep missed S5's original < 1% gate
+  everywhere but dd/interior, chiefly on calibration (up to 60 ms, 270–400 ms in deep dd). The
+  maintainer then revised the gate deliberately: under 1% for renders of 3.7 s or more,
+  calibration included; at most 50 ms for shorter ones; cold and warm.
+- **The clock ramp is a step after 100–300 ms of load,** not a gradual climb. It costs a cold
+  render about 280 ms of GPU time, and a warm-up kernel removes only the part it overlaps.
 
 ### Decision
 - **A GPU-free planner, `brotkit.backends.chunks.ChunkPlanner`,** issues chunks as tiles
@@ -527,20 +533,31 @@ Ti, sm_86):
 - **Target 100 ms,** from the recent chunks' cost, never below the knee while the ceiling
   allows, and raised to `floor / 0.25` when the floor is large, so the floor costs at most a
   quarter of a chunk (floor-heavy renders run chunks up to the ceiling).
-- **Calibration in scratch on NaN coordinates:** a tiny latency probe growing from 64
-  iterations, then throughput probes until `R` settles, each probe's projected cost under
-  20 ms. The planner reports the scratch shape it needs (`scratch_shape`).
+- **A stored prior instead of calibration launches.** After every render the runner writes
+  the planner's `Estimates(tau, rate)` to a perf record beside the kernel's cache entry, per
+  device (`KernelCache.write_perf`; a small JSON file, so the write-once entry is never
+  rewritten; a damaged record reads as none). The next render starts from it, slowed by a
+  factor `c`. `c` is 10 until a chunk has run (S5: 3–9× after idle), so the first real chunk,
+  sized for the target at that slowdown, stays under the ceiling even with a prior up to 50×
+  too fast. After each chunk, `c` is the largest `seconds ÷ prior model` over the last two
+  chunks the prior puts at 1 ms or more, never below 1. The prior is a hint, never trusted for
+  safety: the ceiling holds whatever it says.
+- **Calibration in scratch on NaN coordinates only without a prior,** or when the floor at
+  the current slowdown breaks the ceiling (deep dd on a cold clock): a tiny latency probe
+  growing from 64 iterations, then throughput probes until `R` settles, each probe's projected
+  cost under 20 ms. The planner reports the scratch shape it needs (`scratch_shape`).
 - **Estimates follow every chunk.** `R` is the best measured iterations per second and `τ` the
   least `seconds / largest count` over uniform chunks (every pixel at the largest count, at
   least one full block). Latency probes re-run after 0.5 s and 2 s of GPU time. A stale `R`
   (a chunk well under the model while the ceiling limits growth) brings in another throughput
   probe. A chunk over its bound scales `R` and `τ` back by the overrun.
 - **Renders whose floor breaks the ceiling are refused** with `CeilingInfeasibleError`, after
-  up to 3 confirming probes, naming the largest feasible max_iter, until iteration-sliced
-  launches exist (backlog 1.29).
-- **Warm start:** `prior=` takes a previous render's estimates and skips the throughput probes;
-  the latency probes still run and scale `R` by the cold factor they measure, and the first
-  chunk gets a quarter of the throughput room.
+  up to 3 confirming probes, naming the largest feasible max_iter and backlog 1.29 (#76,
+  iteration-sliced launches). For dd it also names qf (`FASTER_TIER`), which runs about 10×
+  deeper in one launch at about 96 against 106 mantissa bits.
+- **A warm-up kernel only around a kernel build or disk load.** The clock stays at 210 MHz for
+  100–300 ms of load and a warm-up hides only what it overlaps, so on a memory hit (about
+  15 ms of host setup) it buys about 5% of the 280 ms cold penalty.
 - **Bands by default.** `ChunkPolicy(tile=N)` gives N×N tiles for tiling and multi-GPU work,
   at 512 px.
 - **The CUDA runner** (backlog 1.4) waits by polling: sleep in 1 ms slices to half the expected
@@ -550,15 +567,18 @@ Ti, sm_86):
   lookup per render.
 
 ### Consequences
-- **Overhead misses S5's < 1% gate except on the longest renders.** The chunk loop costs
-  0.2–0.7% on 4K renders of 3.7 s or more (about 0.6 ms of host time per chunk) and 0.9–1.5% on
-  2–3 s renders. Calibration adds up to 60 ms per render, and 270–400 ms for dd at 10,000
-  iterations. The total is 0.5–0.7% on an 80 s dd render, 1.1–2.3% on other renders of 3.7 s
-  or more, 2.7–4.2% on 2–3 s renders and 5–50 ms on renders under a second. Accepting the
-  planner means accepting that, or funding cheaper calibration or pipelining (backlog 1.30).
-- **Warm starts help short renders only** (df64/seahorse total 15.8% → 3.5%) and their first
-  chunks overran the planned worst case by up to 2.0× (0.23 s chunks); the quarter-room first
-  chunk keeps them safe.
+- **Overhead against the revised gate** (under 1% for renders of 3.7 s or more, at most 50 ms
+  for shorter ones, cold and warm; revised by the maintainer after the first sweep): 29 of 30
+  runs pass. Short renders cost 3–18 ms; longer ones 0.44–0.96%. **dd/whole from an idle clock
+  costs 1.17%**: no dd chunk at 10,000 iterations fits under the ceiling at 210 MHz, so 345 ms
+  of NaN probes warm the clock before the first real chunk. Back to back it costs 0.29%.
+  Removing that needs iteration-sliced launches (backlog 1.29) or a budget that counts the
+  clock ramp separately.
+- **A cold render is about 280 ms slower than a warm one** (GPU time, not overhead) whatever
+  the planner does: the clock ramp.
+- **A kernel's first render on a device** (no perf record yet) still calibrates: 9–59 ms on
+  short renders, 260–410 ms for dd at 10,000 iterations. It follows a build (0.2–2.5 s), so it
+  is a small part of that render.
 - **Deep iteration counts need iteration-sliced kernels.** At the 0.5 s ceiling the largest
   max_iter is about 5.3 million in f32, 1.5 million in df64, 320,000 in f64, 27,000 in dd and
   250,000 in qf on this GPU. Past that the planner refuses the render (backlog 1.29).
@@ -568,10 +588,13 @@ Ti, sm_86):
   from launches up to 1.33 s.
 - **Results don't depend on chunking**: a chunked render is bit-identical to one launch (S5's
   smoke test), so chunk boundaries can change freely between versions.
-- **Pipelining** (the next chunk queued before the current one ends, with a cancel flag the
-  kernel checks on entry) would hide the per-chunk host time; backlog 1.30 if it's needed.
+- **Pipelining** (two chunks in flight) would hide the per-chunk host time and each chunk's
+  floor tail, at the cost of a cancel latency of up to two chunks unless the kernel checks a
+  cancel flag on entry; backlog 1.30, not in this ADR.
 - **The planner's tests run on CPU** against a simulated GPU built from S5's measurements,
   including cold clocks, FP64 blocks and sudden slowdowns. `numpy` joins the `dev` group for
   them.
+- **The kernel cache gains perf records** (`KernelStore.read_perf`/`write_perf`, evicted with
+  their entry); ADR-0008's write-once entry is unchanged.
 - **Spec edits in the same PR:** "Rules that keep it fast" rule 2, the interruptibility row
   and the tiling row.

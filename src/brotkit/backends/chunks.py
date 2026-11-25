@@ -49,12 +49,20 @@ over its bound (a GPU now shared with another process, a lower clock) scales `R`
 by the overrun, so the next chunks shrink. Between the overrun and that correction nothing can
 help: a running kernel can't be cancelled.
 
-**Warm start.** `prior=` takes a previous render's `estimates` (same kernel, same GPU) and skips
-the throughput probes. The latency probes still run: the GPU drops its clock between renders, so
-a render's first chunks run several times slower than the prior's warm numbers (S5: 4-9x), and
-a first chunk sized from the prior alone could overrun the ceiling by that much. `R` starts at
-the prior's, divided by the cold factor the latency probes measure, and the first chunk gets a
-quarter of the ceiling's throughput room.
+**Prior.** `prior=` takes a previous render's `estimates` for the same kernel on the same GPU
+(the kernel cache stores them per entry and device). With a prior there are no calibration
+launches: the model is the prior slowed by a factor `c`, `tau = prior.tau * c` and
+`R = prior.rate / c` (or what this render has measured, where that is better). The prior is a
+hint, never trusted for safety. Until a chunk has run, `c` is `prior_cold` (10): the GPU drops
+its clock between renders and a render's first launches run several times slower than the
+prior's warm numbers (S5: 3-9x). The first chunk is a real one, sized for `target_s` at that
+slowdown, so a prior up to `prior_cold * ceiling_s / target_s` times too fast still keeps it
+under the ceiling. After every chunk `c` becomes the largest `seconds / prior model` over the
+last `cold_window` chunks the prior puts at `ratio_min_s` or more (a cheaper chunk is mostly
+launch cost), never below 1, so it follows the clock as it ramps and jumps at once if the GPU
+slows down. Only if the floor at that slowdown would break the ceiling (dd at deep
+iteration counts on a cold clock) does a tiny NaN probe run first, to measure `c` before any
+real chunk; the confirmation probes then warm the clock as without a prior.
 
 Chunks are carved from regions: the whole image (bands) or square tiles of `tile` pixels. Inside
 a region the planner takes whole strips of `strip_rows` rows when it can and a column segment of
@@ -84,8 +92,23 @@ DEFAULT_CEILING_S: Final = 0.5
 """25% of the Windows default `TdrDelay` (2 s), the watchdog WDDM applies under WSL2 (S5)."""
 
 
+FASTER_TIER: Final = {"dd": "qf"}
+"""A tier to suggest when a render is refused. qf keeps about 96 mantissa bits to dd's 106
+(spec) and runs 9-12x dd's throughput on a 1:64-FP64 card (S4, S5), so its ceiling sits about
+10x deeper (S5: ~250,000 iterations against dd's ~27,000)."""
+
+
 class CeilingInfeasibleError(RuntimeError):
-    """One thread's `max_iter` iterations alone would take longer than the ceiling."""
+    """One thread's `max_iter` iterations alone would take longer than the ceiling.
+
+    `max_feasible_iter` is the most one launch can run on this GPU; `alternative` a faster tier
+    to suggest (from `FASTER_TIER`), if any.
+    """
+
+    def __init__(self, message: str, *, max_feasible_iter: int, alternative: str | None) -> None:
+        super().__init__(message)
+        self.max_feasible_iter = max_feasible_iter
+        self.alternative = alternative
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -107,6 +130,9 @@ class ChunkPolicy:
     reprobe_max: int = 8  # and at most this many per render
     stale_ratio: float = 0.65  # actual / modelled below this: R is stale (S5: >= 0.8 when not)
     tau_recheck_s: tuple[float, ...] = (0.5, 2.0)  # re-measure tau after this much GPU time
+    prior_cold: float = 10.0  # assumed slowdown against a prior until measured (S5: 3-9x)
+    cold_window: int = 2  # the slowdown against a prior is the largest over this many chunks
+    ratio_min_s: float = 1e-3  # only chunks the prior puts at this or more measure the slowdown
     max_growth: float = 8.0  # chunk pixels grow at most this much per step
     strip_rows: int = 8  # band heights are multiples of this (the launch block height)
     col_align: int = 32  # column segments are multiples of this (the launch block width)
@@ -143,6 +169,8 @@ class ChunkPolicy:
             raise ValueError("need 0 < uniform_frac <= 1")
         if self.max_growth <= 1:
             raise ValueError("max_growth must be > 1")
+        if self.prior_cold < 1 or self.cold_window < 1 or self.ratio_min_s < 0:
+            raise ValueError("need prior_cold >= 1, cold_window >= 1 and ratio_min_s >= 0")
         if self.tile is not None and self.tile < 1:
             raise ValueError("tile must be positive")
 
@@ -155,8 +183,31 @@ class Estimates:
     rate: float  # iterations per second with the GPU full
 
     def __post_init__(self) -> None:
-        if not (self.tau > 0 and self.rate > 0):
-            raise ValueError("tau and rate must be positive")
+        ok = all(math.isfinite(v) and v > 0 for v in self.values())
+        if not ok:
+            raise ValueError("tau and rate must be positive and finite")
+
+    def values(self) -> tuple[float, float]:
+        return self.tau, self.rate
+
+    def to_json(self) -> dict[str, float]:
+        return {"tau": self.tau, "rate": self.rate}
+
+    @classmethod
+    def from_json(cls, obj: object) -> Estimates | None:
+        """Estimates from stored JSON, or None if it isn't a valid pair (a prior is a hint:
+        a damaged one is ignored, never an error)."""
+        if not isinstance(obj, dict):
+            return None
+        tau, rate = obj.get("tau"), obj.get("rate")  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+        if isinstance(tau, bool) or isinstance(rate, bool):
+            return None
+        if not (isinstance(tau, float | int) and isinstance(rate, float | int)):
+            return None
+        try:
+            return cls(tau=float(tau), rate=float(rate))
+        except ValueError:
+            return None
 
 
 @dataclass(frozen=True, slots=True)
@@ -210,11 +261,16 @@ class ChunkPlanner:
     max_iter: int
     policy: ChunkPolicy = field(default_factory=ChunkPolicy)
     prior: Estimates | None = None  # a previous render's estimates: skip calibration
+    tier: str | None = None  # precision tier, only to suggest a faster one when refusing
     records: list[ChunkRecord] = field(default_factory=list[ChunkRecord])
     _regions: list[_Region] = field(default_factory=list[_Region])
     _pending: dict[Chunk, float] = field(default_factory=dict[Chunk, float])
-    _rate: float = 0.0  # best measured iterations / second (a lower bound on R)
-    _tau: float = 0.0  # per-thread seconds per iteration: least seconds / max_n seen
+    _rate: float = 0.0  # R the planner sizes with
+    _tau: float = 0.0  # tau the planner sizes with
+    _meas_rate: float = 0.0  # best measured iterations / second (a lower bound on R)
+    _meas_tau: float = 0.0  # least seconds / max_n over uniform chunks (an upper bound on tau)
+    _cold: float = 1.0  # slowdown against the prior
+    _ratios: list[float] = field(default_factory=list[float])  # seconds / prior model, per chunk
     _confirmations: int = 0
     _rate_probes: int = 0
     _reprobes: int = 0
@@ -248,10 +304,10 @@ class ChunkPlanner:
         self._regions.reverse()  # pop() from the end = row-major order
         self._calib_iter = min(self.policy.calib_iter, self.max_iter)
         if self.prior is not None:
-            # The latency probes still run: the clock drops between renders, so the first chunks
-            # run several times slower than the prior's warm numbers (S5: 4-9x). R starts from
-            # the prior scaled by the cold factor the probes measure; see `_calibrate`.
-            self._rate = self.prior.rate
+            # No calibration launches: the prior, slowed by `prior_cold` until a chunk has run.
+            self._calibrated = True
+            self._cold = self.policy.prior_cold
+            self._update_model()
 
     # -- the time model ------------------------------------------------------------------------
 
@@ -284,8 +340,6 @@ class ChunkPlanner:
         """Most pixels whose bound stays under the ceiling."""
         pol = self.policy
         room = pol.ceiling_s / pol.safety - self.max_iter * self._tau
-        if self.prior is not None and self._done_pixels == 0:
-            room *= 0.25  # the prior may be stale (a shared or cooler GPU): start small
         return int(room * self._rate / self.max_iter)
 
     def budget_pixels(self) -> int:
@@ -298,9 +352,15 @@ class ChunkPlanner:
             room = max(pol.target_s, floor / pol.floor_share) - floor
             per_px = self._recent_n_mean / self._rate
             target = int(room / per_px) if room > 0 else 0
+        elif self.prior is not None:
+            # The first chunk from a prior: worst case at the assumed slowdown within the target.
+            room = pol.target_s / pol.safety - self.max_iter * self._tau
+            target = max(0, int(room * self._rate / self.max_iter))
         else:
             target = cap
         want = max(target, knee)
+        if self._done_pixels == 0 and self.prior is not None:
+            return max(1, min(cap, want))  # nothing to grow from yet
         growth = int(pol.max_growth * max(self._last_pixels, 1))
         return max(1, min(cap, want, growth))
 
@@ -314,21 +374,22 @@ class ChunkPlanner:
             self._pending[chunk] = self.worst_case_seconds(tile.pixels, self._calib_iter)
             return chunk
         if self.floor_seconds * self.policy.safety > self.policy.ceiling_s:
-            if self._confirmations < self.policy.confirm_probes:
+            if self.prior is not None and not self._ratios:
+                # The floor at the assumed slowdown breaks the ceiling: measure the slowdown
+                # with one cheap probe before any real chunk.
+                budget = self.policy.calib_budget_s
+            elif self._confirmations < self.policy.confirm_probes:
                 # tau may come from a cold clock or a shared GPU: measure again before refusing.
                 self._confirmations += 1
-                tile = self._probe_tile()
-                per_iter = self.policy.safety * (self._tau + tile.pixels / self._rate)
-                m = max(1, min(self.max_iter, int(0.5 * self.policy.ceiling_s / per_iter)))
-                chunk = Chunk(tile, m, calibration=True)
-                self._pending[chunk] = self.worst_case_seconds(tile.pixels, m)
-                return chunk
-            raise CeilingInfeasibleError(
-                f"max_iter={self.max_iter} alone takes about {self.floor_seconds:.2f} s per "
-                f"thread on this GPU, over the {self.policy.ceiling_s:.2f} s chunk ceiling; "
-                f"the most this kernel can run in one launch is about {self.max_feasible_iter} "
-                "iterations (iteration-sliced launches are backlog work)"
-            )
+                budget = 0.5 * self.policy.ceiling_s
+            else:
+                raise self._infeasible()
+            tile = self._probe_tile()
+            per_iter = self.policy.safety * (self._tau + tile.pixels / self._rate)
+            m = max(1, min(self.max_iter, int(budget / per_iter)))
+            chunk = Chunk(tile, m, calibration=True)
+            self._pending[chunk] = self.worst_case_seconds(tile.pixels, m)
+            return chunk
         while self._regions and self._regions[-1].row >= self._regions[-1].h:
             self._regions.pop()
         if not self._regions:
@@ -377,6 +438,25 @@ class ChunkPlanner:
         self._pending[chunk] = self.worst_case_seconds(tile.pixels)
         return chunk
 
+    def _infeasible(self) -> CeilingInfeasibleError:
+        alt = FASTER_TIER.get(self.tier or "")
+        hint = (
+            f" or render in {alt}, which runs about 10x as deep in one launch "
+            f"(~96 mantissa bits against {self.tier}'s ~106)"
+            if alt
+            else ""
+        )
+        return CeilingInfeasibleError(
+            f"max_iter={self.max_iter} alone takes about {self.floor_seconds:.2f} s per thread "
+            f"on this GPU, over the {self.policy.ceiling_s:.2f} s chunk ceiling with its "
+            f"{self.policy.safety:g}x margin; the most this kernel can run in one launch is "
+            f"about {self.max_feasible_iter} iterations. Lower max_iter{hint}. Launches that "
+            "split the iterations across chunks are backlog 1.29 (iteration-sliced launches, "
+            "issue #76).",
+            max_feasible_iter=self.max_feasible_iter,
+            alternative=alt,
+        )
+
     @property
     def scratch_shape(self) -> tuple[int, int]:
         """(rows, cols) the caller's calibration scratch buffer must hold.
@@ -394,6 +474,8 @@ class ChunkPlanner:
         would stay high for the whole render (S5, f64: 6.2 us against 1.26 us warm), inflating
         the floor and, through `floor_share`, the chunks.
         """
+        if self.prior is not None:  # tau follows the prior's slowdown chunk by chunk
+            return False
         marks = self.policy.tau_recheck_s
         return self._tau_rechecks < len(marks) and self._busy_s >= marks[self._tau_rechecks]
 
@@ -407,7 +489,8 @@ class ChunkPlanner:
         """
         pol = self.policy
         return (
-            self._last_loose
+            self.prior is None  # R follows the prior's slowdown chunk by chunk
+            and self._last_loose
             and self._since_probe >= pol.reprobe_every
             and self._reprobes < pol.reprobe_max
             and self.budget_pixels() >= self._cap_pixels()
@@ -446,7 +529,7 @@ class ChunkPlanner:
             max_n * self._tau + iterations / self._rate if self._rate > 0 and self._tau > 0 else 0.0
         )
         if seconds > 0 and iterations > 0:
-            self._rate = max(self._rate, iterations / seconds)
+            self._meas_rate = max(self._meas_rate, iterations / seconds)
         # Uniform: every pixel near max_n and at least one full launch block (a short tile's
         # blocks are part-empty and run faster).
         t = chunk.tile
@@ -455,13 +538,21 @@ class ChunkPlanner:
         if seconds > 0 and max_n > 0 and uniform:
             # A uniform chunk takes at least max_n * tau, so this is an upper bound on tau.
             est = seconds / max_n
-            self._tau = est if self._tau <= 0 else min(self._tau, est)
+            self._meas_tau = est if self._meas_tau <= 0 else min(self._meas_tau, est)
         if not chunk.calibration and seconds > predicted:
             # Slower than the bound allowed (a shared GPU, a lower clock): the estimates only
             # ever tighten otherwise, so scale them back by the overrun.
             f = seconds / predicted
-            self._rate /= f
-            self._tau *= f
+            self._meas_rate /= f
+            self._meas_tau *= f
+        if self.prior is not None and seconds > 0:
+            # A cheap chunk is mostly launch cost (tens of microseconds), which says nothing
+            # about the clock, so it neither raises nor lowers the slowdown.
+            pm = max_n * self.prior.tau + iterations / self.prior.rate
+            if pm >= max(self.policy.ratio_min_s, 1e-12):
+                self._ratios.append(seconds / pm)
+                self._cold = max(1.0, *self._ratios[-self.policy.cold_window :])
+        self._update_model()
         if chunk.calibration:
             if chunk == self._reprobe_chunk:
                 self._reprobe_chunk = None
@@ -480,6 +571,16 @@ class ChunkPlanner:
         self._recent_n_max = max_n
         return rec
 
+    def _update_model(self) -> None:
+        """The (tau, R) chunks are sized with: what was measured, or the prior slowed by `c`
+        where that is better. Without a prior, only what was measured."""
+        tau, rate = self._meas_tau, self._meas_rate
+        if self.prior is not None:
+            ptau, prate = self.prior.tau * self._cold, self.prior.rate / self._cold
+            tau = min(tau, ptau) if tau > 0 else ptau
+            rate = max(rate, prate)
+        self._tau, self._rate = tau, rate
+
     def _calibrate(self, rec: ChunkRecord) -> None:
         m = rec.chunk.max_iter
         pol = self.policy
@@ -490,12 +591,6 @@ class ChunkPlanner:
             nxt = min(self.max_iter, 4 * m)
             if m < self.max_iter and self.worst_case_seconds(rec.tile.pixels, nxt) <= budget:
                 self._calib_iter = nxt
-                return
-            if self.prior is not None:
-                cold = max(1.0, self._tau / self.prior.tau)
-                self._rate = min(self._rate, self.prior.rate / cold)
-                self._calibrated = True
-                self._last_pixels = self._probe_tile().pixels
                 return
             self._calib_phase = 1
             self._calib_iter = self._rate_probe_iter()
@@ -530,6 +625,11 @@ class ChunkPlanner:
     @property
     def tau(self) -> float:
         return self._tau
+
+    @property
+    def cold_factor(self) -> float:
+        """The slowdown against the prior the planner currently assumes (1 without a prior)."""
+        return self._cold
 
     @property
     def rate(self) -> float:

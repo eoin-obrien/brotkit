@@ -15,6 +15,12 @@ for every chunk. Waiting is one of:
              then poll every poll_s (Python stays responsive, little CPU, little added latency)
 On KeyboardInterrupt the runner finishes the in-flight chunk (it can't be cancelled), records it,
 and returns a partial result instead of leaving the buffers mid-write.
+
+Prior: by default the planner's prior is the perf record the kernel cache holds for this kernel
+on this device, and the render's final estimates are written back after it (`prior="store"`).
+Warm-up: `warmup_ms` launches the warm kernel on a second stream at the very start of the
+render, before the kernel lookup and buffer setup, so the clock starts rising while the host
+works (S5: the GPU idles at 210 MHz).
 """
 
 from __future__ import annotations
@@ -68,6 +74,42 @@ def wait_idle(q: Any, baseline: int, label: str, own_mib: int = 1200) -> None:
             time.sleep(20)
 
 
+def sm_mhz() -> int:
+    import subprocess
+
+    out = subprocess.check_output(
+        ["nvidia-smi", "--query-gpu=clocks.sm", "--format=csv,noheader,nounits"], text=True
+    )
+    return int(out.split()[0])
+
+
+def wait_cold(limit_mhz: int = 300, timeout_s: float = 180.0) -> float:
+    """Wait for two consecutive idle-clock readings, then 2 s more. Returns seconds waited."""
+    t0 = time.monotonic()
+    ok = 0
+    while ok < 2:
+        if time.monotonic() - t0 > timeout_s:
+            raise RuntimeError(f"clock stayed above {limit_mhz} MHz for {timeout_s} s")
+        ok = ok + 1 if sm_mhz() <= limit_mhz else 0
+        time.sleep(0.5)
+    time.sleep(2.0)
+    return time.monotonic() - t0
+
+
+def load_mhz(gpu: Gpu) -> int:
+    """The SM clock under load: run the warm kernel for ~0.5 s and read the clock mid-way."""
+    import cuda.core as cc
+
+    sms = gpu.backend.device.properties.multiprocessor_count
+    cfg = cc.LaunchConfig(grid=sms, block=32)
+    out = np.uintp(int(gpu.warm_out.handle))
+    cc.launch(gpu.warm_stream, cfg, gpu.warm._kernel, np.int64(20_000_000), out)
+    time.sleep(0.3)
+    mhz = sm_mhz()
+    gpu.warm_stream.sync()
+    return mhz
+
+
 def view_args(tier: str, view: str, w: int) -> tuple[Any, ...]:
     word, nw, _ = gen_s5.TIERS[tier]
     dt = np.dtype(word).type
@@ -87,8 +129,18 @@ class Gpu:
     backend: Any
     cache: Any
     tile_sum: Any
+    warm: Any
+    warm_stream: Any
+    warm_out: Any
     kernels: dict[tuple[str, str], Any] = field(default_factory=dict)
+    specs: dict[tuple[str, str], Any] = field(default_factory=dict)
     lookups: int = 0
+    warm_iters_per_ms: int = 0  # warm-kernel iterations for 1 ms at the idle clock
+
+    @property
+    def device_id(self) -> str:
+        """Perf records are per kernel key and device: the arch and the board's name."""
+        return f"{self.backend.target} {self.backend.device.name}"
 
     @classmethod
     def open(cls, root: pathlib.Path) -> Gpu:
@@ -102,18 +154,74 @@ class Gpu:
                 source=gen_s5.TILE_SUM_SOURCE, entry="tile_sum", signature=gen_s5.TILE_SUM_SIGNATURE
             )
         )
-        return cls(be, cache, ts)
+        wk = cache.get(
+            be.spec(source=gen_s5.WARM_SOURCE, entry="warm", signature=gen_s5.WARM_SIGNATURE)
+        )
+        ws = be.device.create_stream()
+        wo = be.device.memory_resource.allocate(4, stream=be.stream)
+        return cls(be, cache, ts, wk, ws, wo)
+
+    def spec(self, tier: str, kern: str) -> Any:
+        key = (tier, kern)
+        if key not in self.specs:
+            self.specs[key] = self.backend.spec(
+                source=gen_s5.emit(tier, kern),
+                entry=gen_s5.entry_name(tier, kern),
+                signature=gen_s5.signature(tier),
+            )
+        return self.specs[key]
+
+    def read_prior(self, tier: str, kern: str) -> Estimates | None:
+        return Estimates.from_json(self.cache.read_perf(self.spec(tier, kern), self.device_id))
+
+    def write_prior(self, tier: str, kern: str, est: Estimates) -> None:
+        self.cache.write_perf(self.spec(tier, kern), self.device_id, est.to_json())
+
+    def forget_prior(self, tier: str, kern: str) -> None:
+        d, _ = self.cache.key(self.spec(tier, kern))
+        self.cache.store.perf_path(d).unlink(missing_ok=True)
+
+    def launch_warm(self, ms: float, launches_per_ms: int = 1) -> None:
+        """Queue about `ms` of warm-up on the side stream (sized at the idle clock, so it
+        finishes sooner as the clock rises). One block of one warp per SM."""
+        import cuda.core as cc
+
+        if ms <= 0:
+            return
+        if not self.warm_iters_per_ms:
+            raise RuntimeError("calibrate_warm() first")
+        sms = self.backend.device.properties.multiprocessor_count
+        cfg = cc.LaunchConfig(grid=sms, block=32)
+        n = np.int64(self.warm_iters_per_ms // launches_per_ms)
+        out = np.uintp(int(self.warm_out.handle))
+        for _ in range(max(1, round(ms * launches_per_ms))):
+            cc.launch(self.warm_stream, cfg, self.warm._kernel, n, out)
+
+    def calibrate_warm(self, idle_mhz: float, now_mhz: float) -> None:
+        """Size the warm kernel: time it now and scale to the idle clock."""
+        import cuda.core as cc
+        from cuda.core import EventOptions
+
+        sms = self.backend.device.properties.multiprocessor_count
+        cfg = cc.LaunchConfig(grid=sms, block=32)
+        opt = EventOptions(timing_enabled=True)
+        n = 200_000
+        out = np.uintp(int(self.warm_out.handle))
+        best = float("inf")
+        for _ in range(5):
+            a = self.warm_stream.record(options=opt)
+            cc.launch(self.warm_stream, cfg, self.warm._kernel, np.int64(n), out)
+            b = self.warm_stream.record(options=opt)
+            b.sync()
+            best = min(best, (b - a))  # ms
+        per_ms_now = n / best
+        self.warm_iters_per_ms = max(1, int(per_ms_now * idle_mhz / now_mhz))
 
     def kernel(self, tier: str, kern: str) -> Any:
         key = (tier, kern)
         if key not in self.kernels:
             self.lookups += 1
-            spec = self.backend.spec(
-                source=gen_s5.emit(tier, kern),
-                entry=gen_s5.entry_name(tier, kern),
-                signature=gen_s5.signature(tier),
-            )
-            self.kernels[key] = self.cache.get(spec)
+            self.kernels[key] = self.cache.get(self.spec(tier, kern))
         return self.kernels[key]
 
     def alloc(self, nbytes: int) -> Any:
@@ -249,16 +357,23 @@ def render(
     sentinel: bool = False,
     on_chunk: Any = None,
     reraise: bool = False,
-    prior: Estimates | None = None,
+    prior: Estimates | str | None = "store",
+    warmup_ms: float = 0.0,
+    record_prior: bool = True,
 ) -> Result:
     from cuda.core import EventOptions
 
+    t_entry = time.perf_counter()
+    gpu.launch_warm(warmup_ms)  # before any host work, so the clock rises while it runs
     be = gpu.backend
     stream = be.stream
     k = gpu.kernel(tier, kern)
+    if prior == "store":
+        prior = gpu.read_prior(tier, kern)
+    assert prior is None or isinstance(prior, Estimates)
     mi = max_iter if max_iter is not None else VIEWS[view][3]
     pol = policy or ChunkPolicy()
-    planner = ChunkPlanner(h=h, w=w, max_iter=mi, policy=pol, prior=prior)
+    planner = ChunkPlanner(h=h, w=w, max_iter=mi, policy=pol, prior=prior, tier=tier)
     nf, nu = gen_s5.NLF * h * w * 4, gen_s5.NLU * h * w * 4
     bf, bu = out if out is not None else (gpu.alloc(nf), gpu.alloc(nu))
     if sentinel:
@@ -281,6 +396,7 @@ def render(
     interrupted_at = None
     stream.sync()
     cpu0, t0 = time.process_time(), time.perf_counter()
+    prep_s = t0 - t_entry
     i = 0
     # Deferred interrupt: the first Ctrl-C only sets a flag, checked between chunks, so the
     # chunk in flight is always finished and recorded (it can't be cancelled anyway) and no
@@ -375,6 +491,11 @@ def render(
     )
     res.buffers = (bf, bu)  # type: ignore[attr-defined]
     res.estimates = planner.estimates  # type: ignore[attr-defined]
+    res.prior = prior  # type: ignore[attr-defined]
+    res.prep_s = prep_s  # type: ignore[attr-defined]
+    res.cold_factor = planner.cold_factor  # type: ignore[attr-defined]
+    if record_prior and planner.estimates is not None:
+        gpu.write_prior(tier, kern, planner.estimates)
     if not complete and reraise:
         raise RenderInterrupted(res)
     return res

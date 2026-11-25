@@ -123,3 +123,21 @@ def tile_sum(p_n, p_acc, row0, col0, th, tw, h, pitch):
         cuda.atomic.max(acc, 1, mx[0])
 """
 TILE_SUM_SIGNATURE = ("uint32*", "uint64*", "int64", "int64", "int64", "int64", "int64", "int64")
+
+
+# A clock warm-up kernel: one warp per block spinning on a dependent FMA chain, so it occupies
+# almost nothing and keeps the GPU busy (and its clock rising) while the host prepares a render.
+WARM_SOURCE = """
+import numpy as np
+from numba_cuda_mlir import cuda
+
+
+def warm(n, p_out):
+    out = cuda.carray(p_out, (1,), np.float32)
+    x = np.float32(cuda.threadIdx.x)
+    for _ in range(n):
+        x = cuda.fma(x, np.float32(0.9999999), np.float32(1e-7))
+    if x == np.float32(-1.0):
+        out[0] = x
+"""
+WARM_SIGNATURE = ("int64", "float32*")
