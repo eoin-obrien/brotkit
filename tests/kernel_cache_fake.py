@@ -49,10 +49,12 @@ class FakeBackend:
         versions: Mapping[str, str] | None = None,
         marker_dir: Path | None = None,
         build_seconds: float = 0.0,
+        fail_loads: int = 0,
     ) -> None:
         self.versions = dict(versions or {"fakecc": "1.0", "fakelink": "1.0"})
         self.marker_dir = marker_dir
         self.build_seconds = build_seconds
+        self.fail_loads = fail_loads  # the next N loads raise, like a driver rejecting a cubin
         self.builds = 0
         self.loads = 0
 
@@ -82,6 +84,9 @@ class FakeBackend:
 
     def load(self, entry: CacheEntry) -> FakeKernel:
         self.loads += 1
+        if self.fail_loads > 0:
+            self.fail_loads -= 1
+            raise RuntimeError("CUDA_ERROR_INVALID_SOURCE: device kernel image is invalid")
         res = entry.meta["resources"]
         assert isinstance(res, dict)
         regs = res["registers"]

@@ -453,6 +453,9 @@ so a fresh kernel session must reach a launchable kernel fast. Spike S2
 - **Corruption.** Any failed check (preamble, header checksum, JSON, blob sizes or checksums,
   file name, or stored key components that differ from the requested ones) deletes the entry,
   warns once per key per process (`KernelCacheWarning`) and rebuilds.
+- **Load failures are misses.** If the backend can't load a stored entry (for example, a driver
+  that rejects the cubin), the entry is deleted, warned about once and rebuilt. Only a fresh
+  build that won't load raises.
 - **Size cap.** 1 GiB by default; least-recently-used entries are evicted after each build, and
   temp files older than an hour are removed.
 - **Refused locations.** A root on 9p/drvfs (a Windows drive under WSL2) raises

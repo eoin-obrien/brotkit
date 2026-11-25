@@ -434,6 +434,10 @@ class KernelStore:
         stripe = int(digest_[:2], 16) % _STRIPES
         return filelock.FileLock(str(d / f"{stripe:02x}.lock"), timeout=timeout)
 
+    def discard(self, digest_: str, reason: str) -> None:
+        """Delete entry `digest_` as unusable, warning once per key (e.g. it failed to load)."""
+        self._corrupt(digest_, self.entry_path(digest_), reason)
+
     def _corrupt(self, digest_: str, path: Path, reason: str) -> None:
         self.corrupt_count += 1
         with suppress(FileNotFoundError):
@@ -556,6 +560,7 @@ class CacheStats:
     builds: int = 0
     waited_for_other_process: int = 0
     corrupt: int = 0
+    load_failures: int = 0
     last_lookup_seconds: float = 0.0
     events: list[str] = field(default_factory=list[str])
 
@@ -624,12 +629,20 @@ class KernelCache[K]:
             if hit is not None:
                 self.stats.memory_hits += 1
                 return hit
+            kernel: K | None = None
             entry = self._read(d, comps)
             if entry is not None:
-                self.stats.disk_hits += 1
-            else:
+                try:
+                    kernel = self.backend.load(entry)
+                    self.stats.disk_hits += 1
+                except Exception as e:
+                    # A stored build that no longer loads (a driver that rejects the cubin, a
+                    # damaged blob that passed its checksum) is a miss, not an error.
+                    self.stats.load_failures += 1
+                    self.store.discard(d, f"the backend couldn't load it: {type(e).__name__}: {e}")
+            if kernel is None:
                 entry = self._build_locked(spec, d, comps)
-            kernel = self.backend.load(entry)
+                kernel = self.backend.load(entry)  # a fresh build that won't load is a real error
             self._memory[d] = kernel
         self.stats.last_lookup_seconds = time.perf_counter() - t0
         return kernel

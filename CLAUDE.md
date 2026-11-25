@@ -9,3 +9,6 @@
   `nvidia-smi` first, and ask if anything else holds the card.
 - Ask before updating golden images, every time. Approval for one update doesn't carry over
   to the next.
+- gstack's `/build-check` reads this line (it doesn't follow the `@AGENTS.md` import):
+
+gstack:verify: uv run pre-commit run -a && uv run pytest -m "not gpu"

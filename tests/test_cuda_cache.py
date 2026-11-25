@@ -28,7 +28,12 @@ pytestmark = pytest.mark.gpu
 
 cuda_backend = pytest.importorskip("brotkit.backends.cuda")
 
-from brotkit.kernels.cache import KernelCache, KernelCacheWarning, KernelStore  # noqa: E402
+from brotkit.kernels.cache import (  # noqa: E402
+    KernelCache,
+    KernelCacheWarning,
+    KernelStore,
+    decode_entry,
+)
 
 # A raw-pointer ABI kernel (ADR-0008): typed pointers, int64 shape/pitch. 16 independent f64
 # accumulators keep ~40+ registers live, so a 32-register cap is visible.
@@ -231,6 +236,27 @@ def test_corrupt_real_entry_rebuilds(cache: KernelCache[Any], backend: Any, tmp_
     with pytest.warns(KernelCacheWarning):
         k = c2.get(spec(backend))
     assert c2.stats.builds == 1
+    assert np.array_equal(run(k, backend), good)
+
+
+def test_cubin_the_driver_rejects_is_a_miss(
+    cache: KernelCache[Any], backend: Any, tmp_path: Path
+) -> None:
+    """Stands in for a driver update that rejects a stored cubin: checksums are valid, the
+    driver's module load fails, and the cache rebuilds instead of raising (ADR-0008)."""
+    import dataclasses
+
+    good = run(cache.get(spec(backend)), backend)
+    d, _ = cache.key(spec(backend))
+    entry = decode_entry(cache.store.entry_path(d).read_bytes())
+    junk = b"\x7fELF" + bytes(252)
+    cache.store.write(
+        dataclasses.replace(entry, blobs=(("cubin", junk), ("ptx", entry.blob("ptx"))))
+    )
+    c2: KernelCache[Any] = KernelCache(backend, KernelStore(tmp_path / "cache"))
+    with pytest.warns(KernelCacheWarning, match="couldn't load"):
+        k = c2.get(spec(backend))
+    assert (c2.stats.load_failures, c2.stats.builds) == (1, 1)
     assert np.array_equal(run(k, backend), good)
 
 

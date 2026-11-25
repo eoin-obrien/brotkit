@@ -42,8 +42,9 @@ def make_cache(
     *,
     versions: dict[str, str] | None = None,
     build_seconds: float = 0.0,
+    fail_loads: int = 0,
 ) -> tuple[KernelCache[FakeKernel], FakeBackend]:
-    be = FakeBackend(versions=versions, build_seconds=build_seconds)
+    be = FakeBackend(versions=versions, build_seconds=build_seconds, fail_loads=fail_loads)
     return KernelCache(be, KernelStore(tmp_path / "cache")), be
 
 
@@ -324,6 +325,37 @@ def test_corrupt_entry_is_deleted_rebuilt_and_warned_once(
         warnings.simplefilter("error")
         c3.get(BASE)
     assert be3.builds == 0
+
+
+def test_entry_that_fails_to_load_is_a_miss_and_rebuilds(tmp_path: Path) -> None:
+    """E.g. a driver update that rejects a stored cubin: rebuild, don't raise (ADR-0008)."""
+    c, _ = make_cache(tmp_path)
+    good = c.get(BASE)
+    c2, be2 = make_cache(tmp_path, fail_loads=1)
+    with pytest.warns(KernelCacheWarning, match="couldn't load"):
+        again = c2.get(BASE)
+    assert be2.builds == 1
+    assert again.cubin == good.cubin
+    assert (c2.stats.load_failures, c2.stats.disk_hits) == (1, 0)
+    c3, be3 = make_cache(tmp_path)
+    c3.get(BASE)  # the rebuilt entry loads in a fresh process
+    assert (be3.builds, c3.stats.disk_hits) == (0, 1)
+
+
+def test_fresh_build_that_fails_to_load_raises(tmp_path: Path) -> None:
+    c, _ = make_cache(tmp_path)
+    c.get(BASE)
+    c2, be2 = make_cache(tmp_path, fail_loads=2)
+    with pytest.warns(KernelCacheWarning), pytest.raises(RuntimeError, match="INVALID_SOURCE"):
+        c2.get(BASE)
+    assert be2.builds == 1  # one rebuild, then the real error
+
+
+def test_miss_whose_build_fails_to_load_raises(tmp_path: Path) -> None:
+    c, be = make_cache(tmp_path, fail_loads=1)
+    with pytest.raises(RuntimeError, match="INVALID_SOURCE"):
+        c.get(BASE)
+    assert be.builds == 1
 
 
 def test_warns_once_per_key_even_if_damaged_again(tmp_path: Path) -> None:
