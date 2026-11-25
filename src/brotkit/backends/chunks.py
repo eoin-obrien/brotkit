@@ -49,20 +49,34 @@ over its bound (a GPU now shared with another process, a lower clock) scales `R`
 by the overrun, so the next chunks shrink. Between the overrun and that correction nothing can
 help: a running kernel can't be cancelled.
 
-**Prior.** `prior=` takes a previous render's `estimates` for the same kernel on the same GPU
-(the kernel cache stores them per entry and device). With a prior there are no calibration
-launches: the model is the prior slowed by a factor `c`, `tau = prior.tau * c` and
-`R = prior.rate / c` (or what this render has measured, where that is better). The prior is a
-hint, never trusted for safety. Until a chunk has run, `c` is `prior_cold` (10): the GPU drops
-its clock between renders and a render's first launches run several times slower than the
-prior's warm numbers (S5: 3-9x). The first chunk is a real one, sized for `target_s` at that
-slowdown, so a prior up to `prior_cold * ceiling_s / target_s` times too fast still keeps it
-under the ceiling. After every chunk `c` becomes the largest `seconds / prior model` over the
-last `cold_window` chunks the prior puts at `ratio_min_s` or more (a cheaper chunk is mostly
-launch cost), never below 1, so it follows the clock as it ramps and jumps at once if the GPU
-slows down. Only if the floor at that slowdown would break the ceiling (dd at deep
-iteration counts on a cold clock) does a tiny NaN probe run first, to measure `c` before any
-real chunk; the confirmation probes then warm the clock as without a prior.
+**Prior.** `prior=` takes a previous render's `estimates` for the same kernel on the same GPU (the
+kernel cache stores them per entry and device). With a prior there are no calibration launches: the
+model is the prior slowed by two factors, `tau = prior.tau * c_tau` and `R = prior.rate / c_rate`
+(or what this render has measured, where that is better). The prior is a hint, never trusted for
+safety. Until a chunk has run, both are `prior_cold` (10): the GPU drops its clock between renders
+and a render's first launches run several times slower than the prior's warm numbers (S5: 3-9x). The
+first chunk is a real one, sized for `target_s` at that slowdown, so a prior up to `prior_cold *
+ceiling_s / target_s` times too fast still keeps it under the ceiling. After every chunk the prior
+puts at `ratio_min_s` or more (a cheaper chunk is mostly launch cost), its `seconds / prior model`
+updates `c_tau`, and also `c_rate` if the prior's throughput term dominates the chunk. Each factor
+is the largest such ratio over its last `cold_window` chunks, never below 1, so it follows the clock
+as it ramps and jumps at once if the GPU slows down. A latency-bound chunk never moves `c_rate`,
+because the prior's two numbers err differently: a short render learns `tau` only as a loose upper
+bound (S5: 220x high in df64), and a latency probe running far under that `tau` says nothing about
+`R` (taking it as "warm" ran a chunk at 1.88x its bound on a cold clock). A throughput-bound chunk
+may move `c_tau`: the clock slows both terms alike, and large chunks never show `tau` on their own.
+One case needs a throughput probe even with a prior: when the last two real chunks were
+latency-bound and the ceiling sizes chunks (dd, or f64 and qf at deep iteration counts, whose floor
+at the assumed slowdown fills the chunk), no real chunk can show R's slowdown and R at `prior.rate /
+c_rate` keeps them small (S5, dd/whole: 794 chunks against 275); a small probe in scratch (2 ms of
+the prior's throughput time), timed against that term alone, measures it (at most one per
+`reprobe_every` chunks; it counts as calibration). Only if the floor at that slowdown would break
+the ceiling (dd at deep iteration counts on a cold clock) does a tiny NaN probe run first, to
+measure `c_tau` before any real chunk; the confirmation probes then warm the clock as without a
+prior. Those later probes, issued with the clock measured and not even one thread's `max_iter`
+fitting under the ceiling at it, do nothing but raise the clock: they are flagged `Chunk.warmup` and
+reported as clock warm-up (`warmup_seconds`), apart from planner overhead (ADR-0009), until
+iteration-sliced launches (backlog 1.29, #76) let real work warm the clock.
 
 Chunks are carved from regions: the whole image (bands) or square tiles of `tile` pixels. Inside
 a region the planner takes whole strips of `strip_rows` rows when it can and a column segment of
@@ -227,6 +241,7 @@ class Chunk:
     tile: Tile
     max_iter: int  # iteration cap for this launch (below the render's for calibration)
     calibration: bool = False  # run on NaN coordinates into scratch; output discarded
+    warmup: bool = False  # a calibration chunk issued only to raise the clock (see `next`)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -269,8 +284,13 @@ class ChunkPlanner:
     _tau: float = 0.0  # tau the planner sizes with
     _meas_rate: float = 0.0  # best measured iterations / second (a lower bound on R)
     _meas_tau: float = 0.0  # least seconds / max_n over uniform chunks (an upper bound on tau)
-    _cold: float = 1.0  # slowdown against the prior
-    _ratios: list[float] = field(default_factory=list[float])  # seconds / prior model, per chunk
+    _cold_tau: float = 1.0  # slowdown against the prior's tau
+    _cold_rate: float = 1.0  # slowdown against the prior's rate
+    _ratios_tau: list[float] = field(default_factory=list[float])  # latency-bound chunks
+    _ratios_rate: list[float] = field(default_factory=list[float])  # throughput-bound chunks
+    _lat_streak: int = 0  # real chunks in a row the prior's terms call latency-bound
+    _since_rate_probe: int = 0
+    _prior_rate_probe: Chunk | None = None
     _confirmations: int = 0
     _rate_probes: int = 0
     _reprobes: int = 0
@@ -306,7 +326,7 @@ class ChunkPlanner:
         if self.prior is not None:
             # No calibration launches: the prior, slowed by `prior_cold` until a chunk has run.
             self._calibrated = True
-            self._cold = self.policy.prior_cold
+            self._cold_tau = self._cold_rate = self.policy.prior_cold
             self._update_model()
 
     # -- the time model ------------------------------------------------------------------------
@@ -374,7 +394,7 @@ class ChunkPlanner:
             self._pending[chunk] = self.worst_case_seconds(tile.pixels, self._calib_iter)
             return chunk
         if self.floor_seconds * self.policy.safety > self.policy.ceiling_s:
-            if self.prior is not None and not self._ratios:
+            if self.prior is not None and not self._ratios_tau:
                 # The floor at the assumed slowdown breaks the ceiling: measure the slowdown
                 # with one cheap probe before any real chunk.
                 budget = self.policy.calib_budget_s
@@ -387,7 +407,13 @@ class ChunkPlanner:
             tile = self._probe_tile()
             per_iter = self.policy.safety * (self._tau + tile.pixels / self._rate)
             m = max(1, min(self.max_iter, int(budget / per_iter)))
-            chunk = Chunk(tile, m, calibration=True)
+            # Clock warm-up: with a prior, once the clock has been measured (`_ratios_tau`), a probe
+            # here runs only because not even one thread's max_iter fits under the ceiling at
+            # that clock; its sole effect is raising the clock. Reported apart from planner
+            # overhead (ADR-0009) until iteration-sliced launches (#76) let real work do it.
+            # Without a prior these probes also measure tau and count as calibration.
+            warm = self.prior is not None and bool(self._ratios_tau) and self._confirmations > 0
+            chunk = Chunk(tile, m, calibration=True, warmup=warm)
             self._pending[chunk] = self.worst_case_seconds(tile.pixels, m)
             return chunk
         while self._regions and self._regions[-1].row >= self._regions[-1].h:
@@ -401,6 +427,23 @@ class ChunkPlanner:
             m = max(1, min(self.max_iter, int(self.policy.calib_budget_s / per_iter)))
             chunk = Chunk(tile, m, calibration=True)
             self._pending[chunk] = self.worst_case_seconds(tile.pixels, m)
+            return chunk
+        if self._prior_rate_probe_due():
+            # The floor-heavy trap: real chunks are latency-bound, so none shows R's slowdown,
+            # and R at prior / c_rate caps them small enough to stay latency-bound (S5,
+            # dd/whole: 794 chunks against 275). A throughput probe in scratch measures it.
+            self._reprobes += 1
+            self._since_rate_probe = 0
+            tile = self._rate_probe_tile()
+            # The smallest probe that measures: twice `ratio_min_s` of the prior's throughput
+            # time, within the calibration budget at the current model. On a cold clock every
+            # millisecond of it costs several (S5: 12 ms for the full budget at 210 MHz).
+            assert self.prior is not None
+            want = int(2 * self.policy.ratio_min_s * self.prior.rate / tile.pixels) + 1
+            m = max(1, min(self._rate_probe_iter(), want))
+            chunk = Chunk(tile, m, calibration=True)
+            self._pending[chunk] = self.worst_case_seconds(tile.pixels, m)
+            self._prior_rate_probe = chunk
             return chunk
         if self._reprobe_due():
             self._reprobes += 1
@@ -496,6 +539,20 @@ class ChunkPlanner:
             and self.budget_pixels() >= self._cap_pixels()
         )
 
+    def _prior_rate_probe_due(self) -> bool:
+        """With a prior: the last two real chunks were latency-bound (one is expected at the
+        assumed slowdown in any deep render; the trap is a run of them), the ceiling (not the
+        target) sizes chunks, and R's slowdown is still above `rate_settle`. At most one probe
+        per `reprobe_every` real chunks after the first, and `reprobe_max` per render."""
+        pol = self.policy
+        if self.prior is None or self._lat_streak < 2 or self._cold_rate <= pol.rate_settle:
+            return False
+        if self._reprobes >= pol.reprobe_max:
+            return False
+        if self._reprobes and self._since_rate_probe < pol.reprobe_every:
+            return False
+        return self.budget_pixels() >= self._cap_pixels()
+
     def _rate_probe_iter(self) -> int:
         """Largest iteration count whose projected cost on the rate probe fits the budget."""
         big = self._rate_probe_tile().pixels
@@ -548,10 +605,23 @@ class ChunkPlanner:
         if self.prior is not None and seconds > 0:
             # A cheap chunk is mostly launch cost (tens of microseconds), which says nothing
             # about the clock, so it neither raises nor lowers the slowdown.
-            pm = max_n * self.prior.tau + iterations / self.prior.rate
+            lat, thr = max_n * self.prior.tau, iterations / self.prior.rate
+            pm = lat + thr
             if pm >= max(self.policy.ratio_min_s, 1e-12):
-                self._ratios.append(seconds / pm)
-                self._cold = max(1.0, *self._ratios[-self.policy.cold_window :])
+                w = self.policy.cold_window
+                self._ratios_tau.append(seconds / pm)
+                self._cold_tau = max(1.0, *self._ratios_tau[-w:])
+                probe = chunk == self._prior_rate_probe
+                if thr > lat or probe:
+                    # A throughput probe is timed against the prior's throughput term alone,
+                    # which can only overstate the slowdown (the prior's tau may be loose).
+                    self._ratios_rate.append(seconds / (thr if probe else pm))
+                    self._cold_rate = max(1.0, *self._ratios_rate[-w:])
+                if not chunk.calibration:
+                    self._lat_streak = self._lat_streak + 1 if lat >= thr else 0
+                    self._since_rate_probe += 1
+            if chunk == self._prior_rate_probe:
+                self._prior_rate_probe = None
         self._update_model()
         if chunk.calibration:
             if chunk == self._reprobe_chunk:
@@ -576,7 +646,7 @@ class ChunkPlanner:
         where that is better. Without a prior, only what was measured."""
         tau, rate = self._meas_tau, self._meas_rate
         if self.prior is not None:
-            ptau, prate = self.prior.tau * self._cold, self.prior.rate / self._cold
+            ptau, prate = self.prior.tau * self._cold_tau, self.prior.rate / self._cold_rate
             tau = min(tau, ptau) if tau > 0 else ptau
             rate = max(rate, prate)
         self._tau, self._rate = tau, rate
@@ -627,9 +697,15 @@ class ChunkPlanner:
         return self._tau
 
     @property
+    def warmup_seconds(self) -> float:
+        """Kernel time spent on clock warm-up chunks (`Chunk.warmup`), kept apart from
+        calibration so it stays visible."""
+        return sum(r.seconds for r in self.records if r.chunk.warmup)
+
+    @property
     def cold_factor(self) -> float:
-        """The slowdown against the prior the planner currently assumes (1 without a prior)."""
-        return self._cold
+        """The larger slowdown against the prior the planner assumes (1 without a prior)."""
+        return max(self._cold_tau, self._cold_rate)
 
     @property
     def rate(self) -> float:

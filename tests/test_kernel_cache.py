@@ -570,6 +570,56 @@ def test_damaged_perf_record_reads_as_none_and_is_replaced(tmp_path: Path, conte
     assert c.read_perf(BASE, DEV_A) == {"tau": 1e-6, "rate": 1e10}
 
 
+def test_perf_record_with_a_changed_value_reads_as_none(tmp_path: Path) -> None:
+    """A record is checksummed, so a damaged number can't pass for a real measurement."""
+    c, _ = make_cache(tmp_path)
+    c.write_perf(BASE, DEV_A, {"tau": 1.5e-06, "rate": 13000000000.0})
+    path = c.store.perf_path(c.key(BASE)[0])
+    text = path.read_text()
+    assert "13000000000" in text
+    path.write_text(text.replace("13000000000", "93000000000"))
+    assert c.read_perf(BASE, DEV_A) is None
+
+
+A_REC = {"tau": 1e-6, "rate": 1e10}
+B_REC = {"tau": 2e-6, "rate": 5e9}
+
+
+def _perf_writer(root: str, device: str, rec: dict[str, float], n: int) -> None:
+    c: KernelCache[FakeKernel] = KernelCache(FakeBackend(), KernelStore(root))
+    for _ in range(n):
+        c.write_perf(BASE, device, rec)
+
+
+@pytest.mark.parametrize("devices", [(DEV_A, DEV_A), (DEV_A, DEV_B)], ids=["same", "other"])
+def test_racing_perf_writers_leave_a_whole_record_or_none(
+    tmp_path: Path, devices: tuple[str, str]
+) -> None:
+    """Two processes write records while this one reads: every read is one of the written
+    records or None (a lost update), never a mix or a damaged value."""
+    ctx = mp.get_context("spawn")
+    root = str(tmp_path / "cache")
+    recs = (A_REC, B_REC)
+    ps = [
+        ctx.Process(target=_perf_writer, args=(root, dev, rec, 300))
+        for dev, rec in zip(devices, recs, strict=True)
+    ]
+    for p in ps:
+        p.start()
+    c: KernelCache[FakeKernel] = KernelCache(FakeBackend(), KernelStore(root))
+    seen: list[object] = []
+    while any(p.is_alive() for p in ps):
+        seen.extend(c.read_perf(BASE, dev) for dev in set(devices))
+    for p in ps:
+        p.join(60)
+        assert p.exitcode == 0
+    assert all(r is None or r in recs for r in seen)
+    final = [c.read_perf(BASE, dev) for dev in devices]
+    assert all(r is None or r in recs for r in final)
+    assert any(r is not None for r in final)
+    assert not list(c.store.dir.glob("??/.*.tmp"))
+
+
 def test_oversized_perf_record_is_ignored(tmp_path: Path) -> None:
     c, _ = make_cache(tmp_path)
     d, _ = c.key(BASE)

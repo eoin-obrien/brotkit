@@ -22,6 +22,7 @@ uv pip install --no-deps -e ../..          # brotkit into this venv
 | `curve.py <root>` | Time against chunk size for all-interior tiles, per tier: latency floor, throughput, knee |
 | `nan_tau.py <root>` | Latency from NaN probes against real interior pixels, kernels C and F6 |
 | `sweep.py <root> [warmup_ms] [tiers] [views] [wait]` | 4K sweep, every tier and view: no prior, then the stored prior on a cold and a warm GPU; chunks, overhead, longest chunk, bound check, the revised gate |
+| `warm_build.py <scratch> [reps]` | qf/whole rendered right after building its kernel into an empty cache on an idle GPU, with and without the warm-up batch queued before the build |
 | `warmup.py <root> [reps]` | Clock ramp after idle, and how much of it a warm-up kernel with an H ms head start hides; host setup times |
 | `fixed_cost.py <root>` | Per-chunk pipeline cost and CPU time on 200 tiny chunks, by wait mode |
 | `tiles.py <root>` | Bands against 256 and 512 px tiles, f32 and qf, worst-case views |

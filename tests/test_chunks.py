@@ -332,8 +332,10 @@ def test_a_warm_start_skips_calibration() -> None:
     assert first.planner.estimates is not None
     second = run(QF, field, 5000, prior=first.planner.estimates)
     assert (coverage(second.planner) == 1).all()
-    assert any(c.calibration for c in first.chunks)
-    assert not any(c.calibration for c in second.chunks)
+    calib_first = sum(t for c, t in zip(first.chunks, first.times, strict=True) if c.calibration)
+    calib_second = sum(t for c, t in zip(second.chunks, second.times, strict=True) if c.calibration)
+    assert sum(c.calibration for c in second.chunks) <= 1  # at most the floor-heavy probe
+    assert calib_second < 0.5 * calib_first
     assert max(second.times) <= second.planner.policy.ceiling_s
 
 
@@ -387,12 +389,24 @@ def test_tau_tightens_from_real_chunks() -> None:
 
 @pytest.mark.parametrize("gpu", [F32, F64, QF], ids=["f32", "f64", "qf"])
 @pytest.mark.parametrize("name", sorted(FIELDS))
-def test_a_prior_needs_no_calibration_launches(gpu: Gpu, name: str) -> None:
+def test_a_prior_needs_at_most_one_cheap_probe(gpu: Gpu, name: str) -> None:
+    """No latency or throughput calibration; at 10,000 iterations the first chunks are
+    floor-heavy at the assumed 10x slowdown, and one throughput probe may measure R's."""
     max_iter = 10000
     r = run(gpu, FIELDS[name](540, 960, max_iter), max_iter, prior=prior_of(gpu))
-    assert not any(c.calibration for c in r.chunks)
+    calib = [t for c, t in zip(r.chunks, r.times, strict=True) if c.calibration]
+    assert len(calib) <= 1
+    assert all(t <= r.planner.policy.calib_budget_s for t in calib)
     assert (coverage(r.planner) == 1).all()
     assert max(r.times) <= r.planner.policy.ceiling_s
+
+
+@pytest.mark.parametrize("name", sorted(FIELDS))
+@pytest.mark.parametrize("gpu", [F32, F64, QF], ids=["f32", "f64", "qf"])
+def test_a_shallow_render_from_a_prior_launches_no_probe(gpu: Gpu, name: str) -> None:
+    for cold in ((1.0, 0.0), (9.0, 0.3)):
+        r = run(gpu, FIELDS[name](540, 960, 1000), 1000, prior=prior_of(gpu), cold=cold)
+        assert not any(c.calibration for c in r.chunks)
 
 
 @pytest.mark.parametrize("gpu", [F32, F64, QF], ids=["f32", "f64", "qf"])
@@ -417,6 +431,37 @@ def test_a_prior_far_too_fast_stays_under_the_ceiling(gpu: Gpu, slower: float) -
     assert (coverage(r.planner) == 1).all()
 
 
+@pytest.mark.parametrize("slowdown", [3.0, 6.0])
+def test_a_prior_with_a_loose_tau_keeps_the_bound_on_a_cold_gpu(slowdown: float) -> None:
+    """S5, df64/seahorse warm: a short render stored a tau 220x too high (learned from
+    throughput-bound chunks), so the first chunk's floor needed a probe. The probe ran far
+    faster than that tau said, and taking it as "the GPU is warm" applied the prior's full R
+    on a clock still at 375 MHz: the next chunk ran 1.88x its bound. A latency-bound chunk
+    only says how slow tau is; R keeps its own slowdown."""
+    gpu = Gpu(rate=9.7e10, tau=265e-9)  # df64-like
+    prior = Estimates(tau=gpu.tau * 220, rate=gpu.rate)
+    r = run(gpu, split_worst(1080, 1920, 1000), 1000, prior=prior, cold=(slowdown, 0.3))
+    assert r.chunks[0].calibration  # the loose tau put the assumed floor over the ceiling
+    for rec in r.planner.records:
+        if not rec.chunk.calibration:
+            assert rec.seconds <= rec.predicted_worst_s
+    assert (coverage(r.planner) == 1).all()
+
+
+@pytest.mark.parametrize("cold", [(1.0, 0.0), (5.0, 0.3)], ids=["warm", "cold"])
+def test_a_floor_heavy_render_from_a_prior_amortises_the_floor(cold: tuple[float, float]) -> None:
+    """S5, dd/whole with a prior: every chunk is floor-heavy, so if only throughput-bound
+    chunks may lower R's slowdown, R stays at prior / 10, the ceiling keeps chunks small and
+    small chunks stay latency-bound: 794 chunks and 59 s against 275 and 40 s. A throughput
+    probe measures R's slowdown when real chunks can't."""
+    field = uniform(540, 960, 10000)
+    r = run(DD, field, 10000, prior=prior_of(DD), cold=cold)
+    real = [t for c, t in zip(r.chunks, r.times, strict=True) if not c.calibration]
+    assert max(r.times) <= r.planner.policy.ceiling_s
+    assert float(np.median(real)) >= 0.25
+    assert r.total <= 2.0 * ideal_seconds(DD, field) + 0.5
+
+
 def test_a_prior_too_slow_is_overtaken_by_measurement() -> None:
     field = disc(1080, 1920, 5000)
     exact = run(QF, field, 5000, prior=prior_of(QF))
@@ -435,12 +480,15 @@ def test_the_slowdown_follows_the_clock() -> None:
 
 def test_a_deep_dd_render_with_a_prior_measures_before_its_first_chunk() -> None:
     """dd at 10,000 iterations: the floor at the assumed 10x slowdown (1.5 s) breaks the
-    ceiling, so one cheap probe measures the slowdown first; on a warm GPU that is all."""
+    ceiling, so one cheap probe measures the slowdown first; on a warm GPU that and one
+    throughput probe (every chunk is floor-heavy) are all."""
     field = uniform(270, 480, 10000)
     r = run(DD, field, 10000, prior=prior_of(DD))
     assert r.chunks[0].calibration
-    assert sum(c.calibration for c in r.chunks) == 1
-    assert r.times[0] <= r.planner.policy.calib_budget_s
+    assert sum(c.calibration for c in r.chunks) <= 2
+    assert not any(c.warmup for c in r.chunks)
+    calib = [t for c, t in zip(r.chunks, r.times, strict=True) if c.calibration]
+    assert all(t <= r.planner.policy.calib_budget_s for t in calib)
     assert (coverage(r.planner) == 1).all()
     assert max(r.times) <= r.planner.policy.ceiling_s
 
@@ -449,7 +497,7 @@ def test_a_deep_dd_render_with_a_prior_on_a_cold_gpu() -> None:
     field = uniform(270, 480, 10000)
     r = run(DD, field, 10000, prior=prior_of(DD), cold=(5.0, 0.3))
     pol = r.planner.policy
-    assert sum(c.calibration for c in r.chunks) <= 1 + pol.confirm_probes
+    assert sum(c.calibration for c in r.chunks) <= 2 + pol.confirm_probes
     assert (coverage(r.planner) == 1).all()
     assert max(r.times) <= pol.ceiling_s
 
@@ -470,6 +518,139 @@ def test_refusing_dd_names_qf_and_the_backlog_row() -> None:
     assert err.value.alternative == "qf"
     assert 20000 < err.value.max_feasible_iter < 30000
     assert all(r.chunk.calibration for r in p.records)
+
+
+def drive_checking_warmup(
+    gpu: Gpu,
+    field: Field,
+    max_iter: int,
+    *,
+    prior: Estimates | None,
+    cold: tuple[float, float] = (1.0, 0.0),
+) -> ChunkPlanner:
+    """Run a render, asserting at every clock warm-up chunk that it was issued only because
+    the clock had been measured and not even one thread's max_iter fit under the ceiling."""
+    h, w = field.shape
+    p = ChunkPlanner(h=h, w=w, max_iter=max_iter, prior=prior)
+    busy = 0.0
+    while True:
+        floor_breaks = p.floor_seconds * p.policy.safety > p.policy.ceiling_s
+        measured = p.records != []
+        c = p.next()
+        if c is None:
+            return p
+        if c.warmup:
+            assert c.calibration
+            assert prior is not None
+            assert measured
+            assert floor_breaks
+        s, iters, n_max = kernel_seconds(gpu, field, c)
+        if busy < cold[1]:
+            s *= cold[0]
+        busy += s
+        p.record(c, s, iters, n_max)
+
+
+@pytest.mark.parametrize(
+    ("gpu", "max_iter", "cold"),
+    [
+        (DD, 10000, (1.0, 0.0)),  # a warm GPU: the floor fits once measured
+        (DD, 1000, (9.0, 0.5)),  # a shallow render on a cold GPU
+        (DD, 5000, (3.0, 0.5)),  # 5000 x 15 us x 3 x 1.25 = 0.28 s: fits cold
+        (F64, 10000, (9.0, 0.5)),
+        (QF, 10000, (9.0, 0.5)),
+        (F32, 10000, (9.0, 0.5)),
+    ],
+    ids=["dd-warm", "dd-shallow-cold", "dd-5000-cold", "f64-cold", "qf-cold", "f32-cold"],
+)
+def test_no_clock_warmup_when_the_floor_fits(
+    gpu: Gpu, max_iter: int, cold: tuple[float, float]
+) -> None:
+    p = drive_checking_warmup(
+        gpu, uniform(270, 480, max_iter), max_iter, prior=prior_of(gpu), cold=cold
+    )
+    assert p.warmup_seconds == 0
+    assert not any(r.chunk.warmup for r in p.records)
+    assert (coverage(p) == 1).all()
+
+
+def test_clock_warmup_on_a_deep_dd_render_from_an_idle_clock() -> None:
+    """S5, dd/whole cold: at 210 MHz (8.6x slow) one thread's 10,000 iterations take ~1.3 s,
+    so after the measuring probe the planner can only warm the clock."""
+    p = drive_checking_warmup(
+        DD, uniform(270, 480, 10000), 10000, prior=prior_of(DD), cold=(8.6, 0.3)
+    )
+    warm = [r for r in p.records if r.chunk.warmup]
+    assert warm
+    assert not p.records[0].chunk.warmup  # the first probe measures the clock: it counts
+    assert p.warmup_seconds == pytest.approx(sum(r.seconds for r in warm))
+    assert (coverage(p) == 1).all()
+
+
+def test_probes_without_a_prior_are_never_warmup() -> None:
+    """Without a prior the confirming probes also measure tau: they count as calibration."""
+    p = drive_checking_warmup(DD, uniform(270, 480, 10000), 10000, prior=None, cold=(8.6, 0.3))
+    assert any(r.chunk.calibration for r in p.records)
+    assert p.warmup_seconds == 0
+
+
+@settings(max_examples=60, deadline=None)
+@given(
+    which=st.sampled_from(["f32", "f64", "qf", "dd"]),
+    max_iter=st.sampled_from([500, 5000, 10000, 20000]),
+    slowdown=st.sampled_from([1.0, 3.0, 9.0]),
+    with_prior=st.booleans(),
+)
+def test_clock_warmup_only_when_the_idle_clock_check_fails(
+    which: str, max_iter: int, slowdown: float, with_prior: bool
+) -> None:
+    gpu = {"f32": F32, "f64": F64, "qf": QF, "dd": DD}[which]
+    prior = prior_of(gpu) if with_prior else None
+    drive_checking_warmup(
+        gpu, uniform(64, 256, max_iter), max_iter, prior=prior, cold=(slowdown, 0.3)
+    )
+
+
+def first_real_chunk(gpu: Gpu, field: Field, max_iter: int, prior: Estimates | None) -> Chunk:
+    h, w = field.shape
+    p = ChunkPlanner(h=h, w=w, max_iter=max_iter, prior=prior)
+    while (c := p.next()) is not None:
+        if not c.calibration:
+            return c
+        p.record(c, *kernel_seconds(gpu, field, c))
+    raise AssertionError("no real chunk")
+
+
+@settings(max_examples=60, deadline=None)
+@given(
+    which=st.sampled_from(["f32", "f64", "qf"]),
+    slower=st.floats(1.0, 1000.0),
+    max_iter=st.sampled_from([1000, 10000]),
+)
+def test_a_slower_prior_never_makes_the_first_chunk_larger(
+    which: str, slower: float, max_iter: int
+) -> None:
+    gpu = {"f32": F32, "f64": F64, "qf": QF}[which]
+    field = uniform(540, 960, max_iter)
+    exact = first_real_chunk(gpu, field, max_iter, prior_of(gpu))
+    slow = first_real_chunk(gpu, field, max_iter, prior_of(gpu, slower))
+    assert slow.tile.pixels <= exact.tile.pixels
+
+
+@pytest.mark.parametrize("gpu", [F32, F64, QF], ids=["f32", "f64", "qf"])
+def test_a_damaged_prior_makes_the_first_launch_the_tiny_probe(gpu: Gpu) -> None:
+    """A record that fails its checksum or doesn't parse reads as None: the render calibrates
+    from the tiny probe, a smaller first launch than any prior gives."""
+    field = uniform(540, 960, 10000)
+    for bad in (None, {"tau": "x"}, {"tau": 0.0, "rate": 1.0}):
+        prior = Estimates.from_json(bad)
+        assert prior is None
+        p = ChunkPlanner(h=540, w=960, max_iter=10000, prior=prior)
+        first = p.next()
+        assert first is not None
+        assert first.calibration
+        assert first.max_iter == p.policy.calib_iter
+        assert first.tile.pixels <= first_real_chunk(gpu, field, 10000, prior_of(gpu)).tile.pixels
 
 
 @given(tau=st.floats(1e-12, 1.0), rate=st.floats(1.0, 1e15))

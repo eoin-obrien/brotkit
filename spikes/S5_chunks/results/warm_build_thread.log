@@ -1,0 +1,5 @@
+{'rep': 0, 'warm_on_miss': False, 'mhz_before': 210, 'build_and_warm_ms': 0.0, 'prep_s': 2.481, 'wall_s': 2.6824, 'kernel_s': 2.5697, 'calibration_s': 0.08224, 'gpu_s': 2.6519, 'first_chunks_s': [0.000116, 0.138081, 0.0174], 'chunks': 30}
+{'rep': 0, 'warm_on_miss': True, 'mhz_before': 210, 'build_and_warm_ms': 2835.1, 'prep_s': 2.86, 'wall_s': 2.4949, 'kernel_s': 2.405, 'calibration_s': 0.06448, 'gpu_s': 2.4695, 'first_chunks_s': [0.000274, 0.055483, 0.033996], 'chunks': 29}
+waiting 20 s: PAUSED before warm_build 1 False: GPU busy (utilisation [6, 3, 7, 12, 10, 6, 12, 8]%, memory used 4105 MiB, baseline 3484 MiB + ours ~1200 MiB). Not measuring.
+{'rep': 1, 'warm_on_miss': False, 'mhz_before': 210, 'build_and_warm_ms': 0.0, 'prep_s': 2.9, 'wall_s': 2.732, 'kernel_s': 2.6552, 'calibration_s': 0.04685, 'gpu_s': 2.702, 'first_chunks_s': [0.000116, 0.128551, 0.073328], 'chunks': 34}
+{'rep': 1, 'warm_on_miss': True, 'mhz_before': 210, 'build_and_warm_ms': 3246.6, 'prep_s': 3.248, 'wall_s': 2.4404, 'kernel_s': 2.3674, 'calibration_s': 0.04911, 'gpu_s': 2.4165, 'first_chunks_s': [7.6e-05, 0.082002, 0.016268], 'chunks': 28}

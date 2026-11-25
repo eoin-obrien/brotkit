@@ -18,9 +18,12 @@ and returns a partial result instead of leaving the buffers mid-write.
 
 Prior: by default the planner's prior is the perf record the kernel cache holds for this kernel
 on this device, and the render's final estimates are written back after it (`prior="store"`).
-Warm-up: `warmup_ms` launches the warm kernel on a second stream at the very start of the
-render, before the kernel lookup and buffer setup, so the clock starts rising while the host
-works (S5: the GPU idles at 210 MHz).
+Warm-up kernel: only when the render's kernel isn't in memory (a disk load or a build), about
+300 ms of warm kernel is queued on a second stream before the lookup, so the clock rises while
+the host works (S5: idle 210 MHz; a memory-hit render has ~15 ms of host work,
+too little to matter). `warmup_ms` is warmup.py's explicit head start (the sweep passes 0).
+Clock warm-up chunks (`Chunk.warmup`, ADR-0009) are timed apart: `Result.warmup_s`, excluded
+from `overhead`.
 """
 
 from __future__ import annotations
@@ -135,7 +138,10 @@ class Gpu:
     kernels: dict[tuple[str, str], Any] = field(default_factory=dict)
     specs: dict[tuple[str, str], Any] = field(default_factory=dict)
     lookups: int = 0
-    warm_iters_per_ms: int = 0  # warm-kernel iterations for 1 ms at the idle clock
+    warm_iters_per_ms: int = 10423  # warm-kernel iterations for 1 ms at 210 MHz (warmup.py)
+    warm_on_miss: bool = True
+    warm_ms_on_miss: float = 300.0  # S5: the clock jumps after 100-300 ms of load
+    warmed_ms: float = 0.0  # host time the last lookup spent queueing warm-up
 
     @property
     def device_id(self) -> str:
@@ -219,8 +225,17 @@ class Gpu:
 
     def kernel(self, tier: str, kern: str) -> Any:
         key = (tier, kern)
+        self.warmed_ms = 0.0
         if key not in self.kernels:
             self.lookups += 1
+            if self.warm_on_miss:
+                # A disk load or a build: queue ~300 ms of warm-up (sized at the idle clock,
+                # so it ends sooner once the clock jumps) on the side stream, then look up.
+                # One batch, no helper thread: a thread polling every 0.5 ms slowed the
+                # build by 0.36 s (warm_build.py, first version).
+                t0 = time.perf_counter()
+                self.launch_warm(self.warm_ms_on_miss)
+                self.warmed_ms = (time.perf_counter() - t0) * 1e3  # host cost of queueing
             self.kernels[key] = self.cache.get(self.spec(tier, kern))
         return self.kernels[key]
 
@@ -270,10 +285,12 @@ class Result:
     done: list[Tile]
     interrupted_at: float | None = None
     stopped_at: float | None = None
+    warmup_s: float = 0.0  # clock warm-up chunks (ADR-0009): reported, not overhead
 
     @property
     def overhead(self) -> float:
-        return 1 - self.kernel_s / self.wall_s
+        """Planner overhead: wall time not spent in real chunks or clock warm-up."""
+        return 1 - (self.kernel_s + self.warmup_s) / self.wall_s
 
     @property
     def iterations(self) -> int:
@@ -301,8 +318,10 @@ class Result:
             "tile": self.policy.tile,
             "complete": self.complete,
             "chunks": len(real),
-            "calibration_chunks": len(calib),
-            "calibration_s": round(sum(r.seconds for r in calib), 5),
+            "calibration_chunks": sum(not r.chunk.warmup for r in calib),
+            "calibration_s": round(sum(r.seconds for r in calib if not r.chunk.warmup), 5),
+            "warmup_chunks": sum(r.chunk.warmup for r in calib),
+            "warmup_s": round(self.warmup_s, 5),
             "wall_s": round(self.wall_s, 4),
             "kernel_s": round(self.kernel_s, 4),
             "sum_s": round(self.sum_s, 5),
@@ -364,7 +383,7 @@ def render(
     from cuda.core import EventOptions
 
     t_entry = time.perf_counter()
-    gpu.launch_warm(warmup_ms)  # before any host work, so the clock rises while it runs
+    gpu.launch_warm(warmup_ms)  # an explicit head start (warmup.py); the sweep passes 0
     be = gpu.backend
     stream = be.stream
     k = gpu.kernel(tier, kern)
@@ -488,11 +507,13 @@ def render(
         done,
         interrupted_at,
         time.perf_counter() if interrupted_at else None,
+        planner.warmup_seconds,
     )
     res.buffers = (bf, bu)  # type: ignore[attr-defined]
     res.estimates = planner.estimates  # type: ignore[attr-defined]
     res.prior = prior  # type: ignore[attr-defined]
     res.prep_s = prep_s  # type: ignore[attr-defined]
+    res.warmed_ms = gpu.warmed_ms  # type: ignore[attr-defined]
     res.cold_factor = planner.cold_factor  # type: ignore[attr-defined]
     if record_prior and planner.estimates is not None:
         gpu.write_prior(tier, kern, planner.estimates)

@@ -1,45 +1,84 @@
-f32   seahorse  first mhz0= 210 chunks=   5 calib= 4/   8.9ms wall=   0.082s overhead=27.741% (   22.6 ms) prep= 24.7ms max=0.048s act/pred<=0.4185 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.196
-f32   seahorse  cold  mhz0= 210 chunks=   3 calib= 0/   0.0ms wall=   0.066s overhead=10.707% (    7.0 ms) prep= 25.1ms max=0.029s act/pred<=0.4553 over_ceil=0 c_end=1.212 gate=PASS cpu/wall=0.122
-f32   seahorse  warm  mhz0= 210 chunks=   3 calib= 0/   0.0ms wall=   0.065s overhead= 8.713% (    5.6 ms) prep=  0.9ms max=0.028s act/pred<=0.4002 over_ceil=0 c_end=1.152 gate=PASS cpu/wall=0.108
-f32   whole     first mhz0= 210 chunks=   7 calib= 7/  21.9ms wall=   0.222s overhead=15.197% (   33.8 ms) prep=  1.1ms max=0.117s act/pred<=0.4512 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.135
-f32   whole     cold  mhz0= 210 chunks=   5 calib= 0/   0.0ms wall=   0.273s overhead= 2.131% (    5.8 ms) prep=  1.1ms max=0.204s act/pred<=0.4463 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.106
-f32   whole     warm  mhz0= 285 chunks=   5 calib= 0/   0.0ms wall=   0.236s overhead= 2.305% (    5.4 ms) prep=  0.8ms max=0.158s act/pred<=0.6114 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.076
-f32   interior  first mhz0= 210 chunks=   8 calib= 7/  20.7ms wall=   0.357s overhead= 9.363% (   33.5 ms) prep=  1.0ms max=0.096s act/pred<=0.7658 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.090
-f32   interior  cold  mhz0= 210 chunks=   5 calib= 0/   0.0ms wall=   0.275s overhead= 1.312% (    3.6 ms) prep=  0.9ms max=0.129s act/pred<=1.0166 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.095
-f32   interior  warm  mhz0= 255 chunks=   5 calib= 0/   0.0ms wall=   0.358s overhead= 1.156% (    4.1 ms) prep=  1.1ms max=0.160s act/pred<=1.2719 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.084
-df64  seahorse  first mhz0= 210 chunks=   7 calib= 5/  18.0ms wall=   0.297s overhead= 9.687% (   28.8 ms) prep=  1.0ms max=0.141s act/pred<=0.6926 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.084
-df64  seahorse  cold  mhz0= 210 chunks=   4 calib= 0/   0.0ms wall=   0.305s overhead= 2.234% (    6.8 ms) prep=  1.1ms max=0.143s act/pred<=0.4498 over_ceil=0 c_end=4.147 gate=PASS cpu/wall=0.121
-df64  seahorse  warm  mhz0= 240 chunks=   5 calib= 0/   0.0ms wall=   0.323s overhead= 1.813% (    5.9 ms) prep=  1.0ms max=0.108s act/pred<=0.5314 over_ceil=0 c_end=1.148 gate=PASS cpu/wall=0.059
-df64  whole     first mhz0= 210 chunks=  12 calib= 6/  19.7ms wall=   0.626s overhead= 5.108% (   32.0 ms) prep=  0.8ms max=0.093s act/pred<=0.4035 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.077
-df64  whole     cold  mhz0= 210 chunks=  11 calib= 0/   0.0ms wall=   0.618s overhead= 1.567% (    9.7 ms) prep=  1.0ms max=0.120s act/pred<=0.3372 over_ceil=0 c_end=1.04 gate=PASS cpu/wall=0.091
-df64  whole     warm  mhz0= 285 chunks=  10 calib= 0/   0.0ms wall=   0.585s overhead= 1.823% (   10.7 ms) prep=  0.9ms max=0.142s act/pred<=0.353 over_ceil=0 c_end=1.084 gate=PASS cpu/wall=0.091
-df64  interior  first mhz0= 210 chunks=  16 calib= 6/  19.9ms wall=   1.180s overhead= 2.978% (   35.1 ms) prep=  0.9ms max=0.102s act/pred<=0.7877 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.086
-df64  interior  cold  mhz0= 210 chunks=  12 calib= 0/   0.0ms wall=   1.036s overhead= 0.717% (    7.4 ms) prep=  1.0ms max=0.121s act/pred<=0.9344 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.090
-df64  interior  warm  mhz0= 300 chunks=  13 calib= 0/   0.0ms wall=   1.101s overhead= 0.805% (    8.9 ms) prep=  0.9ms max=0.146s act/pred<=1.0482 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.090
-f64   seahorse  first mhz0= 210 chunks=   8 calib= 6/  45.9ms wall=   0.411s overhead=14.085% (   58.0 ms) prep=  1.0ms max=0.098s act/pred<=0.5608 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.100
-f64   seahorse  cold  mhz0= 210 chunks=   5 calib= 0/   0.0ms wall=   0.407s overhead= 1.013% (    4.1 ms) prep=  1.2ms max=0.127s act/pred<=0.3576 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.088
-f64   seahorse  warm  mhz0= 300 chunks=   5 calib= 0/   0.0ms wall=   0.483s overhead= 0.854% (    4.1 ms) prep=  1.1ms max=0.217s act/pred<=0.4999 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.095
-f64   whole     first mhz0= 210 chunks=  26 calib= 7/  33.8ms wall=   2.110s overhead= 2.647% (   55.9 ms) prep=  1.0ms max=0.112s act/pred<=0.4354 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.088
-f64   whole     cold  mhz0= 210 chunks=  25 calib= 0/   0.0ms wall=   1.976s overhead= 0.819% (   16.2 ms) prep=  1.2ms max=0.123s act/pred<=0.4563 over_ceil=0 c_end=2.0 gate=PASS cpu/wall=0.093
-f64   whole     warm  mhz0= 285 chunks=  28 calib= 0/   0.0ms wall=   2.095s overhead= 0.872% (   18.3 ms) prep=  1.0ms max=0.134s act/pred<=0.4512 over_ceil=0 c_end=1.258 gate=PASS cpu/wall=0.093
-f64   interior  first mhz0= 210 chunks=  47 calib= 7/  42.9ms wall=   5.000s overhead= 1.530% (   76.5 ms) prep=  0.9ms max=0.123s act/pred<=0.7661 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.088
-f64   interior  cold  mhz0= 210 chunks=  47 calib= 0/   0.0ms wall=   5.019s overhead= 0.490% (   24.6 ms) prep=  1.1ms max=0.159s act/pred<=1.0833 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.088
-f64   interior  warm  mhz0=1950 chunks=  48 calib= 0/   0.0ms wall=   4.779s overhead= 0.491% (   23.5 ms) prep=  0.7ms max=0.108s act/pred<=0.7889 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.083
-dd    seahorse  first mhz0= 210 chunks=  35 calib= 7/  58.0ms wall=   3.799s overhead= 2.091% (   79.4 ms) prep=  0.9ms max=0.132s act/pred<=0.5726 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.063
-dd    seahorse  cold  mhz0= 210 chunks=  37 calib= 0/   0.0ms wall=   3.781s overhead= 0.437% (   16.5 ms) prep=  0.9ms max=0.117s act/pred<=0.4391 over_ceil=0 c_end=1.058 gate=PASS cpu/wall=0.061
-dd    seahorse  warm  mhz0= 285 chunks=  39 calib= 0/   0.0ms wall=   3.896s overhead= 0.486% (   18.9 ms) prep=  1.2ms max=0.120s act/pred<=0.5704 over_ceil=0 c_end=1.15 gate=PASS cpu/wall=0.062
-dd    whole     first mhz0= 210 chunks= 274 calib=10/ 263.0ms wall=  39.909s overhead= 0.968% (  386.3 ms) prep=  0.8ms max=0.165s act/pred<=0.4421 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.044
-dd    whole     cold  mhz0= 210 chunks= 272 calib= 4/ 344.5ms wall=  39.666s overhead= 1.172% (  464.7 ms) prep=  0.9ms max=0.163s act/pred<=0.3526 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.043
-dd    whole     warm  mhz0= 300 chunks= 275 calib= 3/ 247.4ms wall=  39.463s overhead= 0.962% (  379.6 ms) prep=  1.1ms max=0.163s act/pred<=0.3529 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.057
-dd    interior  first mhz0= 210 chunks= 273 calib=10/ 408.9ms wall=  78.790s overhead= 0.719% (  566.9 ms) prep=  0.8ms max=0.293s act/pred<=0.6024 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.061
-dd    interior  cold  mhz0= 210 chunks= 271 calib= 4/ 350.2ms wall=  78.672s overhead= 0.712% (  560.0 ms) prep=  1.2ms max=0.309s act/pred<=0.6624 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.075
-dd    interior  warm  mhz0= 255 chunks= 272 calib= 4/ 381.4ms wall=  78.620s overhead= 0.711% (  558.8 ms) prep=  1.5ms max=0.290s act/pred<=0.5981 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.074
-qf    seahorse  first mhz0= 210 chunks=   9 calib= 4/  23.7ms wall=   0.489s overhead= 6.559% (   32.1 ms) prep=  0.9ms max=0.091s act/pred<=0.4349 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.051
-qf    seahorse  cold  mhz0= 210 chunks=   6 calib= 0/   0.0ms wall=   0.595s overhead= 0.769% (    4.6 ms) prep=  0.9ms max=0.204s act/pred<=0.416 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.034
-qf    seahorse  warm  mhz0= 360 chunks=   5 calib= 0/   0.0ms wall=   0.505s overhead= 0.627% (    3.2 ms) prep=  0.9ms max=0.204s act/pred<=0.4648 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.040
-qf    whole     first mhz0= 210 chunks=  29 calib= 8/  53.9ms wall=   2.630s overhead= 2.793% (   73.5 ms) prep=  0.8ms max=0.133s act/pred<=0.4918 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.038
-qf    whole     cold  mhz0= 210 chunks=  32 calib= 0/   0.0ms wall=   2.689s overhead= 0.565% (   15.2 ms) prep=  1.2ms max=0.134s act/pred<=0.4774 over_ceil=0 c_end=2.078 gate=PASS cpu/wall=0.041
-qf    whole     warm  mhz0= 300 chunks=  30 calib= 0/   0.0ms wall=   2.692s overhead= 0.634% (   17.1 ms) prep=  0.9ms max=0.199s act/pred<=0.4306 over_ceil=0 c_end=1.147 gate=PASS cpu/wall=0.050
-qf    interior  first mhz0= 210 chunks=  65 calib= 6/  39.1ms wall=   6.378s overhead= 1.161% (   74.0 ms) prep=  1.4ms max=0.163s act/pred<=0.8285 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.049
-qf    interior  cold  mhz0= 210 chunks=  66 calib= 0/   0.0ms wall=   6.262s overhead= 0.482% (   30.2 ms) prep=  0.9ms max=0.240s act/pred<=0.7776 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.045
-qf    interior  warm  mhz0= 345 chunks=  65 calib= 0/   0.0ms wall=   6.345s overhead= 0.455% (   28.9 ms) prep=  0.8ms max=0.202s act/pred<=0.8217 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.046
+f32   seahorse  first mhz0= 210 chunks=   5 calib= 5/   5.2ms warmup=0/  0.0ms wall=   0.076s overhead=27.655% (   20.9 ms) prep= 24.9ms max=0.044s act/pred<=0.5046 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.212
+f32   seahorse  cold  mhz0= 210 chunks=   3 calib= 0/   0.0ms warmup=0/  0.0ms wall=   0.061s overhead=11.577% (    7.1 ms) prep= 25.5ms max=0.028s act/pred<=0.3706 over_ceil=0 c_end=1.048 gate=PASS cpu/wall=0.130
+f32   seahorse  warm  mhz0= 210 chunks=   3 calib= 0/   0.0ms warmup=0/  0.0ms wall=   0.060s overhead= 9.112% (    5.4 ms) prep=  1.2ms max=0.026s act/pred<=0.365 over_ceil=0 c_end=1.004 gate=PASS cpu/wall=0.117
+f32   whole     first mhz0= 210 chunks=   7 calib= 7/  20.7ms warmup=0/  0.0ms wall=   0.251s overhead=13.708% (   34.4 ms) prep=  1.0ms max=0.149s act/pred<=0.4925 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.135
+f32   whole     cold  mhz0= 210 chunks=   5 calib= 0/   0.0ms warmup=0/  0.0ms wall=   0.292s overhead= 2.413% (    7.0 ms) prep=  1.1ms max=0.190s act/pred<=0.3806 over_ceil=0 c_end=5.02 gate=PASS cpu/wall=0.103
+f32   whole     warm  mhz0= 240 chunks=   6 calib= 1/   3.0ms warmup=0/  0.0ms wall=   0.298s overhead= 4.780% (   14.2 ms) prep=  1.1ms max=0.110s act/pred<=0.2276 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.101
+f32   interior  first mhz0= 210 chunks=   7 calib= 7/  20.7ms warmup=0/  0.0ms wall=   0.300s overhead=11.151% (   33.4 ms) prep=  1.1ms max=0.091s act/pred<=0.7571 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.103
+f32   interior  cold  mhz0= 210 chunks=   5 calib= 0/   0.0ms warmup=0/  0.0ms wall=   0.322s overhead= 1.795% (    5.8 ms) prep=  1.4ms max=0.153s act/pred<=1.2229 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.090
+f32   interior  warm  mhz0= 270 chunks=   5 calib= 0/   0.0ms warmup=0/  0.0ms wall=   0.296s overhead= 1.824% (    5.4 ms) prep=  1.0ms max=0.148s act/pred<=1.1808 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.091
+df64  seahorse  first mhz0= 210 chunks=   7 calib= 6/  30.8ms warmup=0/  0.0ms wall=   0.249s overhead=16.816% (   41.9 ms) prep=  0.9ms max=0.111s act/pred<=0.4638 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.116
+df64  seahorse  cold  mhz0= 210 chunks=   4 calib= 0/   0.0ms warmup=0/  0.0ms wall=   0.207s overhead= 2.439% (    5.1 ms) prep=  1.2ms max=0.147s act/pred<=0.4606 over_ceil=0 c_end=1.234 gate=PASS cpu/wall=0.101
+df64  seahorse  warm  mhz0= 270 chunks=   5 calib= 0/   0.0ms warmup=0/  0.0ms wall=   0.297s overhead= 1.989% (    5.9 ms) prep=  1.0ms max=0.124s act/pred<=0.43 over_ceil=0 c_end=3.822 gate=PASS cpu/wall=0.084
+df64  whole     first mhz0= 210 chunks=   9 calib= 7/  29.2ms warmup=0/  0.0ms wall=   0.491s overhead= 9.047% (   44.4 ms) prep=  0.9ms max=0.125s act/pred<=0.3785 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.112
+df64  whole     cold  mhz0= 210 chunks=  10 calib= 2/  13.5ms warmup=0/  0.0ms wall=   0.598s overhead= 4.220% (   25.2 ms) prep=  1.0ms max=0.106s act/pred<=0.3516 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.100
+df64  whole     warm  mhz0= 225 chunks=   9 calib= 1/  11.2ms warmup=0/  0.0ms wall=   0.509s overhead= 4.506% (   22.9 ms) prep=  1.1ms max=0.114s act/pred<=0.3625 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.096
+df64  interior  first mhz0= 210 chunks=  14 calib= 7/  33.0ms warmup=0/  0.0ms wall=   1.147s overhead= 4.401% (   50.5 ms) prep=  1.5ms max=0.104s act/pred<=0.7911 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.102
+df64  interior  cold  mhz0= 210 chunks=  13 calib= 0/   0.0ms warmup=0/  0.0ms wall=   1.160s overhead= 0.932% (   10.8 ms) prep=  1.0ms max=0.123s act/pred<=0.8234 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.095
+df64  interior  warm  mhz0= 300 chunks=  12 calib= 0/   0.0ms warmup=0/  0.0ms wall=   1.016s overhead= 0.830% (    8.4 ms) prep=  1.0ms max=0.111s act/pred<=0.7894 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.094
+f64   seahorse  first mhz0= 210 chunks=   8 calib= 4/  23.6ms warmup=0/  0.0ms wall=   0.412s overhead= 8.471% (   34.9 ms) prep=  1.2ms max=0.093s act/pred<=0.5076 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.107
+f64   seahorse  cold  mhz0= 210 chunks=   6 calib= 0/   0.0ms warmup=0/  0.0ms wall=   0.523s overhead= 0.888% (    4.6 ms) prep=  1.0ms max=0.150s act/pred<=0.3361 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.073
+f64   seahorse  warm  mhz0= 255 chunks=   6 calib= 0/   0.0ms warmup=0/  0.0ms wall=   0.518s overhead= 1.009% (    5.2 ms) prep=  1.1ms max=0.147s act/pred<=0.3453 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.079
+f64   whole     first mhz0= 210 chunks=  25 calib= 8/  47.5ms warmup=0/  0.0ms wall=   2.003s overhead= 3.413% (   68.4 ms) prep=  0.9ms max=0.118s act/pred<=0.4389 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.081
+f64   whole     cold  mhz0= 210 chunks=  23 calib= 1/   1.8ms warmup=0/  0.0ms wall=   1.920s overhead= 0.848% (   16.3 ms) prep=  1.2ms max=0.124s act/pred<=0.4412 over_ceil=0 c_end=2.422 gate=PASS cpu/wall=0.082
+f64   whole     warm  mhz0= 270 chunks=  26 calib= 2/  14.8ms warmup=0/  0.0ms wall=   1.980s overhead= 1.663% (   32.9 ms) prep=  1.1ms max=0.130s act/pred<=0.4049 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.075
+f64   interior  first mhz0= 210 chunks=  52 calib= 7/  50.5ms warmup=0/  0.0ms wall=   5.172s overhead= 1.620% (   83.8 ms) prep=  1.2ms max=0.170s act/pred<=0.7568 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.080
+f64   interior  cold  mhz0= 210 chunks=  49 calib= 0/   0.0ms warmup=0/  0.0ms wall=   5.259s overhead= 0.521% (   27.4 ms) prep=  1.1ms max=0.169s act/pred<=0.8333 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.082
+f64   interior  warm  mhz0= 270 chunks=  48 calib= 0/   0.0ms warmup=0/  0.0ms wall=   5.057s overhead= 0.516% (   26.1 ms) prep=  1.5ms max=0.128s act/pred<=0.8304 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.087
+dd    seahorse  first mhz0= 210 chunks=  35 calib= 7/  63.0ms warmup=0/  0.0ms wall=   3.725s overhead= 2.381% (   88.7 ms) prep=  0.9ms max=0.128s act/pred<=0.5606 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.091
+dd    seahorse  cold  mhz0= 210 chunks=  38 calib= 1/   2.1ms warmup=0/  0.0ms wall=   3.812s overhead= 0.637% (   24.3 ms) prep=  1.4ms max=0.146s act/pred<=0.445 over_ceil=0 c_end=1.032 gate=PASS cpu/wall=0.089
+dd    seahorse  warm  mhz0= 300 chunks=  39 calib= 1/  10.9ms warmup=0/  0.0ms wall=   3.943s overhead= 0.855% (   33.7 ms) prep=  1.1ms max=0.117s act/pred<=0.4997 over_ceil=0 c_end=1.074 gate=PASS cpu/wall=0.094
+dd    whole     first mhz0= 210 chunks= 337 calib=11/ 284.1ms warmup=0/  0.0ms wall=  40.811s overhead= 1.200% (  489.6 ms) prep=  1.1ms max=0.169s act/pred<=0.4709 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.076
+dd    whole     cold  mhz0= 210 chunks= 282 calib= 4/  23.2ms warmup=2/190.8ms wall=  40.531s overhead= 0.454% (  184.0 ms) prep=  1.2ms max=0.163s act/pred<=0.3305 over_ceil=0 c_end=1.088 gate=PASS cpu/wall=0.073
+dd    whole     warm  mhz0= 285 chunks= 547 calib= 2/  15.1ms warmup=3/331.4ms wall=  41.048s overhead= 0.975% (  400.1 ms) prep=  1.2ms max=0.165s act/pred<=0.6543 over_ceil=0 c_end=1.032 gate=PASS cpu/wall=0.098
+dd    interior  first mhz0= 210 chunks= 274 calib= 8/ 277.6ms warmup=0/  0.0ms wall=  81.580s overhead= 0.519% (  423.5 ms) prep=  1.3ms max=0.321s act/pred<=0.6837 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.056
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [2, 2, 2, 6, 8, 7, 7, 7]%, memory used 4093 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [11, 11, 11, 11, 11, 11, 11, 11]%, memory used 4093 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [13, 12, 13, 13, 13, 12, 13, 13]%, memory used 4118 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [13, 19, 15, 13, 13, 12, 15, 13]%, memory used 4110 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4093 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 13, 12, 13, 22, 12, 12]%, memory used 4106 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4093 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4093 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4093 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4093 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 16, 19, 12, 13, 12, 12, 12]%, memory used 4105 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 16, 22, 13, 18, 22, 14, 27]%, memory used 4179 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 11]%, memory used 4136 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 15]%, memory used 4163 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [13, 12, 13, 15, 25, 19, 13, 19]%, memory used 4222 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [15, 13, 13, 13, 15, 13, 12, 13]%, memory used 4134 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 13, 14, 13, 13, 12, 13, 13]%, memory used 4133 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [11, 13, 13, 13, 11, 13, 13, 13]%, memory used 4127 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 14, 14, 12]%, memory used 4076 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4060 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4060 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4060 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4060 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4060 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [14, 23, 23, 14, 15, 13, 13, 13]%, memory used 4136 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 13, 13, 13, 13, 12, 13, 13]%, memory used 4086 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 14, 14, 13, 13, 14, 13, 12]%, memory used 4125 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [13, 13, 12, 11, 12, 13, 12, 11]%, memory used 4086 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [16, 20, 21, 15, 13, 13, 13, 13]%, memory used 4124 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 12, 12, 12, 12, 12, 12]%, memory used 4090 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [13, 12, 12, 12, 12, 12, 12, 12]%, memory used 4074 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [11, 11, 12, 11, 11, 11, 11, 11]%, memory used 4078 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [11, 11, 11, 11, 11, 11, 11, 11]%, memory used 4071 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [11, 11, 11, 11, 11, 11, 11, 12]%, memory used 4071 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 11, 12, 12, 12, 11, 12, 12]%, memory used 4071 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [12, 12, 11, 12, 12, 12, 12, 11]%, memory used 4071 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [15, 15, 14, 14, 12, 13, 19, 16]%, memory used 4119 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [11, 11, 11, 11, 11, 11, 12, 11]%, memory used 4072 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+dd    interior  cold  mhz0= 210 chunks= 272 calib= 2/  18.3ms warmup=2/187.6ms wall=  81.425s overhead= 0.153% (  125.0 ms) prep=  1.0ms max=0.304s act/pred<=0.7047 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.027
+waiting 20 s: PAUSED before dd/interior: GPU busy (utilisation [2, 2, 6, 6, 6, 6, 6, 7]%, memory used 4099 MiB, baseline 3352 MiB + ours ~1200 MiB). Not measuring.
+dd    interior  warm  mhz0=1950 chunks= 274 calib= 2/   7.8ms warmup=2/275.4ms wall=  80.973s overhead= 0.152% (  123.3 ms) prep=  0.7ms max=0.313s act/pred<=0.8146 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.027
+qf    seahorse  first mhz0= 210 chunks=   8 calib= 4/  50.0ms warmup=0/  0.0ms wall=   0.508s overhead=12.238% (   62.1 ms) prep=  0.8ms max=0.109s act/pred<=0.6865 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.039
+qf    seahorse  cold  mhz0= 210 chunks=   6 calib= 1/   9.2ms warmup=0/  0.0ms wall=   0.496s overhead= 2.723% (   13.5 ms) prep=  0.9ms max=0.132s act/pred<=0.3453 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.026
+qf    seahorse  warm  mhz0= 345 chunks=   7 calib= 1/   9.2ms warmup=0/  0.0ms wall=   0.585s overhead= 2.344% (   13.7 ms) prep=  0.8ms max=0.135s act/pred<=0.371 over_ceil=0 c_end=1.021 gate=PASS cpu/wall=0.031
+qf    whole     first mhz0= 210 chunks=  29 calib= 9/  65.4ms warmup=0/  0.0ms wall=   2.731s overhead= 3.031% (   82.8 ms) prep=  1.8ms max=0.130s act/pred<=0.484 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.032
+qf    whole     cold  mhz0= 210 chunks=  32 calib= 2/   9.6ms warmup=0/  0.0ms wall=   2.695s overhead= 0.962% (   25.9 ms) prep=  1.2ms max=0.132s act/pred<=0.4813 over_ceil=0 c_end=1.51 gate=PASS cpu/wall=0.031
+qf    whole     warm  mhz0= 285 chunks=  30 calib= 1/   1.5ms warmup=0/  0.0ms wall=   2.609s overhead= 0.658% (   17.2 ms) prep=  0.8ms max=0.120s act/pred<=0.443 over_ceil=0 c_end=1.541 gate=PASS cpu/wall=0.036
+qf    interior  first mhz0= 210 chunks=  56 calib= 6/  44.5ms warmup=0/  0.0ms wall=   6.536s overhead= 1.122% (   73.3 ms) prep=  0.9ms max=0.150s act/pred<=0.8412 over_ceil=0 c_end=1.0 gate=FAIL cpu/wall=0.052
+qf    interior  cold  mhz0= 210 chunks=  58 calib= 0/   0.0ms warmup=0/  0.0ms wall=   6.561s overhead= 0.398% (   26.1 ms) prep=  1.0ms max=0.281s act/pred<=0.8396 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.057
+qf    interior  warm  mhz0= 285 chunks=  61 calib= 0/   0.0ms warmup=0/  0.0ms wall=   6.599s overhead= 0.421% (   27.8 ms) prep=  1.0ms max=0.184s act/pred<=0.8404 over_ceil=0 c_end=1.0 gate=PASS cpu/wall=0.044

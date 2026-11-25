@@ -5,7 +5,7 @@ Each config renders three times:
     cold   the prior the first render stored, after the GPU has dropped to its idle clock
     warm   the same, straight after (clock up)
 `cold` and `warm` are the revised overhead gate's two cases. Records per render: chunks, wall
-and kernel time, overhead (wall - kernel, which includes calibration launches), host setup
+and kernel time, overhead (wall - kernel - clock warm-up; calibration launches count), host setup
 before the first launch (`prep`, outside the wall time), the longest chunk, the planner's
 worst-case bound against the actual time, and chunks over the ceiling. GPU idle check as S4.
 
@@ -66,7 +66,7 @@ def main() -> None:
                     warmup_ms=warmup_ms if start != "first" else 0.0,
                 )
                 s = r.summary()
-                oh = r.wall_s - r.kernel_s
+                oh = r.wall_s - r.kernel_s - r.warmup_s
                 prep = r.prep_s  # type: ignore[attr-defined]
                 s |= {
                     "start": start,
@@ -84,6 +84,7 @@ def main() -> None:
                 print(
                     f"{tier:5} {view:9} {start:5} mhz0={mhz0:4} chunks={s['chunks']:4} "
                     f"calib={s['calibration_chunks']:2}/{s['calibration_s'] * 1e3:6.1f}ms "
+                    f"warmup={s['warmup_chunks']}/{s['warmup_s'] * 1e3:5.1f}ms "
                     f"wall={s['wall_s']:8.3f}s overhead={s['overhead'] * 100:6.3f}% "
                     f"({s['overhead_ms']:7.1f} ms) prep={prep * 1e3:5.1f}ms "
                     f"max={s['chunk_s_max']:.3f}s act/pred<={s['actual_over_pred_max']} "

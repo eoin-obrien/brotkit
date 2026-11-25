@@ -484,7 +484,7 @@ so a fresh kernel session must reach a launchable kernel fast. Spike S2
 
 ## ADR-0009: Chunk planner with a hard ceiling, learned from every chunk; bands by default
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-11-25
 - **Backlog:** S5 (affects 1.4, 1.20, 1.29, 1.30, 2.12, 4.4, 4.5)
 
@@ -535,13 +535,21 @@ Ti, sm_86):
   quarter of a chunk (floor-heavy renders run chunks up to the ceiling).
 - **A stored prior instead of calibration launches.** After every render the runner writes
   the planner's `Estimates(tau, rate)` to a perf record beside the kernel's cache entry, per
-  device (`KernelCache.write_perf`; a small JSON file, so the write-once entry is never
-  rewritten; a damaged record reads as none). The next render starts from it, slowed by a
-  factor `c`. `c` is 10 until a chunk has run (S5: 3–9× after idle), so the first real chunk,
-  sized for the target at that slowdown, stays under the ceiling even with a prior up to 50×
-  too fast. After each chunk, `c` is the largest `seconds ÷ prior model` over the last two
-  chunks the prior puts at 1 ms or more, never below 1. The prior is a hint, never trusted for
-  safety: the ceiling holds whatever it says.
+  device (`KernelCache.write_perf`). It is a small JSON file, so the write-once,
+  checksummed entry is never rewritten. Each record carries its own sha256 and the file is
+  replaced atomically, so a damaged, half-written or lost record reads as none. The render
+  then calibrates from the tiny probe, so damage can only make the first launch smaller,
+  never larger. The next render starts from it, slowed by two factors,
+  `c_tau` and `c_rate`, both 10 until a chunk has run (S5: 3–9× after idle), so the first real
+  chunk, sized for the target at that slowdown, stays under the ceiling even with a prior up to
+  50× too fast. After each chunk the prior puts at 1 ms or more, `seconds ÷ prior model` updates
+  `c_tau`, and `c_rate` too if the throughput term dominates; each is the largest ratio over the
+  last two chunks, never below 1. They are kept apart because a short render learns `τ` only as a
+  loose upper bound, so a latency-bound launch says nothing reliable about `R` (one run with a
+  single factor put a chunk at 1.88× its bound). When the last two real chunks were latency-bound
+  and the ceiling sizes chunks (dd's floor-heavy chunks at `c_rate` = 10), one small throughput probe
+  in scratch (2 ms of the prior's throughput time), timed against the prior's throughput term alone, measures `R`'s slowdown; it counts as
+  calibration. The prior is a hint, never trusted for safety: the ceiling holds whatever it says.
 - **Calibration in scratch on NaN coordinates only without a prior,** or when the floor at
   the current slowdown breaks the ceiling (deep dd on a cold clock): a tiny latency probe
   growing from 64 iterations, then throughput probes until `R` settles, each probe's projected
@@ -555,9 +563,23 @@ Ti, sm_86):
   up to 3 confirming probes, naming the largest feasible max_iter and backlog 1.29 (#76,
   iteration-sliced launches). For dd it also names qf (`FASTER_TIER`), which runs about 10×
   deeper in one launch at about 96 against 106 mantissa bits.
-- **A warm-up kernel only around a kernel build or disk load.** The clock stays at 210 MHz for
-  100–300 ms of load and a warm-up hides only what it overlaps, so on a memory hit (about
-  15 ms of host setup) it buys about 5% of the 280 ms cold penalty.
+- **Clock warm-up is reported apart from planner overhead: a narrow exception.** A launch is
+  "clock warm-up" when its only purpose is to raise the clock, and it was issued because no
+  real chunk, not even one thread × the full `max_iter`, fits under the ceiling at the
+  current, measured clock. The planner flags such launches `Chunk.warmup`. Their time is
+  reported separately in the render's timing (`ChunkPlanner.warmup_seconds`, the runner's
+  `warmup_s`) and left out of planner overhead. In practice these are the confirming probes a
+  render with a prior runs after its first probe has measured the clock, for dd at deep
+  iteration counts started from an idle GPU. Everything else counts as overhead: the first
+  probe (it measures the clock), every probe in a render without a prior, and all other
+  calibration. Iteration-sliced launches ([#76](https://github.com/eoin-obrien/brotkit/issues/76),
+  backlog 1.29) let real work raise the clock; that change removes this exception and re-runs
+  the overhead gate.
+- **A warm-up kernel only while a kernel is built or loaded from disk,** where there is host
+  time to overlap: a helper thread keeps it running for the length of the lookup. The clock
+  stays at 210 MHz for 100–300 ms of load and a warm-up hides only what it overlaps, so on the
+  memory-hit path (about 15 ms of host setup) it would buy about 5% of the 280 ms cold penalty,
+  and it isn't launched there.
 - **Bands by default.** `ChunkPolicy(tile=N)` gives N×N tiles for tiling and multi-GPU work,
   at 512 px.
 - **The CUDA runner** (backlog 1.4) waits by polling: sleep in 1 ms slices to half the expected
@@ -568,17 +590,20 @@ Ti, sm_86):
 
 ### Consequences
 - **Overhead against the revised gate** (under 1% for renders of 3.7 s or more, at most 50 ms
-  for shorter ones, cold and warm; revised by the maintainer after the first sweep): 29 of 30
-  runs pass. Short renders cost 3–18 ms; longer ones 0.44–0.96%. **dd/whole from an idle clock
-  costs 1.17%**: no dd chunk at 10,000 iterations fits under the ceiling at 210 MHz, so 345 ms
-  of NaN probes warm the clock before the first real chunk. Back to back it costs 0.29%.
-  Removing that needs iteration-sliced launches (backlog 1.29) or a budget that counts the
-  clock ramp separately.
+  for shorter ones, cold and warm; revised by the maintainer after the first sweep).
+  - **All 30 runs pass**, with clock warm-up reported apart: renders under 3.7 s cost
+    4.6–32.9 ms, longer ones 0.15–0.97%.
+  - **Clock warm-up:** 188–331 ms, only on dd at 10,000 iterations from a low clock. Counted
+    as overhead, dd/whole would be 0.92% cold and 1.78% warm. That is the cost #76 removes.
+  - **Calibration with a prior is small, not zero:** up to four probes, 2–23 ms in all. The
+    first render of a kernel on a device (no record yet) still calibrates in full: 21–83 ms on
+    short renders, 0.5–2.4% on longer ones. It follows a build (0.2–2.5 s), so it is a small
+    part of that render.
+  - **Follow-up:** dd at 10,000 iterations is capped near one 8-row strip per chunk, and a
+    budget just under a strip cuts strips into column segments (547 chunks against 282).
+    Rounding up to the full strip when that stays under the ceiling would halve that.
 - **A cold render is about 280 ms slower than a warm one** (GPU time, not overhead) whatever
   the planner does: the clock ramp.
-- **A kernel's first render on a device** (no perf record yet) still calibrates: 9–59 ms on
-  short renders, 260–410 ms for dd at 10,000 iterations. It follows a build (0.2–2.5 s), so it
-  is a small part of that render.
 - **Deep iteration counts need iteration-sliced kernels.** At the 0.5 s ceiling the largest
   max_iter is about 5.3 million in f32, 1.5 million in df64, 320,000 in f64, 27,000 in dd and
   250,000 in qf on this GPU. Past that the planner refuses the render (backlog 1.29).

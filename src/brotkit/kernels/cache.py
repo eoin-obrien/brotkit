@@ -17,8 +17,10 @@ Pieces:
   the key's lock, and hands entries to the backend's `load`.
 - Perf records: a small JSON file beside each entry holding what renders measured with that
   kernel, per device (spike S5: the chunk planner's prior, so a render needs no calibration
-  launches). The entry itself stays write-once; a perf record is a hint, so a damaged or
-  missing one reads as None and two processes racing to update it may lose one update.
+  launches). The entry itself stays write-once. A perf record is a hint: each device's record
+  carries a sha256 of its canonical JSON, so a damaged one reads as None, as does a missing one.
+  Writes are atomic (temp file and `os.replace`), so a reader sees a whole file, old or new;
+  two processes racing to update the file may lose one update, which also reads as None.
 
 Nothing here imports a GPU stack. The CUDA build and load adapter lives in
 `brotkit.backends.cuda`.
@@ -447,14 +449,25 @@ class KernelStore:
         return devices if isinstance(devices, dict) else {}  # pyright: ignore[reportUnknownVariableType]
 
     def read_perf(self, digest_: str, device: str) -> dict[str, JSON] | None:
-        """What was recorded for `digest_` on `device`, or None (missing or damaged)."""
-        rec = self._perf_devices(digest_).get(device)
-        return rec if isinstance(rec, dict) else None  # pyright: ignore[reportUnknownVariableType]
+        """What was recorded for `digest_` on `device`, or None (missing, or damaged: its
+        checksum doesn't match)."""
+        slot = self._perf_devices(digest_).get(device)
+        if not isinstance(slot, dict):
+            return None
+        rec, check = slot.get("record"), slot.get("sha256")  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
+        if not isinstance(rec, dict) or not isinstance(check, str):
+            return None
+        canon = canonical_json(rec)  # pyright: ignore[reportUnknownArgumentType]
+        if hashlib.sha256(canon.encode()).hexdigest() != check:
+            return None
+        return rec  # pyright: ignore[reportUnknownVariableType]
 
     def write_perf(self, digest_: str, device: str, record: Mapping[str, JSON]) -> None:
         """Replace `device`'s record for `digest_`, keeping other devices'. Atomic per file."""
         devices = self._perf_devices(digest_)
-        devices[device] = dict(record)
+        rec: dict[str, JSON] = dict(record)
+        check = hashlib.sha256(canonical_json(rec).encode()).hexdigest()
+        devices[device] = {"record": rec, "sha256": check}
         doc: dict[str, JSON] = {"format": _PERF_FORMAT, "devices": devices}
         path = self.perf_path(digest_)
         path.parent.mkdir(parents=True, exist_ok=True)
