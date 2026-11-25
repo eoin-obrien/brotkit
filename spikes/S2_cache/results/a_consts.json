@@ -1,0 +1,15 @@
+{
+ "first": {
+  "value": 1.0,
+  "hits": 0
+ },
+ "same_stamp_const_2": {
+  "value": 1.0,
+  "hits": 1
+ },
+ "after_touch": {
+  "value": 2.0,
+  "hits": 0
+ },
+ "stale": true
+}

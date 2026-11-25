@@ -170,7 +170,7 @@ result = render(
 2. **Differentiate.** Exterior DE uses z′ ← f\_z·z′ + f\_c (parameter plane) or z′ ← f\_z·z′ (Julia). Interior DE adds f\_zz and f\_zc. Non-holomorphic formulas (Burning Ship, Tricorn) get a 2×2 Jacobian instead of a complex derivative, and DE uses its operator norm.
 3. **Lower to reals.** Split every complex variable into an (x, y) pair, run `sympy.cse` over the whole step plus derivatives, and print with a custom `RealPairPrinter`. Integer powers become squaring chains. Non-integer or symbolic powers become polar exp/log, with a warning about the branch-cut seam. Explicit reals are what make the `f32` and `df64` tiers possible: `df64` swaps the printer's `+ − ×` for two-sum/two-product device-function calls, and the dd printer emits the same error-free transformations over f64 pairs (FMA-based two-product), so both tiers come from one lowering pass.
 4. **Assemble.** The family template has slots (`init`, `step`, `escape_test`, `per_iter`, `finalise`). Each feature contributes code to those slots and declares its output layers and dtype. Features are compile-time mix-ins, never runtime virtual calls.
-5. **Compile and cache.** Write the generated source to `~/.cache/brotkit/kernels/<sha256>.py`, import it, and decorate with `numba.njit(parallel=True)` or `cuda.jit`. Writing a real file rather than calling `exec` keeps the source inspectable and gives tracebacks a file to point at. The sha256 covers the source and every compile option that changes the binary (backend, precision, target cc, fastmath, `max_registers`, launch bounds, ptxas options) plus Numba, numba-cuda-mlir and CUDA toolkit versions. brotkit doesn't rely on Numba's `cache=True`: on numba-cuda-mlir 0.6.0 its key ignores `max_registers` and `ptxas_options`, so it can silently load a build made with other options (S4, [#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493)). S2 decides how warm starts store the compiled artefact under brotkit's key (ADR-0007).
+5. **Compile and cache.** Look the kernel up in brotkit's kernel cache under a sha256 of the source, the entry name and signature, every compile option that changes the binary (fastmath, `max_registers`, launch bounds, lineinfo, debug, opt, ptxas and nvJitLink options), the target cc, and the Python, numba-cuda-mlir, libNVVM, nvJitLink and NumPy versions (ADR-0008). On a miss, write the generated source to a real `.py` file in the cache (inspectable, and tracebacks have a file to point at), import it, compile it to PTX with Numba (`numba.njit(parallel=True)` on the CPU), link a cubin with nvJitLink and store the cubin, the PTX, the entry symbol, the launch signature and the `ResourceUsage` as one entry. A hit loads the cubin with `cuda.core` without importing Numba: milliseconds in a fresh process, against 0.2–2.5 s cold (S2). brotkit never uses Numba's `cache=True`: its key ignores `max_registers`, `ptxas_options`, `lineinfo`, `opt` and the function's constants (S2, S4, [#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493)). Kernels use a raw-pointer ABI: typed device pointers plus `int64` shapes, strides and counts (ADR-0008).
 
 **Runtime parameters vs specialisation.** Parameters are kernel arguments by default, so animating `k` never recompiles. `specialize={"p": 3}` bakes a value in, so integer powers unroll and constants fold. Use it for stills, and automatically for `p` when it is an integer.
 
@@ -510,7 +510,7 @@ Use objects for configuration and data, and generated code for the hot loop. Eve
 flowchart LR
   subgraph once["Runs once per render"]
     R[Recipe<br/>SymPy formula, view, features, precision] --> G[Codegen<br/>diff, cse, lower to reals, add features]
-    G --> K[Kernel cache<br/>.py on disk, sha256 of source + every compile option]
+    G --> K[Kernel cache<br/>cubin + manifest on disk, sha256 of source + every compile option]
     K --> B[Backend<br/>CPU njit+prange / CUDA via numba-cuda-mlir]
   end
   B -- one fused pass --> L[Layers<br/>raw arrays + lazy derived mu, DE, angle]
@@ -570,7 +570,7 @@ The design is viable as written. Its core bet, composing features at code-genera
 
 | Claim in the design | Verdict | Evidence / reasoning |
 | --- | --- | --- |
-| Generated source written to disk can be cached across sessions | Holds, with a caveat | `numba-cuda` supports `cache=True` on `@cuda.jit` with [a file-based cache](https://nvidia.github.io/numba-cuda/user/caching.html), and keeps [separate cache files per compute capability](https://numba.readthedocs.io/en/0.56.0/cuda/caching.html). S1 showed `numba-cuda-mlir` 0.6.0 writing and reloading the same `__pycache__/<module>.<func>-<line>.py3XX.{nbi,nbc}` files in a fresh process; S2 measures it. Writing real `.py` files (not `exec`) is what makes it work. The caveat: that cache's key ignores `max_registers` and `ptxas_options` (S4, [#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493)), so brotkit keys on every compile option itself and doesn't rely on `cache=True` (ADR-0007). |
+| Generated source written to disk can be cached across sessions | Holds, through brotkit's own store | S2 tested Numba's `cache=True` (`__pycache__/*.nbi/.nbc`): it reloads in a fresh process, but its key ignores `max_registers`, `ptxas_options`, `lineinfo`, `opt` and the function's constants, so it served stale builds in tests ([#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493)). brotkit stores the nvJitLink cubin itself and loads it with `cuda.core`, keyed on every compile option (ADR-0008). Warm loads take milliseconds and never import Numba. A cubin is per compute capability, so a different GPU always misses. |
 | Runtime parameters avoid recompiles during animation | Holds | Kernel arguments of scalar or complex type don't change the signature. Only dtype or precision changes recompile. |
 | Multi-word precision (df64, dd, qf) can be codegen-only | Holds, with a caveat | No custom device types are needed: the printer emits tuples of scalar locals (S3: tuple-returning device functions inline cleanly). The caveat is FMA contraction and flush-to-zero (below); with rounding-explicit codegen, S3 got df64/dd results bit-identical to a CPU emulation of the same source. |
 | Immutable recipes as cache keys | Holds | SymPy expressions are immutable and hashable. Python 3.15 adds a [built-in hashable `frozendict`](https://docs.python.org/3.16/whatsnew/3.15.html) for params, with the PyPI `frozendict` package [as a pre-3.15 fallback](https://discuss.python.org/t/pep-814-add-frozendict-built-in-type/104854?page=7). |
@@ -579,7 +579,7 @@ The design is viable as written. Its core bet, composing features at code-genera
 ### Risks and required changes
 
 1. **Contraction and flush-to-zero break multi-word arithmetic (must fix).** Error-free transformations (two-sum, two-product) depend on the compiler not reassociating, contracting or flushing operations. Compiler flags can't guarantee that: on `numba-cuda-mlir` 0.6.0, FMA contraction is on by default for every architecture, even with `fastmath=False`, and can't be turned off; `fastmath=True` has no effect at all below sm_100, and on sm_100+ adds `.ftz` (S3, ADR-0006). Policy: multi-word printers (`df64`, `dd`, `qf`) never emit bare `+ - *` on floats. Every add and multiply is a libdevice round-to-nearest intrinsic (`dadd_rn`/`dmul_rn`, `fadd_rn`/`fsub_rn`/`fmul_rn`; f64 subtraction is `dadd_rn(x, -y)`), and every FMA is an explicit `cuda.fma`. These lower to `add.rn`/`mul.rn`, which the code generator doesn't fuse. Multi-word kernels compile with `fastmath=False` (FTZ). `fastmath=True` is a performance option for `f32` kernels only. Tests: generated multi-word source has no bare float operators, its PTX FMA count equals the explicit `cuda.fma` count, and its GPU results are bit-identical to a CPU emulation of the same source.
-2. **Kernel variant explosion (must fix).** Formula × feature subset × precision × backend multiplies quickly, and each fused CUDA kernel takes seconds to compile cold. Fixes: canonicalise and sort feature tuples so equivalent sets share a key; compile lazily; offer `FeatureSet.standard()` presets so notebooks reuse a few hot kernels; let a cheap feature (such as `FinalZ`) ride along rather than spawning a new variant.
+2. **Kernel variant explosion (must fix).** Formula × feature subset × precision × backend multiplies quickly. Cold CUDA compiles cost 0.2–0.3 s (f32, f64) to 0.9–1.1 s (df64, dd) and 1.9–2.5 s (qf) per kernel on an i9-12900K under WSL2, plus about 1.4 s once per process; warm loads from the cache take milliseconds (S2). A five-set `FeatureSet.standard()` preset across five tiers is 25 kernels and about 21 s cold for one formula (S2). Fixes: canonicalise and sort feature tuples so equivalent sets share a key; compile lazily; offer `FeatureSet.standard()` presets so notebooks reuse a few hot kernels; let a cheap feature (such as `FinalZ`) ride along rather than spawning a new variant; a `brotkit cache prewarm` command (backlog) builds a preset set in parallel processes after an install or a toolchain upgrade, which invalidates every entry.
 3. **Register pressure from fused features (monitor).** Every orbit accumulator lives in registers for the whole loop, and dd/qf multiply that. Too many features cut occupancy. Mitigation: report resource usage (registers, spills, occupancy) from `resource_usage`, which links the kernel's PTX with nvJitLink (ADR-0007). Fuse by default. Split into two launches (core + orbit statistics) only when the default build spills, and only if the split is faster. S4 found no tier that spills with up to six fused features, and the fused kernel beat the split by 13–71%, because a split re-runs the escape loop. Never cap registers below the default allocation; qf starts at `max_registers=128`. This is the one place where "one kernel" bends.
 4. **Where layers live (must fix).** `Layers` must say whether each array is on the host or the device. Hold device arrays via `__cuda_array_interface__`, copy to host lazily on first NumPy access, and let CuPy colouring use them in place. Otherwise animation pays a full device-to-host copy per frame for layers it never colours.
 5. **AUTO values hide what actually ran (must fix).** A recipe with `escape_radius=None, precision=AUTO` is not reproducible. `Recipe.resolve(device)` returns a frozen `ResolvedRecipe` with every value concrete, and only that goes into metadata and filename hashes.
@@ -798,20 +798,18 @@ class QFPrinter(RealPairPrinter):   precision = Precision.QF
 
 @dataclass(**FROZEN)
 class KernelSource:
-    key: str                                # sha256 of everything below + every compile option + tool versions
-    source: str
-    entry: str
+    spec: KernelSpec                        # source, entry, signature (raw-pointer ABI), backend, target, options (ADR-0008)
     layers: tuple[LayerSpec, ...]
-    fastmath: bool
+    # cache key = sha256(spec + Python/toolchain versions + codegen version), brotkit.kernels.cache
 
-class CompiledKernel:                       # resource holder: wraps a Numba dispatcher
-    __slots__ = ("source", "backend", "_dispatcher", "resources")  # resources: ResourceUsage (ADR-0007)
+class CompiledKernel:                       # resource holder: wraps a cuda.core kernel (or an njit function on the CPU)
+    __slots__ = ("source", "backend", "_kernel", "resources")  # resources: ResourceUsage, stored with the build (ADR-0007/0008)
     def launch(self, recipe: ResolvedRecipe, out: dict[str, DeviceOrHostArray]) -> None: ...
-    def __reduce__(self): ...               # rebuild from source via KernelCache, never pickle the dispatcher
+    def __reduce__(self): ...               # (KernelCache.get, (source.spec,)): a disk hit in the worker, never the binary
 
-class KernelCache:                          # process-wide, lock-protected
-    __slots__ = ("root", "_memory", "_lock")
-    def get(self, recipe: ResolvedRecipe) -> CompiledKernel: ...
+class KernelCache:                          # process-wide, lock-protected; brotkit.kernels.cache (ADR-0008)
+    __slots__ = ("store", "backend", "_memory", "_key_locks", "_lock")
+    def get(self, spec: KernelSpec) -> CompiledKernel: ...
 ```
 
 Recipes, results, backends:

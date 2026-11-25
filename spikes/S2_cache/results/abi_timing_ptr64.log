@@ -1,0 +1,71 @@
+[guard s2 abi] free VRAM 21253 MiB, free disk 23.5 GiB
+waiting 20 s: PAUSED before f32/A/struct: GPU busy (utilisation [3, 3, 8, 5, 5, 6, 12, 16]%, memory used 4094 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f32/A/struct: GPU busy (utilisation [13, 14, 13, 13, 14, 13, 12, 12]%, memory used 3938 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f32/A/struct: GPU busy (utilisation [13, 12, 11, 12, 12, 12, 10, 11]%, memory used 3915 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f32/A/struct: GPU busy (utilisation [11, 11, 12, 13, 11, 12, 11, 12]%, memory used 3915 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f32/A/struct: GPU busy (utilisation [18, 16, 17, 17, 14, 14, 15, 15]%, memory used 3927 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f32/A/struct: GPU busy (utilisation [10, 11, 10, 11, 11, 11, 12, 10]%, memory used 3911 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f32/A/struct: GPU busy (utilisation [7, 7, 7, 7, 8, 8, 11, 10]%, memory used 3948 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f32/A/struct: GPU busy (utilisation [12, 10, 10, 24, 27, 17, 11, 11]%, memory used 3962 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f32/A/struct: GPU busy (utilisation [1, 1, 1, 2, 17, 14, 13, 12]%, memory used 3972 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f32/A/ptr64: GPU busy (utilisation [0, 1, 9, 3, 13, 9, 8, 4]%, memory used 3964 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+  ptr64=[958.814, 928.812, 910.836] ptr64/struct=0.917
+f32  /A   ptr64 struct=[936.763, 1015.05, 1012.738] ptr=[958.814, 928.812, 910.836] ptr/struct=0.917 same_iters=True
+waiting 20 s: PAUSED before df64/A/struct: GPU busy (utilisation [0, 0, 4, 7, 7, 8, 8, 9]%, memory used 3960 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before df64/A/struct: GPU busy (utilisation [2, 8, 15, 17, 18, 20, 20, 18]%, memory used 3997 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before df64/A/struct: GPU busy (utilisation [10, 9, 8, 10, 17, 25, 21, 13]%, memory used 4031 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+  ptr64=[164.684, 172.593, 163.725] ptr64/struct=0.973
+df64 /A   ptr64 struct=[169.297, 169.943, 164.294] ptr=[164.684, 172.593, 163.725] ptr/struct=0.973 same_iters=True
+waiting 20 s: PAUSED before f64/A/ptr64: GPU busy (utilisation [4, 4, 4, 9, 12, 12, 11, 12]%, memory used 4043 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f64/A/ptr64: GPU busy (utilisation [26, 16, 19, 11, 12, 13, 13, 17]%, memory used 4009 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f64/A/ptr64: GPU busy (utilisation [0, 0, 13, 7, 20, 19, 13, 22]%, memory used 4008 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before f64/A/ptr64: GPU busy (utilisation [4, 4, 12, 12, 12, 18, 18, 28]%, memory used 4031 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+  ptr64=[27.782, 27.436, 26.304] ptr64/struct=1.054
+f64  /A   ptr64 struct=[25.605, 26.022, 26.227] ptr=[27.782, 27.436, 26.304] ptr/struct=1.054 same_iters=True
+waiting 20 s: PAUSED before dd/A/ptr64: GPU busy (utilisation [3, 3, 9, 9, 10, 10, 11, 10]%, memory used 4011 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [5, 4, 9, 10, 10, 10, 11, 12]%, memory used 4000 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [1, 12, 13, 11, 6, 5, 24, 14]%, memory used 4072 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [12, 13, 10, 11, 11, 15, 11, 5]%, memory used 3994 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [14, 9, 10, 12, 11, 13, 10, 6]%, memory used 4004 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [13, 14, 12, 13, 12, 15, 13, 12]%, memory used 4016 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [11, 12, 12, 13, 10, 12, 11, 12]%, memory used 4006 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [12, 10, 12, 8, 7, 10, 13, 14]%, memory used 4013 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [9, 7, 9, 12, 12, 10, 11, 9]%, memory used 4008 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [21, 24, 18, 23, 16, 15, 11, 10]%, memory used 4016 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [12, 11, 14, 13, 11, 10, 10, 13]%, memory used 4011 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [28, 27, 24, 23, 21, 19, 13, 14]%, memory used 4024 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [11, 10, 9, 12, 12, 5, 10, 11]%, memory used 4010 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [11, 8, 7, 11, 12, 11, 11, 10]%, memory used 4006 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [13, 10, 8, 9, 12, 10, 9, 7]%, memory used 4011 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [17, 16, 20, 13, 13, 12, 14, 10]%, memory used 4012 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [17, 11, 9, 11, 9, 16, 20, 23]%, memory used 4016 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [9, 12, 6, 9, 11, 11, 14, 20]%, memory used 4021 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [10, 10, 9, 6, 10, 9, 10, 19]%, memory used 4020 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [6, 6, 5, 11, 10, 10, 41, 15]%, memory used 4101 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [18, 17, 14, 13, 16, 17, 16, 24]%, memory used 4000 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/struct: GPU busy (utilisation [11, 15, 23, 11, 10, 10, 20, 28]%, memory used 4039 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+waiting 20 s: PAUSED before dd/A/ptr64: GPU busy (utilisation [2, 4, 5, 16, 16, 15, 9, 3]%, memory used 4102 MiB, baseline 3061 MiB + ours ~916 MiB). Not measuring.
+  ptr64=[2.357, 2.447, 2.427] ptr64/struct=1.073
+dd   /A   ptr64 struct=[1.872, 2.343, 2.261] ptr=[2.357, 2.447, 2.427] ptr/struct=1.073 same_iters=True
+  ptr64=[26.306, 26.037, 26.68] ptr64/struct=0.983
+qf   /A   ptr64 struct=[26.407, 26.756, 26.852] ptr=[26.306, 26.037, 26.68] ptr/struct=0.983 same_iters=True
+  ptr64=[508.725, 503.818, 504.088] ptr64/struct=0.985
+f32  /C   ptr64 struct=[511.814, 514.759, 511.391] ptr=[508.725, 503.818, 504.088] ptr/struct=0.985 same_iters=True
+  ptr64=[79.515, 79.346, 77.449] ptr64/struct=0.996
+df64 /C   ptr64 struct=[79.673, 80.022, 78.094] ptr=[79.515, 79.346, 77.449] ptr/struct=0.996 same_iters=True
+  ptr64=[12.86, 12.822, 12.895] ptr64/struct=0.992
+f64  /C   ptr64 struct=[12.086, 13.329, 12.962] ptr=[12.86, 12.822, 12.895] ptr/struct=0.992 same_iters=True
+  ptr64=[1.072, 1.119, 1.068] ptr64/struct=0.954
+dd   /C   ptr64 struct=[1.124, 1.124, 1.071] ptr=[1.072, 1.119, 1.068] ptr/struct=0.954 same_iters=True
+  ptr64=[11.015, 11.362, 11.303] ptr64/struct=1.026
+qf   /C   ptr64 struct=[11.067, 11.016, 11.007] ptr=[11.015, 11.362, 11.303] ptr/struct=1.026 same_iters=True
+  ptr64=[119.145, 118.909, 119.804] ptr64/struct=1.002
+f32  /F6  ptr64 struct=[118.902, 120.393, 116.125] ptr=[119.145, 118.909, 119.804] ptr/struct=1.002 same_iters=False
+  ptr64=[52.333, 51.11, 51.969] ptr64/struct=1.002
+df64 /F6  ptr64 struct=[50.991, 52.253, 51.864] ptr=[52.333, 51.11, 51.969] ptr/struct=1.002 same_iters=True
+  ptr64=[11.506, 11.504, 11.214] ptr64/struct=1.021
+f64  /F6  ptr64 struct=[10.715, 11.266, 11.269] ptr=[11.506, 11.504, 11.214] ptr/struct=1.021 same_iters=True
+  ptr64=[1.159, 1.159, 1.16] ptr64/struct=0.998
+dd   /F6  ptr64 struct=[1.161, 1.163, 1.16] ptr=[1.159, 1.159, 1.16] ptr/struct=0.998 same_iters=True
+  ptr64=[11.024, 10.497, 10.44] ptr64/struct=0.990
+qf   /F6  ptr64 struct=[10.6, 10.717, 10.532] ptr=[11.024, 10.497, 10.44] ptr/struct=0.990 same_iters=True

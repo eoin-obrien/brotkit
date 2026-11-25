@@ -21,8 +21,13 @@ review" in `docs/design/spec.md`.
   promotes an f32 kernel. Emit `np.float32(i)` (or the precision's dtype) for index arithmetic
   that feeds float maths.
 - **Generated source must be inspectable.** Kernels are written to real `.py` files in the
-  cache (never `exec`). `.source`, `.ptx` and `.explain()` must keep working. The cache key
-  covers source, backend, precision and Numba/numba-cuda-mlir versions.
+  cache (never `exec`). `.source`, `.ptx` and `.explain()` must keep working. The kernel cache
+  (`brotkit.kernels.cache`, ADR-0008) keys on the source, entry, signature, every compile option
+  and the toolchain versions; bump `CODEGEN_VERSION` when the ABI or anything else the source
+  hash can't see changes.
+- **Raw-pointer kernel ABI.** Kernels take typed device pointers (`float32*`) and rebuild their
+  arrays with `cuda.carray`; every shape, stride, pitch and count is `int64` (ADR-0008). Never
+  take Numba array arguments.
 - **Codegen never imports the GPU JIT.** Generated CUDA source is compiled by
   `src/brotkit/backends/cuda.py`, the only module allowed to import `numba_cuda_mlir`
   (root AGENTS.md invariant 8). Don't import `numba_cuda_mlir` or `numba.cuda` here, even

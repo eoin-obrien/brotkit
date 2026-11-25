@@ -104,6 +104,34 @@ process 2: uncapped.compile(sig)  -> regs 24, cache HIT   # expected: 30, a miss
 
 ---
 
+### 2a. Follow-up comment for #493 (drafted in spike S2, not posted)
+
+Same bug, more options. Each row was confirmed by test (`spikes/S2_cache/a_keybugs.py`,
+`a_consts.py`; results in `spikes/S2_cache/results/a_keybugs.json`, `a_consts.json`): process 1
+builds variant X with `cache=True`, process 2 asks for variant Y from the same file in a fresh
+interpreter, and process 3 builds Y with `cache=False` as the reference. numba-cuda-mlir 0.6.0,
+sm_86, CPython 3.15.2.
+
+| Changed between X and Y | Process 2 | Stale (Y served X's build)? |
+| --- | --- | --- |
+| `max_registers=32` | cache hit | **yes**: 60 registers, reference 32 |
+| `ptxas_options="--maxrregcount=40"` | cache hit | **yes**: 60 registers, reference 40 |
+| `lineinfo=True` | cache hit | **yes**: PTX without `.loc`, reference has line info |
+| `opt=False` | cache hit | **yes**: 60 registers, reference 73 (unoptimised) |
+| `fastmath=True` | cache hit | not on sm_86, where fastmath doesn't change the build (numba-cuda-mlir#486); the key ignores it, so on sm_100+ it would be |
+| `launch_bounds=(256, 4)` (control) | miss | no: in the key |
+| a constant in the function body, file size and mtime unchanged | cache hit | **yes**: kernel writes the old constant. The key hashes `co_code`, not `co_consts`, and relies on the source stamp |
+| a module-level constant imported from another file | cache hit | **yes**; this one is Numba's documented limitation (cache invalidation doesn't track other files) |
+
+Checked and *not* a problem: the index records `numba_cuda_mlir.__version__` and discards
+itself on a version change.
+
+Suggested fix: build `option_key` from every target option that reaches
+`compile_mlir`/`optimize`/the `Linker` (an allowlist that fails closed for new options), and
+hash `co_consts` alongside `co_code`.
+
+---
+
 ## 3. (FYI, NVIDIA nvJitLink) the verbose info log omits ptxas output on a compute-cache hit
 
 Not numba-cuda-mlir's bug, but it affects anyone who reads resource usage from the link log.

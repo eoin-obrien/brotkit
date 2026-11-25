@@ -1,0 +1,47 @@
+{
+ "dir": "/mnt/c/Users/Eoin/AppData/Local/Temp/brotkit-s2-lock",
+ "fs": "9p on /mnt/c (C:\\134)",
+ "none": {
+  "expected": 1200,
+  "final": 320,
+  "ok": false,
+  "seconds": 12.194,
+  "errors": []
+ },
+ "flock": {
+  "expected": 1200,
+  "final": 1200,
+  "ok": true,
+  "seconds": 22.768,
+  "errors": []
+ },
+ "lockf": {
+  "expected": 1200,
+  "final": 1200,
+  "ok": true,
+  "seconds": 22.854,
+  "errors": []
+ },
+ "filelock": {
+  "expected": 1200,
+  "final": 1200,
+  "ok": true,
+  "seconds": 66.244,
+  "errors": []
+ },
+ "replace": {
+  "reads_good": 680,
+  "reads_torn": 0,
+  "reads_missing": 0,
+  "writer_seconds_300": 12.33,
+  "ok": true
+ },
+ "dirswap": {
+  "rename_onto_nonempty_dir": "OSError errno=39"
+ },
+ "unlink_open": {
+  "unlink_while_open": "ok",
+  "recreate": "ok",
+  "old_handle_reads": "x"
+ }
+}

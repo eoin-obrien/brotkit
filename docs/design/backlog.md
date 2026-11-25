@@ -27,7 +27,7 @@ Status is tracked in GitHub issues (one per row), not in this file.
 | 1.1 | Core value objects | `Frame`, `Embedding` (Mandelbrot, Julia), `View`, `Precision`, `Recipe`, `ResolvedRecipe`: frozen, slotted, hashable; Hypothesis JSON round-trip tests pass | 0.2 |
 | 1.2 | `Formula` + safe JSON tree | z² + c analysed (degree, critical point); `to_json`/`from_json` fuzz-tested; no `eval`/`sympify` path anywhere | 1.1 |
 | 1.3 | Printer + escape-time template | `RealPairPrinter` (f32, f64), template slots, `Smooth` and `DistanceEstimate` features; generated source inspectable and matches a hand-written reference kernel | 1.2, S3, S4 |
-| 1.4 | CPU and CUDA backends | njit/prange and numba-cuda-mlir backends (`backends/cuda.py` is the only `numba_cuda_mlir` importer), `KernelCache` with on-disk cache, chunked launches; f64 CPU/GPU parity on pixels with DE > 2 px | 1.3, S2, S5 |
+| 1.4 | CPU and CUDA backends | njit/prange and numba-cuda-mlir backends (`backends/cuda.py` is the only `numba_cuda_mlir` importer), `KernelCache` (store and CUDA adapter landed in S2, ADR-0008) wired into both backends, chunked launches; f64 CPU/GPU parity on pixels with DE > 2 px | 1.3, S2, S5 |
 | 1.5 | `Layers` (GPU-first) | Device arrays held; host copy only on first NumPy access (tested); lazy `mu`, `de` | 1.4 |
 | 1.6 | Minimal colouring | field → linear/log scale → `FromMPL` ramp (linearised) → sRGB → 16-bit PNG | 1.5 |
 | 1.7 | NPZ persistence | `__meta__` JSON, naming scheme, registry, `allow_pickle=False`; `load(save(x))` round-trips; renamed file warns | 1.5 |
