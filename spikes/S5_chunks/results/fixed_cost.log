@@ -1,0 +1,7 @@
+spin {'wall_per_chunk_us': 205.1, 'kernel_per_chunk_us': 65.1, 'sum_per_chunk_us': 44.9, 'host_per_chunk_us': 95.1, 'cpu_per_wall': 0.953}
+block {'wall_per_chunk_us': 189.4, 'kernel_per_chunk_us': 47.7, 'sum_per_chunk_us': 35.5, 'host_per_chunk_us': 106.1, 'cpu_per_wall': 0.995}
+thread {'wall_per_chunk_us': 615.6, 'kernel_per_chunk_us': 102.2, 'sum_per_chunk_us': 60.4, 'host_per_chunk_us': 453.1, 'cpu_per_wall': 0.855}
+poll 2ms {'wall_per_chunk_us': 2681.0, 'kernel_per_chunk_us': 170.8, 'sum_per_chunk_us': 73.5, 'host_per_chunk_us': 2436.8, 'cpu_per_wall': 0.228}
+poll 0.5ms {'wall_per_chunk_us': 964.3, 'kernel_per_chunk_us': 117.6, 'sum_per_chunk_us': 58.2, 'host_per_chunk_us': 788.6, 'cpu_per_wall': 0.417}
+poll 0.1ms {'wall_per_chunk_us': 484.0, 'kernel_per_chunk_us': 88.9, 'sum_per_chunk_us': 55.3, 'host_per_chunk_us': 339.8, 'cpu_per_wall': 0.643}
+hybrid 0.1ms {'wall_per_chunk_us': 509.9, 'kernel_per_chunk_us': 97.4, 'sum_per_chunk_us': 60.4, 'host_per_chunk_us': 352.1, 'cpu_per_wall': 0.671}

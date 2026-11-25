@@ -475,9 +475,103 @@ so a fresh kernel session must reach a launchable kernel fast. Spike S2
   corruption, eviction, location). The CUDA adapter's tests are `gpu`-marked.
 - **`CompiledKernel.__reduce__` rebuilds from the `KernelSpec`** through the process's
   `KernelCache`; in a worker that is a disk hit, a few milliseconds.
-- **Upstream:** S2 confirmed more options missing from Numba's cache key; a follow-up comment
-  for numba-cuda-mlir#493 is drafted in `spikes/S4_registers/upstream_issue.md`. Nothing here
-  depends on it being fixed.
+- **Upstream:** S2 confirmed more options missing from Numba's cache key, posted as
+  [a comment on numba-cuda-mlir#493](https://github.com/NVIDIA/numba-cuda-mlir/issues/493#issuecomment-7160800477)
+  (text in `spikes/S4_registers/upstream_issue.md`). Nothing here depends on it being fixed.
 - **Spec edits in the same PR:** pipeline step 5, the cross-session caching row, architecture
   review item 2 (variant explosion), the `KernelSource` / `CompiledKernel` / `KernelCache`
   sketch, and the codegen `AGENTS.md` note on the cache key.
+
+## ADR-0009: Chunk planner with a hard ceiling, learned from every chunk; bands by default
+
+- **Status:** Proposed
+- **Date:** 2026-11-25
+- **Backlog:** S5 (affects 1.4, 1.20, 1.29, 1.30, 2.12, 4.4, 4.5)
+
+### Context
+The spec launches every render in chunks "sized to about 50–200 ms each, measured on the first
+chunk", so Jupyter can show progress and stop a render, with 256–512 px tiles doubling as
+chunks when tiling. Spike S5 ([`spikes/S5.md`](spikes/S5.md)) measured on Xenon (WSL2, RTX 3090
+Ti, sm_86):
+
+- **WDDM's watchdog applies to every launch.** `TdrDelay` is the 2 s default (no `Tdr*` value
+  set). A TDR destroys the CUDA context. A running kernel can't be cancelled, so a chunk's
+  length is also the worst-case cancel latency.
+- **Chunk cost isn't uniform and one probe can't predict it.** A chunk of `p` pixels whose
+  pixels run at most `m` iterations takes at most `m·τ + p·m/R`. Below a knee of about `R·τ`
+  pixels (22,000–46,000) it costs the floor `m·τ` however small it is. A band crossing the
+  interior costs 10× or more what an exterior band does.
+- **Measurements err slow, in several ways.** The GPU idles at 210 MHz and drops there between
+  renders, so the first launches run 3–9× slower than warm ones. Chunks below the knee only
+  show a low `R`. A first planner that trusted its probes kept dd/interior in 6,181 chunks for
+  458 s (now about 80 s).
+- **τ is per launch block.** In FP64-bound tiers the 8 warps of a block share an SM's FP64
+  units; a lone warp at max_iter ran about 7× faster than a full block.
+- **NaN coordinates make every pixel run to max_iter** for any formula. NaN τ is 0.94–1.66× real
+  interior τ, so NaN probes don't read low.
+- **Blocking-sync waits spin on WSL2**, with the event flag and the context flag alike.
+  Polling `Event.is_done` with sleeps costs about 1% of a core.
+- **Chunk length doesn't decide other apps' latency.** A second process's tiny kernels took
+  about 0.6 ms during a render for chunk targets from 10 to 400 ms: WDDM time-slices contexts.
+- **Bands beat tiles** at 4K: 512 px tiles tie or cost 4%, 256 px tiles cost up to 27%.
+
+### Decision
+- **A GPU-free planner, `brotkit.backends.chunks.ChunkPlanner`,** issues chunks as tiles
+  (`Tile(row0, col0, th, tw)`); a band is a full-width tile. The runner launches each chunk,
+  times it with events, reads back its iteration sum and largest escape count (a `tile_sum`
+  reduction, 16 bytes) and calls `record`.
+- **Hard ceiling 0.5 s** (`DEFAULT_CEILING_S`, a quarter of the default `TdrDelay`), separate
+  from the target. Every chunk's planned worst case, `1.25 × (max_iter·τ + p·max_iter/R)`, is at
+  most the ceiling, whatever the image holds. The ceiling is the documented worst-case cancel
+  latency.
+- **Target 100 ms,** from the recent chunks' cost, never below the knee while the ceiling
+  allows, and raised to `floor / 0.25` when the floor is large, so the floor costs at most a
+  quarter of a chunk (floor-heavy renders run chunks up to the ceiling).
+- **Calibration in scratch on NaN coordinates:** a tiny latency probe growing from 64
+  iterations, then throughput probes until `R` settles, each probe's projected cost under
+  20 ms. The planner reports the scratch shape it needs (`scratch_shape`).
+- **Estimates follow every chunk.** `R` is the best measured iterations per second and `τ` the
+  least `seconds / largest count` over uniform chunks (every pixel at the largest count, at
+  least one full block). Latency probes re-run after 0.5 s and 2 s of GPU time. A stale `R`
+  (a chunk well under the model while the ceiling limits growth) brings in another throughput
+  probe. A chunk over its bound scales `R` and `τ` back by the overrun.
+- **Renders whose floor breaks the ceiling are refused** with `CeilingInfeasibleError`, after
+  up to 3 confirming probes, naming the largest feasible max_iter, until iteration-sliced
+  launches exist (backlog 1.29).
+- **Warm start:** `prior=` takes a previous render's estimates and skips the throughput probes;
+  the latency probes still run and scale `R` by the cold factor they measure, and the first
+  chunk gets a quarter of the throughput room.
+- **Bands by default.** `ChunkPolicy(tile=N)` gives N×N tiles for tiling and multi-GPU work,
+  at 512 px.
+- **The CUDA runner** (backlog 1.4) waits by polling: sleep in 1 ms slices to half the expected
+  time, then poll `is_done` every 0.1 ms. It defers SIGINT to the end of the chunk in flight
+  (a second SIGINT raises at once) and raises `RenderInterrupted`, a `KeyboardInterrupt`
+  carrying the partial result: `complete=False` and the finished tiles. One `KernelCache`
+  lookup per render.
+
+### Consequences
+- **Overhead misses S5's < 1% gate except on the longest renders.** The chunk loop costs
+  0.2–0.7% on 4K renders of 3.7 s or more (about 0.6 ms of host time per chunk) and 0.9–1.5% on
+  2–3 s renders. Calibration adds up to 60 ms per render, and 270–400 ms for dd at 10,000
+  iterations. The total is 0.5–0.7% on an 80 s dd render, 1.1–2.3% on other renders of 3.7 s
+  or more, 2.7–4.2% on 2–3 s renders and 5–50 ms on renders under a second. Accepting the
+  planner means accepting that, or funding cheaper calibration or pipelining (backlog 1.30).
+- **Warm starts help short renders only** (df64/seahorse total 15.8% → 3.5%) and their first
+  chunks overran the planned worst case by up to 2.0× (0.23 s chunks); the quarter-room first
+  chunk keeps them safe.
+- **Deep iteration counts need iteration-sliced kernels.** At the 0.5 s ceiling the largest
+  max_iter is about 5.3 million in f32, 1.5 million in df64, 320,000 in f64, 27,000 in dd and
+  250,000 in qf on this GPU. Past that the planner refuses the render (backlog 1.29).
+- **The ceiling assumes `TdrDelay` ≥ 2 s.** `doctor` reports `TdrDelay` and `TdrLevel` under
+  WSL2 (backlog 1.20). A GPU that suddenly slows (another process starting) can push one chunk
+  past its bound before the planner corrects; WDDM time-slices in that case, and S5 saw no TDR
+  from launches up to 1.33 s.
+- **Results don't depend on chunking**: a chunked render is bit-identical to one launch (S5's
+  smoke test), so chunk boundaries can change freely between versions.
+- **Pipelining** (the next chunk queued before the current one ends, with a cancel flag the
+  kernel checks on entry) would hide the per-chunk host time; backlog 1.30 if it's needed.
+- **The planner's tests run on CPU** against a simulated GPU built from S5's measurements,
+  including cold clocks, FP64 blocks and sudden slowdowns. `numpy` joins the `dev` group for
+  them.
+- **Spec edits in the same PR:** "Rules that keep it fast" rule 2, the interruptibility row
+  and the tiling row.

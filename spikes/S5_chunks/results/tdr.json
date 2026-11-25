@@ -1,0 +1,46 @@
+[
+ {
+  "goal_s": 0.25,
+  "rows": 8,
+  "warmup_launches": 11,
+  "warmup_first_over_last": 1.01,
+  "predicted_s": 0.171,
+  "kernel_s": 0.1467,
+  "wall_s": 0.147,
+  "completed": true,
+  "followup_ok": true
+ },
+ {
+  "goal_s": 0.5,
+  "rows": 16,
+  "warmup_launches": 11,
+  "warmup_first_over_last": 1.05,
+  "predicted_s": 0.338,
+  "kernel_s": 0.2209,
+  "wall_s": 0.2211,
+  "completed": true,
+  "followup_ok": true
+ },
+ {
+  "goal_s": 1.0,
+  "rows": 56,
+  "warmup_launches": 11,
+  "warmup_first_over_last": 1.04,
+  "predicted_s": 0.891,
+  "kernel_s": 0.739,
+  "wall_s": 0.7393,
+  "completed": true,
+  "followup_ok": true
+ },
+ {
+  "goal_s": 1.5,
+  "rows": 96,
+  "warmup_launches": 11,
+  "warmup_first_over_last": 1.03,
+  "predicted_s": 1.46,
+  "kernel_s": 1.3289,
+  "wall_s": 1.3292,
+  "completed": true,
+  "followup_ok": true
+ }
+]

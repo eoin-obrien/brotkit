@@ -39,6 +39,7 @@ Issues = "https://github.com/eoin-obrien/brotkit/issues"
 dev = [
     "commitizen>=4.20",
     "hypothesis>=6.170",
+    "numpy>=2.5",  # test simulations (test_chunks); the [cuda] extra brings it at runtime
     "packaging>=25",
     "pre-commit>=4.7",
     "pyright>=1.1.414",
