@@ -642,21 +642,41 @@ def test_eviction_removes_the_perf_record(tmp_path: Path) -> None:
 # --- eviction -----------------------------------------------------------------------------------
 
 
-def test_lru_eviction_keeps_newest_under_cap(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "caps",
+    [(32, 33, 34, 35, 36), (8, 128, 120, 9, 10)],
+    ids=["equal-sizes", "unequal-sizes"],  # cap digit counts change the header's length
+)
+def test_lru_eviction_keeps_newest_under_cap(tmp_path: Path, caps: tuple[int, ...]) -> None:
     c, _ = make_cache(tmp_path)
-    specs = [spec(options={"max_registers": 32 + i}) for i in range(5)]
+    specs = [spec(options={"max_registers": cap}) for cap in caps]
     for i, s in enumerate(specs):
         c.get(s)
         d, _ = c.key(s)
         os.utime(c.store.entry_path(d), (1000 + i, 1000 + i))
-    size = c.store.entries()[0].size
-    c.store.max_bytes = size * 3
+    # Entry sizes differ by a few bytes (the header's build_seconds), so the cap is exactly
+    # the three entries that should survive: the kept oldest one and the two newest.
+    sizes = {e.digest: e.size for e in c.store.entries()}
+    c.store.max_bytes = sum(sizes[c.key(specs[i])[0]] for i in (0, 3, 4))
     d_first, _ = c.key(specs[0])
     evicted = c.store.evict(keep=d_first)
     remaining = {e.digest for e in c.store.entries()}
     assert len(remaining) == 3
     assert d_first in remaining  # kept although oldest
     assert {c.key(specs[i])[0] for i in (1, 2)} == set(evicted)
+
+
+def test_eviction_breaks_mtime_ties_by_digest(tmp_path: Path) -> None:
+    """Entries with the same mtime are evicted in digest order, not directory order (#81)."""
+    c, _ = make_cache(tmp_path)
+    specs = [spec(options={"max_registers": 32 + i}) for i in range(4)]
+    for s in specs:
+        c.get(s)
+        os.utime(c.store.entry_path(c.key(s)[0]), (1000, 1000))
+    entries = c.store.entries()
+    by_digest = sorted(entries, key=lambda e: e.digest)
+    c.store.max_bytes = sum(e.size for e in by_digest[2:])
+    assert c.store.evict() == [e.digest for e in by_digest[:2]]
 
 
 def test_hit_refreshes_last_used(tmp_path: Path) -> None:
