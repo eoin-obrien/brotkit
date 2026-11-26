@@ -24,7 +24,7 @@ test pass.
    comparison is a renderer bug until shown otherwise; never regenerate to make it pass.
 2. After approval, commit the generator change first (the run refuses uncommitted generator
    changes and records the git SHA), then run `uv run tools/make_goldens.py [view ...]` on
-   Xenon (about 7 minutes for all views on 24 cores; CPU only).
+   Xenon (5–7 minutes for all views on 24 cores; CPU only).
 3. Check the output: zero P vs 2P mismatches, and the decidable and sensitive fractions in
    the manifest against the table in `docs/design/goldens.md`.
 4. `git lfs ls-files` lists the NPZs; `manifest.json` stays a normal file. Commit as

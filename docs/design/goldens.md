@@ -25,18 +25,18 @@ decimal strings (SEA and M41 abbreviate the long ones below).
 
 | View | Centre | Spacing (width) | Pixels | max_iter | n range | Escaped | Sensitive (max) | Time |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `overview` | −0.75 + 0i | 0.05 (3.2) | 64 × 64 | 256 | 5–194 | 0.851 | 0.021 (0.04) | 4.7 s |
-| `seahorse` | SEA | 1.6e-5 (1.024e-3) | 64 × 64 | 1000 | 40–902 | 1.000 | 0.156 (0.17) | 5.4 s |
-| `seahorse_2e-6` | SEA | 2e-6 (1.28e-4) | 64 × 64 | 2000 | 71–1236 | 1.000 | 0.199 (0.21) | 6.9 s |
-| `m41_1e-12` | M41 | 1e-12 (6.4e-11) | 64 × 64 | 1000 | 87–140 | 1.000 | 0.030 (0.04) | 7.7 s |
-| `m41_1e-20` | M41 | 1e-20 (6.4e-19) | 64 × 64 | 5000 | 152–234 | 1.000 | 0.025 (0.04) | 12.9 s |
-| `julia` | 0 + 0i, c = −0.8 + 0.156i | 0.05 (3.2) | 64 × 64 | 1000 | 5–913 | 1.000 | 0.094 (0.11) | 2.3 s |
-| `seahorse_rotated` | SEA, rotation 0.5 rad | 1.6e-5 (1.024e-3) | 64 × 64 | 1000 | 39–945 | 1.000 | 0.158 (0.17) | 6.3 s |
-| `elephant_61x37` | 0.2925 + 0.0145i | 5e-4 (0.0305) | 61 × 37 | 500 | 16–488 | 0.693 | 0.087 (0.10) | 10.4 s |
-| `period2_bulb` | −1 + 0i | 0.0078125 (0.5) | 64 × 64 | 5000 | 14–4614 | 0.188 | 0.045 (0.06) | 366 s |
+| `overview` | −0.75 + 0i | 0.05 (3.2) | 64 × 64 | 256 | 5–194 | 0.851 | 0.021 (0.04) | 3.9 s |
+| `seahorse` | SEA | 1.6e-5 (1.024e-3) | 64 × 64 | 1000 | 40–902 | 1.000 | 0.156 (0.17) | 4.5 s |
+| `seahorse_2e-6` | SEA | 2e-6 (1.28e-4) | 64 × 64 | 2000 | 71–1236 | 1.000 | 0.199 (0.21) | 6.0 s |
+| `m41_1e-12` | M41 | 1e-12 (6.4e-11) | 64 × 64 | 1000 | 87–140 | 1.000 | 0.030 (0.04) | 6.5 s |
+| `m41_1e-20` | M41 | 1e-20 (6.4e-19) | 64 × 64 | 5000 | 152–234 | 1.000 | 0.025 (0.04) | 10.3 s |
+| `julia` | 0 + 0i, c = −0.8 + 0.156i | 0.05 (3.2) | 64 × 64 | 1000 | 5–913 | 1.000 | 0.094 (0.11) | 1.7 s |
+| `seahorse_rotated` | SEA, rotation 0.5 rad | 1.6e-5 (1.024e-3) | 64 × 64 | 1000 | 39–945 | 1.000 | 0.158 (0.17) | 4.6 s |
+| `elephant_61x37` | 0.2925 + 0.0145i | 5e-4 (0.0305) | 61 × 37 | 500 | 16–488 | 0.693 | 0.087 (0.10) | 7.1 s |
+| `period2_bulb` | −1 + 0i | 0.0078125 (0.5) | 64 × 64 | 5000 | 14–4614 | 0.188 | 0.045 (0.06) | 267 s |
 
-Times are on Xenon's 24 cores (plain mpmath, Python backend); about 7 minutes in all,
-almost all of it the bulb's interior at 5000 iterations. **P vs 2P:** zero disagreements in
+Times are on Xenon's 24 cores (plain mpmath, Python backend); about 5 minutes in all
+(7 under desktop load), almost all of it the bulb's interior at 5000 iterations. **P vs 2P:** zero disagreements in
 outcome, n or the float64 values of z, mu and DE on every non-sensitive pixel of every view,
 and none on the sensitive pixels either. The NPZs total 1.5 MB.
 
