@@ -76,6 +76,9 @@ The tests see an allowlisted environment and nothing else:
   PATH is ignored;
 - HOME and TMPDIR point into the run's temp directory, so the kernel cache starts empty;
 - `CUDA_VISIBLE_DEVICES` and uv's `UV_*` variables pass through;
+- on WSL, `LD_LIBRARY_PATH` is set to `/usr/lib/wsl/lib` (WSL's driver shim) and nothing else.
+  Xenon also has a native Linux `libcuda.so` in `/lib/x86_64-linux-gnu`, which reports no
+  device under WSL; without this every GPU test fails with `CUDA_ERROR_NO_DEVICE`;
 - `BROTKIT_*`, `NUMBA_*` and other `CUDA_*` variables from your shell don't.
 
 Nothing posted contains environment values, home paths, usernames or tokens. The script checks

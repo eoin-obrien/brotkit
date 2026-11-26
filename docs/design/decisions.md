@@ -673,6 +673,8 @@ designed.
        shell's PATH can't leak in;
      - HOME and TMPDIR point into the run's temp directory, so the kernel cache starts empty;
      - `CUDA_VISIBLE_DEVICES` and uv's own `UV_*` variables pass through;
+     - on WSL, `LD_LIBRARY_PATH` is set to WSL's driver directory alone, because a native
+       Linux `libcuda.so` elsewhere on the loader path reports no device;
      - no `BROTKIT_*`, `NUMBA_*` or other `CUDA_*` variable reaches the tests.
    - It posts a `gpu/xenon` commit status on that exact SHA: `success` only if both versions
      pass. A run narrowed with `--python` posts only with `--post-partial`, and then says so

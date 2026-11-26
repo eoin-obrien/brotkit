@@ -210,6 +210,20 @@ def test_scrubbed_env_is_an_allowlist(tmp_path: Path) -> None:
     assert env["PATH"].startswith("/opt/uv:")
 
 
+def test_ld_library_path_is_only_the_wsl_driver_dir(tmp_path: Path) -> None:
+    shell = {
+        "LD_LIBRARY_PATH": "/usr/local/cuda-12.9/lib64:/usr/lib/wsl/lib/",
+        "NUMBA_CUDA_DRIVER": "x",
+    }
+    kw: dict[str, Any] = dict(
+        home=tmp_path, tmp=tmp_path, extra_path=[], uv_cache="/c", uv_python="/p"
+    )
+    assert "LD_LIBRARY_PATH" not in c.scrubbed_env(shell, **kw)
+    env = c.scrubbed_env(shell, **kw, driver_dir=Path("/usr/lib/wsl/lib"))
+    assert env["LD_LIBRARY_PATH"] == "/usr/lib/wsl/lib"
+    assert "NUMBA_CUDA_DRIVER" not in env
+
+
 # --- busy check -----------------------------------------------------------------------------------
 
 

@@ -53,6 +53,14 @@ MAX_FAILED_LISTED = 30
 # be <= 5%, and no compute process may hold the GPU; otherwise wait 20 s and look again.
 BUSY_SAMPLES, BUSY_INTERVAL_S, BUSY_THRESHOLD_PCT, BUSY_RETRY_S = 8, 0.15, 5.0, 20.0
 SYSTEM_PATH = ("/usr/local/bin", "/usr/bin", "/bin", "/usr/lib/wsl/lib")
+# WSL's own libcuda. A native Linux libcuda (from a stray driver package) can also be on the
+# loader path, where `libcuda.so` resolves only to it and it reports no device; so when this
+# directory exists, LD_LIBRARY_PATH is set to it alone. It holds the driver shim, not a toolkit.
+WSL_DRIVER_DIR = Path("/usr/lib/wsl/lib")
+
+
+def wsl_driver_dir() -> Path | None:
+    return WSL_DRIVER_DIR if (WSL_DRIVER_DIR / "libcuda.so.1").exists() else None
 
 
 class Refusal(Exception):
@@ -311,13 +319,15 @@ def scrubbed_env(
     extra_path: Sequence[Path],
     uv_cache: str,
     uv_python: str,
+    driver_dir: Path | None = None,
 ) -> dict[str, str]:
     """The only environment the suite sees: an allowlist, nothing else from the shell.
 
     PATH is rebuilt rather than passed through, so a system CUDA toolkit on the shell's PATH
     can't be picked up. HOME and TMPDIR point into the run's temp dir (so the kernel cache
     starts empty). uv's own UV_* variables pass through; BROTKIT_*, NUMBA_* and CUDA_* don't,
-    apart from CUDA_VISIBLE_DEVICES.
+    apart from CUDA_VISIBLE_DEVICES. LD_LIBRARY_PATH is never passed through; on WSL it is set
+    to `driver_dir` only.
     """
     env = {k: v for k, v in shell_env.items() if k.startswith("UV_")}
     env |= {
@@ -331,6 +341,8 @@ def scrubbed_env(
     }
     if "CUDA_VISIBLE_DEVICES" in shell_env:
         env["CUDA_VISIBLE_DEVICES"] = shell_env["CUDA_VISIBLE_DEVICES"]
+    if driver_dir is not None:
+        env["LD_LIBRARY_PATH"] = str(driver_dir)
     return env
 
 
@@ -591,7 +603,8 @@ def build_comment(
         "",
         f"Run: {who}. Test environment allowlist (names only): "
         + ", ".join(f"`{n}`" for n in sorted(env_names))
-        + ". PATH is rebuilt (venv, uv, system dirs), HOME and TMPDIR point into a fresh temp dir.",
+        + ". PATH is rebuilt (venv, uv, system dirs), HOME and TMPDIR point into a fresh temp dir, "
+        "and on WSL `LD_LIBRARY_PATH` is WSL's driver directory only.",
     ]
     return "\n".join(lines) + "\n"
 
@@ -741,6 +754,7 @@ def main(
                 env = scrubbed_env(
                     shell_env, home=tmp / "home", tmp=tmp / "tmp", uv_cache=uv_cache,
                     uv_python=uv_python, extra_path=[Path(uv).parent],
+                    driver_dir=wsl_driver_dir(),
                 )  # fmt: skip
                 plan = Plan(worktree=worktree, tmp=tmp, uv=uv, env=env)
 
