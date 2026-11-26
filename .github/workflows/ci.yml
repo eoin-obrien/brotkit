@@ -49,5 +49,19 @@ jobs:
       - name: Typecheck
         run: uv run --frozen pyright
 
+      # pytest-randomly shuffles the order and prints its seed in the log header; the JUnit
+      # file names any failing test. Together they make the next unreproduced failure
+      # reproducible (`-p randomly --randomly-seed=<seed>`). tools/gpu_check.py uses the same.
       - name: Test (CPU)
-        run: uv run --frozen pytest -m "not gpu"
+        env:
+          PY: ${{ matrix.python }}
+        run: uv run --frozen pytest -m "not gpu" --junitxml="junit-cpu-$PY.xml"
+
+      - name: Upload JUnit XML
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: junit-cpu-${{ matrix.python }}
+          path: junit-cpu-${{ matrix.python }}.xml
+          if-no-files-found: warn
+          retention-days: 30

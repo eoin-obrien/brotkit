@@ -1,13 +1,13 @@
 name: zizmor
 
-# Static security audit of the GitHub Actions workflows (https://docs.zizmor.sh/),
-# run on any change under .github/workflows/. The release workflow holds publish
-# rights, so regressions there (unpinned actions, template injection, persisted
-# credentials, cache poisoning) must not land unnoticed. zizmor is locked in the
-# dev group, so Dependabot updates it with the other tools.
+# Static security audit of the GitHub Actions workflows (https://docs.zizmor.sh/).
+# It runs on every PR, not only workflow changes, because it is a required check and a
+# path-filtered required check never reports on other PRs, which blocks them (ADR-0010).
+# The release workflow holds publish rights, so regressions there (unpinned actions,
+# template injection, persisted credentials, cache poisoning) must not land unnoticed.
+# zizmor is locked in the dev group, so Dependabot updates it with the other tools.
 on:
   pull_request:
-    paths: [".github/workflows/**"]
   push:
     branches: [main]
     paths: [".github/workflows/**"]

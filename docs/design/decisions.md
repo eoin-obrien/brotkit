@@ -166,7 +166,8 @@ reports 0.0.2) and lands with the next release.
 
 ## ADR-0005: GPU JIT is numba-cuda-mlir
 
-- **Status:** Accepted
+- **Status:** Accepted; its GPU-coverage parts (self-hosted runner, nightly suite, `gpu`
+  label) are superseded by ADR-0010
 - **Date:** 2026-11-23
 - **Backlog:** S1 (gates S3 and S4; affects 0.3, 1.4, 1.20)
 
@@ -623,3 +624,142 @@ Ti, sm_86):
   their entry); ADR-0008's write-once entry is unchanged.
 - **Spec edits in the same PR:** "Rules that keep it fast" rule 2, the interruptibility row
   and the tiling row.
+
+## ADR-0010: A local, attested GPU check instead of a self-hosted runner
+
+- **Status:** Accepted
+- **Date:** 2026-11-26
+- **Backlog:** 0.3 ([#4](https://github.com/eoin-obrien/brotkit/issues/4)); supersedes the
+  GPU-coverage parts of ADR-0005 (self-hosted runner, nightly suite, `gpu` label)
+
+### Context
+The spec (CI and GPU testing row) and ADR-0005 put GPU coverage on a self-hosted GitHub Actions
+runner on Xenon: nightly, before releases, and on PRs the maintainer labels `gpu`. brotkit is a
+public repo and Xenon is the maintainer's main machine. It has the desktop, local LLM
+inference, the maintainer's gh token and SSH keys, and the Windows files under `/mnt/c`. A
+self-hosted runner executes whatever a workflow event hands it. The label gate makes safety
+depend on every trigger, label and runner setting being right every time, and one mistake runs
+a stranger's code on that machine. A public repo must never run code on the maintainer's main
+machine automatically.
+
+Hosted CI can't take the GPU tests over: it has no GPU, and numba-cuda-mlir 0.6.0 can't compile
+PTX without a device (S4 Q1, [numba-cuda-mlir#492](https://github.com/NVIDIA/numba-cuda-mlir/issues/492)).
+Separately, S5's PR saw one CPU failure in 16 runs that 15 reruns didn't reproduce, and nothing
+recorded which test failed or in what order the tests ran. CPU CI on main failed the same way
+on Python 3.15 on 2026-11-25, in `test_lru_eviction_keeps_newest_under_cap`.
+
+### Decision
+1. **No runner. GPU tests run only when the maintainer starts `tools/gpu_check.py`.**
+   - It resolves the PR's head SHA and checks it out into a fresh, throwaway worktree. It
+     refuses a reused path, a dirty tree, or a SHA that has moved, and checks for a moved SHA
+     again before posting.
+   - It waits for S4's GPU busy check: the median of 8 samples over 1.2 s must be ≤ 5%, with
+     no compute process on the GPU, and it waits bursts out in 20 s steps.
+   - Per Python version, 3.14 then 3.15, it runs `uv sync --locked --extra cuda` and then
+     `pytest -m gpu`, with JUnit XML and a recorded pytest-randomly seed.
+   - The tests run under an allowlisted environment:
+     - PATH is rebuilt (venv, uv, system directories), so a system CUDA toolkit on the
+       shell's PATH can't leak in;
+     - HOME and TMPDIR point into the run's temp directory, so the kernel cache starts empty;
+     - `CUDA_VISIBLE_DEVICES` and uv's own `UV_*` variables pass through;
+     - no `BROTKIT_*`, `NUMBA_*` or other `CUDA_*` variable reaches the tests.
+   - It posts a `gpu/xenon` commit status on that exact SHA: `success` only if both versions
+     pass. A run narrowed with `--python` posts only with `--post-partial`, and then says so
+     in the description.
+   - It upserts one PR comment, found by a hidden marker. The comment holds the environment
+     table, the counts, the names of failed tests, the seeds, the JUnit sha256 and the names
+     of the allowlisted variables. Everything posted is scrubbed of home paths, usernames,
+     tokens and `NAME=value` pairs, and is checked again before it goes out.
+   - Last, it re-runs the PR's gpu-gate job.
+2. **`gpu-gate` is a hosted, GPU-free job that enforces the status.**
+   - It runs on `pull_request` only, never `pull_request_target`, with `contents: read` and
+     `statuses: read`.
+   - `tools/gpu_gate.py` and `tools/gpu_gate_paths.toml` are checked out from the PR's
+     *base* commit, and the head is read only as data. The job passes if no GPU-relevant
+     path changed, or if the newest `gpu/xenon` status on exactly the head SHA is `success`
+     and was created by a login on the base config's maintainer list. A new push changes the
+     SHA, so an old status never carries over.
+   - GPU-relevant means:
+     - the backends, codegen and kernels packages (the planner lives in `backends/`);
+     - the gate, the check, the sandbox and the gpu-gate workflow itself;
+     - conftest and fixture files, and tests whose base or head carries `mark.gpu`;
+     - dependency changes that touch a listed GPU-stack package (numba-cuda-mlir, numba,
+       llvmlite, `cuda-*`, `nvidia-*`, numpy, sympy, mpmath, gmpy2), `requires-python` or
+       the `[cuda]` extra. Anything the lockfile or pyproject parser doesn't recognise counts
+       as GPU-relevant.
+   - When the base predates the gate (only this ADR's own PR), the job uses the PR's copy
+     with `--force-required`.
+3. **The checks are required by a branch ruleset on `main`.** It requires a PR, blocks
+   force pushes and deletion, and requires CPU CI, the PR title check, zizmor and gpu-gate,
+   each sourced from the GitHub Actions app. Admins can bypass only when merging a PR. zizmor
+   now runs on every PR: a path-filtered required check never reports on other PRs and
+   blocks them.
+4. **Outside PRs.**
+   - gpu_check refuses PRs from anyone without the admin or maintain role unless the
+     maintainer passes `--reviewed`, meaning a human has read the full diff, lockfile and
+     tests included. Bots, Dependabot among them, are never maintainers. Agents never pass
+     `--reviewed` and never run gpu_check on other people's PRs.
+   - Reviewed outside PRs run only in the sandbox (`--sandbox docker`, below). The sandbox
+     never sees the gh token. gpu_check reads the JUnit file it produces as untrusted input
+     (size cap, no DTD or entities) and posts the status from outside.
+5. **Flaky-test capture.** pytest-randomly is in the dev group, so every run shuffles the test
+   order and prints its seed. CPU CI writes JUnit XML and uploads it as an artifact even when
+   tests fail, and gpu_check passes the same flags. The next failure that won't reproduce comes
+   with its test name and seed.
+
+**Sandbox: candidates evaluated.**
+
+- **(a) Docker container on the distro's own engine (chosen).** Xenon's default Docker context
+  is a native `dockerd` inside the Ubuntu distro, with the `nvidia` runtime configured. It is
+  not Docker Desktop. gpu_check copies the worktree, minus `.git`, into the run's temp
+  directory and runs two containers per Python version:
+  - `uv sync` with network, the source mounted read-only, and writes going only to that
+    run's venv and uv cache;
+  - `pytest -m gpu` with `--network none`, `--gpus all`, the venv mounted read-only, and one
+    writable output directory.
+
+  Both run as the maintainer's uid with every capability dropped, `no-new-privileges` and a
+  read-only root filesystem, and use a fresh container each time. Nothing else is mounted:
+  no HOME, `~/.config/gh`, SSH keys, Docker socket or `/mnt/c`. A preflight refuses if the
+  CLI points at Docker Desktop, whose engine can reach Windows drives.
+- **(b) A dedicated WSL distro** with no gh token, no SSH keys and `/mnt/c` automount off.
+  Rejected:
+  - WSL interop would also have to be off. Otherwise test code can start Windows
+    executables as the Windows user, which reaches every Windows file whether or not
+    automount is on.
+  - There is no per-run network cut-off that test code can't undo.
+  - State builds up between PRs unless the distro is rebuilt each time.
+  - Results have to be copied back across the distro boundary.
+  - It shares the same WSL2 VM and kernel as (a) anyway.
+
+### Consequences
+- **Known limit: on `pull_request`, the workflow YAML comes from the PR.** A PR can edit
+  `gpu-gate.yml` to pass unconditionally, and no `pull_request`-only design prevents that.
+  `pull_request_target` would run the base workflow, but with a write token next to
+  untrusted code, so it stays banned. The defences:
+  - the workflow file is on the GPU path list, so an edit to it needs a maintainer's
+    `gpu/xenon` status, and an outside PR only gets one after human review;
+  - the ruleset requires `gpu-gate` from the GitHub Actions app, so a hand-posted status of
+    that name doesn't count;
+  - optionally, CODEOWNERS review on `.github/**` and `tools/gpu_gate*`.
+- **The status is an attestation, not a proof.** It says the maintainer's machine ran these
+  tests on this SHA with this environment. The comment's JUnit sha256 and environment table
+  make that auditable, not tamper-proof.
+- **No nightly run.** An upstream or driver change that breaks the GPU suite between PRs shows
+  up at the next GPU-relevant PR or release. Releases need `gpu/xenon` success on the release
+  commit (`uv run tools/gpu_check.py <sha>`; see the `cut-release` skill). Dependabot PRs that
+  bump GPU-stack packages are outside PRs, so they need `--reviewed --sandbox docker`, and the
+  sandbox image has to be built before the next numba-cuda-mlir bump.
+- **Sandbox residual risk.** Docker's daemon runs as root and the maintainer is in the
+  `docker` group, so a container escape (a kernel or runtime bug) means root in the distro
+  that holds the credentials. `userns-remap` or rootless Docker would close that, and needs
+  the maintainer's approval. Phase 1 runs the PR's build backend with network access. The
+  reviewed diff covers `build-system`, and the lockfile pins every other package by hash.
+- **CPU CI on 3.15 is currently flaky** (above). Making it a required check means a flake
+  blocks merges until it is re-run or fixed.
+- **Revisit when** outside contributors start sending PRs regularly: an ephemeral GPU machine
+  that holds nothing of the maintainer's would then beat hand-run checks. Also revisit when
+  upstream fixes #492, which lets the PTX snapshot and resource tests move to hosted CI,
+  drop their `gpu` marker, and shrink how often the local check is needed.
+- **Spec edits in the same PR:** the CI and GPU testing row, the Tests and Quality rows,
+  and the phase 0 and phase 1a gates. Backlog 0.3, 1.9 and 1.24 are reworded.

@@ -38,6 +38,28 @@ uv run pytest -m "not gpu"          # CPU tests (what CI runs)
 uv run pytest -m gpu                # GPU tests, if you touched kernels and have a GPU
 ```
 
+## GPU tests and the `gpu-gate` check
+
+Hosted CI has no GPU, so GPU tests (`pytest -m gpu`) run on the maintainer's machine, and only
+when the maintainer starts them. There's no self-hosted runner, so nothing in a PR can trigger
+code on that machine. When your PR touches a GPU-relevant path (backends, codegen, kernels,
+GPU tests, GPU-stack dependencies; the full list is in `tools/gpu_gate_paths.toml`), the
+required `gpu-gate` check stays red until the maintainer has run `tools/gpu_check.py` on your
+PR's latest commit. A new push needs a new run.
+
+For a PR from anyone who isn't a maintainer:
+
+- the maintainer first reads the full diff, including the lockfile and the tests, and only
+  then runs the check with `--reviewed`;
+- the tests run in an isolated container with the GPU but no network and none of the
+  maintainer's credentials;
+- the result is posted as a `gpu/xenon` commit status and one PR comment listing the
+  environment and any failing tests.
+
+So expect a GPU-relevant PR to wait for review before its GPU result appears. You can run
+`uv run pytest -m gpu` on your own GPU first. Details are in
+[`docs/gpu-check.md`](docs/gpu-check.md), and the reasoning is in ADR-0010.
+
 ## Commits and pull requests
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `perf:`,

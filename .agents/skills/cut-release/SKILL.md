@@ -12,8 +12,8 @@ before triggering a run**.
 
 ## Before the run
 
-1. `main` is green (CI, and the nightly GPU suite once it exists) and the phase gate, if any,
-   passes.
+1. `main` is green (CI), the release commit has a `gpu/xenon` success status (the maintainer
+   runs `uv run tools/gpu_check.py <sha>`; agents don't), and the phase gate, if any, passes.
 2. Preview the bump locally: `uv run cz bump --dry-run --yes`. `NO_COMMITS_TO_BUMP` means
    nothing since the last tag is a `feat`, `fix`, `perf`, `refactor` or breaking change.
    In that case, either don't release or force an increment (below). 0.x:

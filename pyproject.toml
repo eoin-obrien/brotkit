@@ -45,6 +45,7 @@ dev = [
     "pyright>=1.1.414",
     "pytest>=9.2",
     "pytest-markdown-docs>=0.9.2",
+    "pytest-randomly>=3.16",
     "ruff>=0.17.6",
     "zizmor>=1.33.1",
 ]
@@ -67,7 +68,7 @@ build-backend = "uv_build"
 [tool.ruff]
 line-length = 100
 target-version = "py314"
-src = ["src", "tests"]
+src = ["src", "tests", "tools"]
 
 [tool.ruff.lint]
 select = [
@@ -99,13 +100,15 @@ exclude = ["docs/design/**"]
 # --- pyright ----------------------------------------------------------------
 
 [tool.pyright]
-include = ["src", "tests"]
+include = ["src", "tests", "tools"]
+extraPaths = ["tools"]   # tests import the dev tools in tools/ (not a package)
 typeCheckingMode = "strict"
 
 # --- pytest -----------------------------------------------------------------
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["tools"]   # tests/test_gpu_gate.py, tests/test_gpu_check.py
 addopts = ["--strict-markers", "--strict-config", "-ra"]
 xfail_strict = true
 markers = [

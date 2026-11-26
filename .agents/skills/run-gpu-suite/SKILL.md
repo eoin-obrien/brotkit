@@ -12,3 +12,6 @@ description: Run brotkit's GPU test suite (pytest -m gpu): CPU/GPU parity, fastm
 4. Parity is precision-bound: compare at equal precision on pixels away from the boundary,
    never bit-for-bit across backends.
 5. Golden-image failures: report them; don't regenerate (see `update-golden-images`).
+6. For a PR, the result that counts is the `gpu/xenon` status from `tools/gpu_check.py`
+   (AGENTS.md, "GPU check"): only on the maintainer's own PRs, only when asked, `--dry-run`
+   first, and never with `--reviewed`.
