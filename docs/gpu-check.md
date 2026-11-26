@@ -121,3 +121,5 @@ Rebuild it when the Dockerfile changes.
   `uv run pytest -m gpu -p randomly --randomly-seed=<seed>` in a checkout of that SHA, or
   `uv run tools/gpu_check.py <PR> --seed <seed> --dry-run`. CPU CI's JUnit files are artifacts
   on each run, and its log header shows the seed.
+
+<!-- throwaway: gpu-gate docs-only test, do not merge -->
