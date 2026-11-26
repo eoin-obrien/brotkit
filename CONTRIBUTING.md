@@ -44,20 +44,20 @@ Hosted CI has no GPU, so GPU tests (`pytest -m gpu`) run on the maintainer's mac
 when the maintainer starts them. There's no self-hosted runner, so nothing in a PR can trigger
 code on that machine. When your PR touches a GPU-relevant path (backends, codegen, kernels,
 GPU tests, GPU-stack dependencies; the full list is in `tools/gpu_gate_paths.toml`), the
-required `gpu-gate` check stays red until the maintainer has run `tools/gpu_check.py` on your
-PR's latest commit. A new push needs a new run.
+`gpu-gate` check shows a warning until the maintainer has run `tools/gpu_check.py` on your
+PR's latest commit. A new push needs a new run. The check is advisory for now: it doesn't
+block merging, but the maintainer won't merge a GPU-relevant PR without a passing
+`gpu/xenon` status.
 
-For a PR from anyone who isn't a maintainer:
+For a PR from anyone who isn't a maintainer, the maintainer first reads the full diff,
+including the lockfile and the tests, and only then runs the check with `--reviewed`. The
+result is posted as a `gpu/xenon` commit status and one PR comment listing the environment
+and any failing tests. So expect a GPU-relevant PR to wait for review before its GPU result
+appears.
 
-- the maintainer first reads the full diff, including the lockfile and the tests, and only
-  then runs the check with `--reviewed`;
-- the tests run in an isolated container with the GPU but no network and none of the
-  maintainer's credentials;
-- the result is posted as a `gpu/xenon` commit status and one PR comment listing the
-  environment and any failing tests.
-
-So expect a GPU-relevant PR to wait for review before its GPU result appears. You can run
-`uv run pytest -m gpu` on your own GPU first. Details are in
+Mark any GPU test that asserts on timings `@pytest.mark.perf`. Those run only with `--perf`,
+on an idle GPU; every other `gpu` test must pass while other programs use the card. You can
+run `uv run pytest -m gpu` on your own GPU first. Details are in
 [`docs/gpu-check.md`](docs/gpu-check.md), and the reasoning is in ADR-0010.
 
 ## Commits and pull requests

@@ -219,6 +219,15 @@ def test_warm_load_in_fresh_process_skips_numba(
     r = fresh_process_load(tmp_path / "cache", {})
     assert r["builds"] == 0
     assert not r["numba_imported"]  # a warm start never imports the JIT
+
+
+@pytest.mark.perf
+def test_warm_load_in_fresh_process_is_fast(
+    cache: KernelCache[Any], backend: Any, tmp_path: Path
+) -> None:
+    cache.get(spec(backend))
+    r = fresh_process_load(tmp_path / "cache", {})
+    assert r["builds"] == 0
     assert r["get_s"] < 0.1
 
 

@@ -114,6 +114,7 @@ xfail_strict = true
 markers = [
     "gpu: needs a CUDA GPU (run with -m gpu; excluded from CPU CI)",
     "slow: long-running test",
+    "perf: asserts on timings; gpu_check runs it only with --perf, on an idle GPU",
 ]
 
 # --- commitizen -------------------------------------------------------------

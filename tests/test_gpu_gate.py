@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import tomllib
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -70,7 +71,6 @@ def test_bad_config_is_rejected(data: dict[str, Any]) -> None:
         "tools/gpu_gate.py",
         "tools/gpu_gate_paths.toml",
         "tools/gpu_check.py",
-        "tools/sandbox/Dockerfile",
         "tests/conftest.py",
         "tests/fixtures/codegen/s4_f32_A_plain.py",
     ],
@@ -417,19 +417,68 @@ def repo(tmp_path: Path) -> Path:
     return r
 
 
+def enforcing_config(tmp_path: Path) -> Path:
+    text = g.DEFAULT_CONFIG.read_text()
+    assert "\nenforce = false\n" in text
+    path = tmp_path / "enforcing.toml"
+    path.write_text(text.replace("\nenforce = false\n", "\nenforce = true\n"))
+    return path
+
+
 def run_cli(
     repo: Path, base: str, head: str, statuses: list[dict[str, Any]], tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
+    monkeypatch: pytest.MonkeyPatch, *, enforce: bool = True,
 ) -> tuple[int, str]:  # fmt: skip
     sfile = tmp_path / "statuses.jsonl"
     sfile.write_text("\n".join(json.dumps(s) for s in statuses))
     summary = tmp_path / "summary.md"
+    summary.unlink(missing_ok=True)
     monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+    config = enforcing_config(tmp_path) if enforce else g.DEFAULT_CONFIG
     rc = g.main(
         ["--repo-dir", str(repo), "--base", base, "--head", head, "--pr", "5",
-         "--statuses", str(sfile)]
+         "--statuses", str(sfile), "--config", str(config)]
     )  # fmt: skip
     return rc, summary.read_text()
+
+
+def test_the_shipped_config_is_advisory() -> None:
+    assert not g.load_config().enforce
+
+
+def test_advisory_gate_warns_but_passes(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    base = commit(repo, {"README.md": "a\n", "src/brotkit/backends/cuda.py": "x = 1\n"})
+    head = commit(repo, {"src/brotkit/backends/cuda.py": "x = 2\n"})
+    rc, summary = run_cli(repo, base, head, [], tmp_path, monkeypatch, enforce=False)
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "::warning title=gpu-gate (advisory)::" in out
+    assert "::error" not in out
+    assert "advisory, not blocking" in summary
+    assert "uv run tools/gpu_check.py 5" in summary
+    # A failing status is still only a warning, and a passing one is a plain pass.
+    rc, summary = run_cli(
+        repo, base, head, [status("failure", sha=head)], tmp_path, monkeypatch, enforce=False
+    )
+    assert rc == 0
+    assert "::warning" in capsys.readouterr().out
+    rc, summary = run_cli(
+        repo, base, head, [status("success", sha=head)], tmp_path, monkeypatch, enforce=False
+    )
+    assert rc == 0
+    assert "::warning" not in capsys.readouterr().out
+    assert summary.startswith("## gpu-gate passed")
+
+
+@pytest.mark.parametrize("value", ['"no"', "1"])
+def test_enforce_must_be_a_bool(value: str) -> None:
+    data = tomllib.loads(
+        g.DEFAULT_CONFIG.read_text().replace("enforce = false", f"enforce = {value}")
+    )
+    with pytest.raises(g.ConfigError, match="enforce"):
+        g.parse_config(data)
 
 
 def test_cli_docs_only_change_passes(

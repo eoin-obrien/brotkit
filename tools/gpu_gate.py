@@ -5,6 +5,10 @@ workflow checks this file and `gpu_gate_paths.toml` out from the PR's *base* com
 the PR's head only as data (changed paths, file contents, the lockfile diff), so a PR can't
 change the rules it is judged by. See ADR-0010 and docs/gpu-check.md.
 
+For now the gate is advisory (`enforce = false` in the config): a GPU-relevant PR without a
+passing `gpu/xenon` status gets a warning annotation and a step-summary reminder, and the job
+still passes. With `enforce = true` it fails instead (ADR-0010, "Revisit when").
+
 Standard library only: the workflow runs it with `uv run --no-project`.
 
     python tools/gpu_gate.py --repo-dir pr --base <sha> --head <sha> --pr <n> \
@@ -44,6 +48,7 @@ class _Unrecognised(Exception):
 @dataclass(frozen=True, slots=True, kw_only=True)
 class GateConfig:
     context: str
+    enforce: bool
     maintainers: frozenset[str]
     gpu_paths: tuple[str, ...]
     gpu_test_marker: str
@@ -68,6 +73,13 @@ def _str(table: Mapping[str, Any], key: str) -> str:
     return value
 
 
+def _bool(table: Mapping[str, Any], key: str, *, default: bool) -> bool:
+    value = table.get(key, default)
+    if not isinstance(value, bool):
+        raise ConfigError(f"{key} must be true or false")
+    return value
+
+
 def _table(table: Mapping[str, Any], key: str) -> Mapping[str, Any]:
     value = table.get(key)
     if not isinstance(value, dict):
@@ -79,6 +91,7 @@ def parse_config(data: Mapping[str, Any]) -> GateConfig:
     paths, deps = _table(data, "paths"), _table(data, "dependencies")
     return GateConfig(
         context=_str(data, "context"),
+        enforce=_bool(data, "enforce", default=False),
         maintainers=frozenset(_strs(data, "maintainers")),
         gpu_paths=_strs(paths, "gpu"),
         gpu_test_marker=_str(paths, "gpu_test_marker"),
@@ -516,15 +529,28 @@ def main(argv: Sequence[str] | None = None) -> int:
     statuses = load_statuses(args.statuses.read_text())
     decision = decide(classification, statuses, head_sha=args.head, pr=args.pr, config=config)
     print(decision.summary)
+    code, heading, annotation = outcome(decision, enforce=config.enforce)
     summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary_file:
-        mark = "passed" if decision.passed else "failed"
         with open(summary_file, "a", encoding="utf-8") as f:
-            f.write(f"## gpu-gate {mark}\n\n{decision.summary}\n")
-    if not decision.passed:
-        first = decision.summary.splitlines()[0]
-        print(f"::error title=gpu-gate::{first}")
-    return 0 if decision.passed else 1
+            f.write(f"## {heading}\n\n{decision.summary}\n")
+    if annotation:
+        print(annotation)
+    return code
+
+
+def outcome(decision: Decision, *, enforce: bool) -> tuple[int, str, str | None]:
+    """(exit code, step-summary heading, workflow annotation). Advisory mode never fails."""
+    if decision.passed:
+        return 0, "gpu-gate passed", None
+    first = decision.summary.splitlines()[0]
+    if enforce:
+        return 1, "gpu-gate failed", f"::error title=gpu-gate::{first}"
+    return (
+        0,
+        "gpu-gate: GPU check still to run (advisory, not blocking)",
+        f"::warning title=gpu-gate (advisory)::{first} Run the GPU check before merging.",
+    )
 
 
 if __name__ == "__main__":

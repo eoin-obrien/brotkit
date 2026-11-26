@@ -3,14 +3,17 @@
 Nothing runs on the GPU machine unless the maintainer starts this script. It checks the exact
 head commit out into a throwaway worktree, runs `pytest -m gpu` on Python 3.14 and 3.15 under a
 scrubbed environment, posts a `gpu/xenon` commit status on that SHA, upserts one PR comment with
-the environment and results, and re-runs the PR's gpu-gate job so the required check sees the
+the environment and results, and re-runs the PR's gpu-gate job so the gate sees the
 new status. See ADR-0010 and docs/gpu-check.md.
 
-    uv run tools/gpu_check.py <PR number | 40-char SHA> [--python 3.15] [--dry-run] [--reviewed]
+    uv run tools/gpu_check.py <PR number | 40-char SHA> [--python 3.15] [--perf] [--dry-run]
+
+Correctness tests (`gpu and not perf`) run straight away, whatever else is using the GPU; the
+utilisation seen just before them is recorded in the comment. Timing tests (`perf`) run only with
+--perf, and only once the GPU is idle (spike S4's busy check).
 
 PRs by anyone who isn't a maintainer are refused unless --reviewed is given, meaning a human has
-read the full diff (lockfile and tests included); those run only in the sandbox (--sandbox
-docker), which never sees the gh token. Agents never pass --reviewed.
+read the full diff (lockfile and tests included). Agents never pass --reviewed.
 """
 
 from __future__ import annotations
@@ -44,11 +47,10 @@ DESCRIPTION_LIMIT = 140
 GATE_WORKFLOW = "gpu-gate.yml"
 PACKAGES = ("numba-cuda-mlir", "nvidia-nvjitlink", "nvidia-nvvm", "cuda-core", "cuda-bindings")
 RANDOMLY = "pytest-randomly"
-SANDBOX_IMAGE = "brotkit-gpu-sandbox:1"
 MAX_JUNIT_BYTES = 32 * 1024 * 1024
 MAX_FAILED_LISTED = 30
-# Busy check from spike S4: median of 8 utilisation samples over 1.2 s must be <= 5%, and no
-# compute process may hold the GPU; otherwise wait 20 s and look again.
+# Busy check from spike S4, for perf tests only: median of 8 utilisation samples over 1.2 s must
+# be <= 5%, and no compute process may hold the GPU; otherwise wait 20 s and look again.
 BUSY_SAMPLES, BUSY_INTERVAL_S, BUSY_THRESHOLD_PCT, BUSY_RETRY_S = 8, 0.15, 5.0, 20.0
 SYSTEM_PATH = ("/usr/local/bin", "/usr/bin", "/bin", "/usr/lib/wsl/lib")
 
@@ -170,18 +172,13 @@ def is_maintainer(runner: Runner, repo: str, login: str) -> bool:
     return json.loads(r.stdout).get("role_name") in ("admin", "maintain")
 
 
-def check_author(maintainer: bool, *, author: str, reviewed: bool, sandbox: str | None) -> None:
-    if maintainer:
+def check_author(maintainer: bool, *, author: str, reviewed: bool) -> None:
+    if maintainer or reviewed:
         return
-    if not reviewed:
-        raise Refusal(
-            f"{author} isn't a maintainer. Read the full diff (lockfile and tests included), "
-            "then re-run with --reviewed --sandbox docker. Agents never pass --reviewed."
-        )
-    if sandbox is None:
-        raise Refusal(
-            "PRs from people who aren't maintainers run only in the sandbox: add --sandbox docker"
-        )
+    raise Refusal(
+        f"{author} isn't a maintainer. Read the full diff (lockfile and tests included), "
+        "then re-run with --reviewed. Agents never pass --reviewed."
+    )
 
 
 # --- worktree -------------------------------------------------------------------------------------
@@ -266,6 +263,21 @@ def gpu_idle(samples: Sequence[float]) -> bool:
     return statistics.median(samples) <= BUSY_THRESHOLD_PCT
 
 
+def observe_util(
+    sample: Callable[[], tuple[float, bool]], *, sleep: Callable[[float], None]
+) -> tuple[float, bool]:
+    """(median utilisation % of 8 samples over 1.2 s, whether a compute process held the GPU)."""
+    utils: list[float] = []
+    holders = False
+    for i in range(BUSY_SAMPLES):
+        u, h = sample()
+        utils.append(u)
+        holders = holders or h
+        if i < BUSY_SAMPLES - 1:
+            sleep(BUSY_INTERVAL_S)
+    return statistics.median(utils), holders
+
+
 def wait_for_idle(
     sample: Callable[[], tuple[float, bool]],
     *,
@@ -273,23 +285,17 @@ def wait_for_idle(
     clock: Callable[[], float],
     max_wait_s: float,
     out: Callable[[str], None],
-) -> None:
-    """S4's busy check: wait out bursts, give up (posting nothing) after `max_wait_s`."""
+) -> float:
+    """S4's busy check, before perf tests: wait out bursts, give up (posting nothing) after
+    `max_wait_s`. Returns the idle median it saw."""
     start = clock()
     while True:
-        utils: list[float] = []
-        holders = False
-        for i in range(BUSY_SAMPLES):
-            u, h = sample()
-            utils.append(u)
-            holders = holders or h
-            if i < BUSY_SAMPLES - 1:
-                sleep(BUSY_INTERVAL_S)
-        if gpu_idle(utils) and not holders:
-            return
+        median, holders = observe_util(sample, sleep=sleep)
+        if gpu_idle([median]) and not holders:
+            return median
         if clock() - start > max_wait_s:
             raise Refusal(f"GPU still busy after {max_wait_s:.0f} s; nothing was posted")
-        why = "a compute process holds it" if holders else f"median {statistics.median(utils):.0f}%"
+        why = "a compute process holds it" if holders else f"median {median:.0f}%"
         out(f"GPU busy ({why}); waiting {BUSY_RETRY_S:.0f} s")
         sleep(BUSY_RETRY_S)
 
@@ -341,8 +347,8 @@ class JUnit:
 
 
 def parse_junit(data: bytes) -> JUnit:
-    """Counts from a JUnit file. The file may come from the sandbox, so it's treated as
-    untrusted: size-capped, and any DTD or entity declaration is rejected before parsing."""
+    """Counts from a JUnit file. The file is written by the code under test, so it's treated
+    as untrusted: size-capped, and any DTD or entity declaration is rejected before parsing."""
     if len(data) > MAX_JUNIT_BYTES:
         raise ValueError("JUnit file too large")
     if b"<!DOCTYPE" in data.upper() or b"<!ENTITY" in data.upper():
@@ -387,6 +393,7 @@ class PyResult:
     junit: JUnit | None = None
     returncode: int = 0
     setup_error: str | None = None
+    util_pct: float | None = None
 
     @property
     def ok(self) -> bool:
@@ -404,9 +411,11 @@ class PyResult:
         return f"{self.python}: {self.junit.passed} passed, {self.junit.failed} failed"
 
 
-def pytest_args(junit: str, seed: int | None) -> list[str]:
-    """The flags hosted CI uses too (JUnit XML, pytest-randomly seed), plus `-m gpu`."""
-    args = ["-m", "pytest", "-m", "gpu", "-p", "no:cacheprovider", f"--junitxml={junit}"]
+def pytest_args(junit: str, seed: int | None, *, perf: bool) -> list[str]:
+    """The flags hosted CI uses too (JUnit XML, pytest-randomly seed), plus the GPU marker.
+    Without --perf, timing tests are left out; with it, the whole GPU suite runs."""
+    marker = "gpu" if perf else "gpu and not perf"
+    args = ["-m", "pytest", "-m", marker, "-p", "no:cacheprovider", f"--junitxml={junit}"]
     if seed is not None:
         args.append(f"--randomly-seed={seed}")
     return args
@@ -414,132 +423,60 @@ def pytest_args(junit: str, seed: int | None) -> list[str]:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Plan:
-    """Where one run lives, and how its commands are spelled (host or sandbox)."""
+    """Where one run lives."""
 
     worktree: Path
     tmp: Path
     uv: str
     env: Mapping[str, str]
-    sandbox: str | None = None
-    uid: int = 1000
-    gid: int = 1000
-
-
-def docker_base(plan: Plan, *, network: bool) -> list[str]:
-    """Hardened `docker run` prefix. Never mounts the Docker socket, HOME or ~/.config/gh;
-    the only bind mounts are the run's own temp dirs."""
-    return [
-        "docker", "run", "--rm", "--init",
-        "--user", f"{plan.uid}:{plan.gid}",
-        "--cap-drop", "ALL", "--security-opt", "no-new-privileges",
-        "--read-only", "--tmpfs", "/tmp:exec,mode=1777",
-        "--pids-limit", "4096",
-        "--network", "bridge" if network else "none",
-        "-v", f"{plan.tmp / 'src'}:/src:ro",
-        "-e", "HOME=/tmp/home", "-e", "LANG=C.UTF-8",
-        "-w", "/src",
-    ]  # fmt: skip
-
-
-def sync_cmd(plan: Plan, python: str) -> list[str]:
-    if plan.sandbox == "docker":
-        return [
-            *docker_base(plan, network=True),
-            "-v", f"{plan.tmp / 'venvs'}:/venvs",
-            "-v", f"{plan.tmp / 'uv-cache'}:/uv-cache",
-            "-e", "UV_CACHE_DIR=/uv-cache", "-e", f"UV_PROJECT_ENVIRONMENT=/venvs/{python}",
-            "-e", "UV_NO_CONFIG=1",
-            SANDBOX_IMAGE, "uv", "sync", "--locked", "--extra", "cuda", "--python", python,
-        ]  # fmt: skip
-    return [plan.uv, "sync", "--locked", "--extra", "cuda", "--python", python]
-
-
-def python_cmd(plan: Plan, python: str, args: Sequence[str]) -> list[str]:
-    if plan.sandbox == "docker":
-        gpu = ["--gpus", "all", "-e", "NVIDIA_DRIVER_CAPABILITIES=compute,utility"]
-        return [
-            *docker_base(plan, network=False), *gpu,
-            "-v", f"{plan.tmp / 'venvs'}:/venvs:ro",
-            "-v", f"{plan.tmp / 'out'}:/out",
-            "-e", "PYTHONDONTWRITEBYTECODE=1",
-            SANDBOX_IMAGE, f"/venvs/{python}/bin/python", *args,
-        ]  # fmt: skip
-    return [str(plan.tmp / f"venv-{python}" / "bin" / "python"), *args]
-
-
-SANDBOX_ENV = (
-    "HOME", "LANG", "UV_CACHE_DIR", "UV_PROJECT_ENVIRONMENT", "UV_NO_CONFIG",
-    "PYTHONDONTWRITEBYTECODE", "NVIDIA_DRIVER_CAPABILITIES",
-)  # fmt: skip
 
 
 def env_names(plan: Plan) -> list[str]:
     """The names (never values) of every variable the suite's process sees."""
-    if plan.sandbox == "docker":
-        return sorted(SANDBOX_ENV)
     return sorted({*plan.env, "UV_PROJECT_ENVIRONMENT"})
 
 
-def sandbox_preflight(runner: Runner) -> None:
-    """Refuse unless the docker CLI talks to the distro's own engine and the image exists.
-
-    Docker Desktop's engine shares Windows paths into containers, so it's never used."""
-    info = runner(["docker", "info", "--format", "{{.OperatingSystem}}"], check=False)
-    if info.returncode != 0:
-        raise Refusal("docker isn't reachable; see docs/gpu-check.md (sandbox)")
-    if "docker desktop" in info.stdout.lower():
-        raise Refusal(
-            "docker points at Docker Desktop; use the distro's engine (--context default)"
-        )
-    image = runner(["docker", "image", "inspect", SANDBOX_IMAGE], check=False)
-    if image.returncode != 0:
-        raise Refusal(f"sandbox image {SANDBOX_IMAGE} missing; build it (docs/gpu-check.md)")
-
-
-def junit_paths(plan: Plan, python: str) -> tuple[str, Path]:
-    """(path the test process writes to, path the host reads)."""
-    host = plan.tmp / "out" / f"junit-{python}.xml"
-    return (f"/out/junit-{python}.xml" if plan.sandbox == "docker" else str(host)), host
-
-
 def run_python(
-    runner: Runner, plan: Plan, python: str, *, wait_idle: Callable[[], None], seed: int
+    runner: Runner,
+    plan: Plan,
+    python: str,
+    *,
+    before_tests: Callable[[], float],
+    seed: int,
+    perf: bool,
 ) -> PyResult:
-    # On the host the scrubbed env is the suite's env. In the sandbox it's the docker CLI's, so
-    # it gets the shell's (DOCKER_HOST, ...); the container's env is set by -e flags alone.
-    env: dict[str, str] | None = None
-    cwd: Path | None = None
-    if plan.sandbox is None:
-        env = dict(plan.env) | {"UV_PROJECT_ENVIRONMENT": str(plan.tmp / f"venv-{python}")}
-        cwd = plan.worktree
-    sync = runner(sync_cmd(plan, python), cwd=cwd, env=env, check=False, echo=True)
+    """Sync, probe versions and run the suite for one Python. `before_tests` returns the GPU
+    utilisation to record: an observation, or (with --perf) the busy check's idle reading."""
+    env = dict(plan.env) | {"UV_PROJECT_ENVIRONMENT": str(plan.tmp / f"venv-{python}")}
+    cwd = plan.worktree
+    venv_python = str(plan.tmp / f"venv-{python}" / "bin" / "python")
+    sync = runner(
+        [plan.uv, "sync", "--locked", "--extra", "cuda", "--python", python],
+        cwd=cwd, env=env, check=False, echo=True,
+    )  # fmt: skip
     if sync.returncode != 0:
         return PyResult(python=python, setup_error="uv sync failed", returncode=sync.returncode)
-    probe = runner(
-        python_cmd(plan, python, ["-c", PROBE, *PACKAGES, RANDOMLY]), cwd=cwd, env=env, check=False
-    )
+    probe = runner([venv_python, "-c", PROBE, *PACKAGES, RANDOMLY], cwd=cwd, env=env, check=False)
     if probe.returncode != 0:
         return PyResult(python=python, setup_error="probe failed", returncode=probe.returncode)
     info = json.loads(probe.stdout.strip().splitlines()[-1])
     packages = cast(dict[str, str | None], info["packages"])
     use_seed = seed if packages.pop(RANDOMLY, None) else None
-    wait_idle()
-    inner, host = junit_paths(plan, python)
+    util = before_tests()
+    junit_path = plan.tmp / "out" / f"junit-{python}.xml"
     tests = runner(
-        python_cmd(plan, python, pytest_args(inner, use_seed)),
+        [venv_python, *pytest_args(str(junit_path), use_seed, perf=perf)],
         cwd=cwd, env=env, check=False, echo=True,
     )  # fmt: skip
-    try:
-        junit = parse_junit(host.read_bytes())
-    except (OSError, ValueError, ElementTree.ParseError) as e:
-        return PyResult(
-            python=python, version=info["python"], packages=packages, seed=use_seed,
-            returncode=tests.returncode, setup_error=f"no usable JUnit file ({type(e).__name__})",
-        )  # fmt: skip
-    return PyResult(
-        python=python, version=info["python"], packages=packages, seed=use_seed, junit=junit,
-        returncode=tests.returncode,
+    common: dict[str, Any] = dict(
+        python=python, version=info["python"], packages=packages, seed=use_seed,
+        returncode=tests.returncode, util_pct=util,
     )  # fmt: skip
+    try:
+        junit = parse_junit(junit_path.read_bytes())
+    except (OSError, ValueError, ElementTree.ParseError) as e:
+        return PyResult(**common, setup_error=f"no usable JUnit file ({type(e).__name__})")
+    return PyResult(**common, junit=junit)
 
 
 # --- payloads -------------------------------------------------------------------------------------
@@ -603,7 +540,7 @@ def build_comment(
     description: str,
     env_names: Sequence[str],
     reviewed: bool,
-    sandbox: str | None,
+    perf: bool,
     context: str,
 ) -> str:
     cols = [r.python for r in results]
@@ -616,6 +553,9 @@ def build_comment(
         ]),
         ("pytest exit code", [str(r.returncode) for r in results]),
         ("pytest-randomly seed", [str(r.seed) if r.seed is not None else "-" for r in results]),
+        ("GPU utilisation before tests", [
+            f"{r.util_pct:.0f}%" if r.util_pct is not None else "-" for r in results
+        ]),
         ("JUnit sha256", [f"`{r.junit.sha256}`" if r.junit else "-" for r in results]),
     ]  # fmt: skip
     lines = [
@@ -640,9 +580,16 @@ def build_comment(
             if len(r.junit.failed_names) > len(shown):
                 lines.append(f"- ... and {len(r.junit.failed_names) - len(shown)} more")
     who = "reviewed by a human (`--reviewed`)" if reviewed else "author is a maintainer"
+    scope = (
+        "the whole GPU suite (`--perf`: timing tests ran once the GPU was idle)"
+        if perf
+        else "correctness tests only (`gpu and not perf`; timing tests need `--perf`)"
+    )
     lines += [
         "",
-        f"Run: {who}; sandbox: {sandbox or 'none'}. Test environment allowlist (names only): "
+        f"Ran {scope}. Utilisation is the median of 8 `nvidia-smi` samples.",
+        "",
+        f"Run: {who}. Test environment allowlist (names only): "
         + ", ".join(f"`{n}`" for n in sorted(env_names))
         + ". PATH is rebuilt (venv, uv, system dirs), HOME and TMPDIR point into a fresh temp dir.",
     ]
@@ -737,8 +684,13 @@ def parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
         "--reviewed", action="store_true",
         help="a human has read the full diff, lockfile and tests included. Agents never pass this.",
     )  # fmt: skip
-    ap.add_argument("--sandbox", choices=["docker"], help="run the suite in the sandbox")
-    ap.add_argument("--max-wait", type=float, default=1800.0, help="GPU busy wait limit, seconds")
+    ap.add_argument(
+        "--perf", action="store_true",
+        help="also run the timing (perf) tests, after waiting for an idle GPU",
+    )  # fmt: skip
+    ap.add_argument(
+        "--max-wait", type=float, default=1800.0, help="--perf: GPU busy wait limit, seconds"
+    )
     ap.add_argument("--seed", type=int, default=None, help="pytest-randomly seed (default: random)")
     ap.add_argument("--repo", default=None, help="OWNER/NAME (default: this checkout's repo)")
     ap.add_argument("--remote-url", default=None, help=argparse.SUPPRESS)
@@ -767,7 +719,7 @@ def main(
         me = runner(["gh", "api", "user", "--jq", ".login"]).stdout.strip()
         check_author(
             is_maintainer(runner, repo, target.author),
-            author=target.author, reviewed=args.reviewed, sandbox=args.sandbox,
+            author=target.author, reviewed=args.reviewed,
         )  # fmt: skip
         pythons = tuple(p for p in PYTHONS if p in (args.python or PYTHONS))
         partial = pythons != PYTHONS
@@ -776,7 +728,7 @@ def main(
         uv_python = runner([uv, "python", "dir"]).stdout.strip()
         seed = args.seed if args.seed is not None else random.randrange(2**32)
         with temp_root() as tmp:
-            for d in ("home", "tmp", "out", "venvs", "uv-cache"):
+            for d in ("home", "tmp", "out"):
                 (tmp / d).mkdir()
             worktree = tmp / "wt"
             prepare_worktree(
@@ -784,28 +736,29 @@ def main(
                 remote_url=args.remote_url or f"https://github.com/{repo}.git",
             )  # fmt: skip
             try:
-                if args.sandbox == "docker":
-                    sandbox_preflight(runner)
-                    shutil.copytree(worktree, tmp / "src", ignore=shutil.ignore_patterns(".git"))
                 ensure_unmoved(runner, repo, target)
                 gpu = gpu_info(runner)
                 env = scrubbed_env(
                     shell_env, home=tmp / "home", tmp=tmp / "tmp", uv_cache=uv_cache,
                     uv_python=uv_python, extra_path=[Path(uv).parent],
                 )  # fmt: skip
-                plan = Plan(
-                    worktree=worktree, tmp=tmp, uv=uv, env=env, sandbox=args.sandbox,
-                    uid=os.getuid(), gid=os.getgid(),
-                )  # fmt: skip
+                plan = Plan(worktree=worktree, tmp=tmp, uv=uv, env=env)
 
-                def wait_idle() -> None:
-                    wait_for_idle(
-                        lambda: gpu_sample(runner), sleep=sleep, clock=clock,
-                        max_wait_s=args.max_wait, out=out,
-                    )  # fmt: skip
+                def before_tests() -> float:
+                    sample = lambda: gpu_sample(runner)  # noqa: E731
+                    if args.perf:
+                        return wait_for_idle(
+                            sample, sleep=sleep, clock=clock, max_wait_s=args.max_wait, out=out
+                        )
+                    util, _ = observe_util(sample, sleep=sleep)
+                    out(f"GPU utilisation {util:.0f}%; running correctness tests (no --perf).")
+                    return util
 
                 results = [
-                    run_python(runner, plan, py, wait_idle=wait_idle, seed=seed) for py in pythons
+                    run_python(
+                        runner, plan, py, before_tests=before_tests, seed=seed, perf=args.perf
+                    )
+                    for py in pythons
                 ]
             finally:
                 remove_worktree(runner, root, worktree)
@@ -821,7 +774,7 @@ def main(
             build_comment(
                 target=target, results=results, gpu=gpu, state=state, description=description,
                 env_names=env_names(plan), reviewed=args.reviewed,
-                sandbox=args.sandbox, context=config.context,
+                perf=args.perf, context=config.context,
             )
         )  # fmt: skip
         leaks = scrub.leaks(description) + scrub.leaks(body)

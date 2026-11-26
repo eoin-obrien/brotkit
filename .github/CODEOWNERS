@@ -1,7 +1,1 @@
 * @eoin-obrien
-
-# The GPU gate's rules and workflows (ADR-0010). Listed explicitly so the rule survives if the
-# catch-all above is ever narrowed; with "require review from code owners" on, an outside PR
-# that edits them needs the maintainer's approval.
-/.github/ @eoin-obrien
-/tools/gpu_gate* @eoin-obrien

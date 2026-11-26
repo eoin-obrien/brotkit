@@ -168,7 +168,7 @@ def test_comment_has_the_marker_environment_and_failures() -> None:
     rs = [result("3.14", failed=["test_fma"]), result("3.15")]
     body = c.build_comment(
         target=target, results=rs, gpu=GPU, state="failure", description="d",
-        env_names=["HOME", "PATH", "UV_CACHE_DIR"], reviewed=False, sandbox=None,
+        env_names=["HOME", "PATH", "UV_CACHE_DIR"], reviewed=False, perf=False,
         context="gpu/xenon",
     )  # fmt: skip
     assert body.startswith(c.MARKER)
@@ -178,6 +178,7 @@ def test_comment_has_the_marker_environment_and_failures() -> None:
     assert "| numba-cuda-mlir | 1.0 | 1.0 |" in body
     assert "`HOME`, `PATH`, `UV_CACHE_DIR`" in body
     assert "author is a maintainer" in body
+    assert "correctness tests only" in body
 
 
 # --- environment ----------------------------------------------------------------------------------
@@ -263,18 +264,16 @@ def test_a_compute_process_counts_as_busy() -> None:
 
 
 def test_maintainer_runs_without_review() -> None:
-    c.check_author(True, author="eoin-obrien", reviewed=False, sandbox=None)
+    c.check_author(True, author="eoin-obrien", reviewed=False)
 
 
 def test_non_maintainer_without_reviewed_is_refused() -> None:
     with pytest.raises(c.Refusal, match="--reviewed"):
-        c.check_author(False, author="mallory", reviewed=False, sandbox="docker")
+        c.check_author(False, author="mallory", reviewed=False)
 
 
-def test_reviewed_outside_pr_needs_the_sandbox() -> None:
-    with pytest.raises(c.Refusal, match="sandbox"):
-        c.check_author(False, author="mallory", reviewed=True, sandbox=None)
-    c.check_author(False, author="mallory", reviewed=True, sandbox="docker")
+def test_reviewed_non_maintainer_runs() -> None:
+    c.check_author(False, author="dependabot[bot]", reviewed=True)
 
 
 # --- fake processes -------------------------------------------------------------------------------
@@ -297,6 +296,7 @@ class Fake:
         self.comments: list[dict[str, Any]] = []
         self.runs: list[dict[str, Any]] = []
         self.junit = junit_xml()
+        self.util = 1.0
 
     def __call__(
         self,
@@ -352,7 +352,7 @@ class Fake:
             if "--query-gpu=name,compute_cap,driver_version" in a:
                 return done(a, f"{GPU.name}, {GPU.cc}, {GPU.driver}\n")
             if "--query-gpu=utilization.gpu" in a:
-                return done(a, "1\n")
+                return done(a, f"{self.util:g}\n")
             return done(a, "")
         if name == "python" and "-c" in a:
             pk = {p: "1.0" for p in c.PACKAGES} | {c.RANDOMLY: "5.1.0"}
@@ -403,7 +403,7 @@ def origin(tmp_path: Path) -> tuple[Path, Path, str]:
 
 
 def run_main(
-    fake: Fake, root: Path, src: Path, tmp_path: Path, *extra: str
+    fake: Fake, root: Path, src: Path, tmp_path: Path, *extra: str, clock: Clock | None = None
 ) -> tuple[int, list[str]]:
     msgs: list[str] = []
     shell = {
@@ -415,7 +415,8 @@ def run_main(
     }
     rc = c.main(
         ["7", "--repo", REPO, "--remote-url", str(src), "--seed", "7", *extra],
-        runner=fake, sleep=lambda _: None, clock=lambda: 0.0, shell_env=shell, repo_root=root,
+        runner=fake, sleep=clock.sleep if clock else lambda _: None,
+        clock=clock.now if clock else lambda: 0.0, shell_env=shell, repo_root=root,
         out=msgs.append,
     )  # fmt: skip
     return rc, msgs
@@ -480,35 +481,6 @@ def test_bots_are_never_maintainers() -> None:
     assert not c.is_maintainer(fake, REPO, "someone")
 
 
-# --- sandbox commands -----------------------------------------------------------------------------
-
-
-def test_sandbox_commands_are_isolated(tmp_path: Path) -> None:
-    plan = c.Plan(worktree=tmp_path / "wt", tmp=tmp_path, uv="uv", env={}, sandbox="docker")
-    sync = c.sync_cmd(plan, "3.14")
-    test = c.python_cmd(plan, "3.14", c.pytest_args("/out/j.xml", 7))
-    for cmd in (sync, test):
-        joined = " ".join(cmd)
-        assert "docker.sock" not in joined
-        assert str(Path.home()) not in joined
-        assert ".config/gh" not in joined
-        assert f"{tmp_path / 'src'}:/src:ro" in cmd
-        assert "--cap-drop" in cmd
-        assert "no-new-privileges" in cmd
-        assert "--read-only" in cmd
-        mounts = [cmd[i + 1] for i, x in enumerate(cmd) if x == "-v"]
-        assert all(m.startswith(str(tmp_path)) for m in mounts)
-    assert cmd_value(sync, "--network") == "bridge"
-    assert "--gpus" not in sync
-    assert cmd_value(test, "--network") == "none"
-    assert "--gpus" in test
-    assert f"{tmp_path / 'venvs'}:/venvs:ro" in test
-
-
-def cmd_value(cmd: list[str], flag: str) -> str:
-    return cmd[cmd.index(flag) + 1]
-
-
 # --- end to end -----------------------------------------------------------------------------------
 
 
@@ -517,6 +489,7 @@ def test_dry_run_end_to_end(origin: tuple[Path, Path, str], tmp_path: Path) -> N
     fake = Fake(sha)
     rc, msgs = run_main(fake, root, src, tmp_path, "--dry-run")
     assert rc == 0, msgs
+    msgs = [m for m in msgs if not m.startswith("GPU utilisation")]
     assert fake.posted() == []
     assert not any(x[:3] == ["gh", "run", "rerun"] for x in fake.calls)
     status = json.loads(msgs[0].split(":\n", 1)[1])
@@ -534,7 +507,7 @@ def test_dry_run_end_to_end(origin: tuple[Path, Path, str], tmp_path: Path) -> N
     # Both versions ran pytest with the shared flags, under the scrubbed env.
     pytest_calls = [x for x in fake.calls if "pytest" in x]
     assert len(pytest_calls) == 2
-    assert all("--randomly-seed=7" in x and "-m" in x and "gpu" in x for x in pytest_calls)
+    assert all("--randomly-seed=7" in x and "gpu and not perf" in x for x in pytest_calls)
     assert all(not any(k.startswith(("BROTKIT_", "NUMBA_", "GH_")) for k in e) for e in fake.envs)
     # The throwaway worktree is gone.
     assert "brotkit-gpu-check-" not in git(root, "worktree", "list")
@@ -548,8 +521,8 @@ def test_narrowed_run_doesnt_post_without_post_partial(
     rc, msgs = run_main(fake, root, src, tmp_path, "--python", "3.15")
     assert rc == 0
     assert fake.posted() == []
-    assert "narrowed run" in msgs[0]
-    assert '"partial: 3.15 only' in msgs[0]
+    assert "narrowed run" in msgs[-2]
+    assert '"partial: 3.15 only' in msgs[-2]
 
 
 def test_real_run_posts_comment_status_and_reruns_the_gate(
@@ -606,13 +579,47 @@ def test_sha_moving_during_the_run_posts_nothing(
     assert fake.posted() == []
 
 
-@pytest.mark.parametrize(
-    ("info", "image_rc", "match"),
-    [("Docker Desktop", 0, "Docker Desktop"), ("Ubuntu 24.04.5 LTS", 1, "missing")],
-)
-def test_sandbox_preflight_refuses(info: str, image_rc: int, match: str) -> None:
-    def runner(args: Sequence[str], **_: Any) -> subprocess.CompletedProcess[str]:
-        return done(args, info + "\n", 0) if "info" in args else done(args, "", image_rc)
+# --- correctness vs perf --------------------------------------------------------------------------
 
-    with pytest.raises(c.Refusal, match=match):
-        c.sandbox_preflight(runner)
+
+def test_correctness_runs_on_a_busy_gpu_and_records_the_load(
+    origin: tuple[Path, Path, str], tmp_path: Path
+) -> None:
+    src, root, sha = origin
+    fake = Fake(sha)
+    fake.util = 27.0
+    clock = Clock()
+    rc, msgs = run_main(fake, root, src, tmp_path, "--dry-run", clock=clock)
+    assert rc == 0, msgs
+    assert c.BUSY_RETRY_S not in clock.sleeps  # never waited
+    pytest_calls = [x for x in fake.calls if "pytest" in x]
+    assert all("gpu and not perf" in x for x in pytest_calls)
+    comment = msgs[-1]
+    assert "| GPU utilisation before tests | 27% | 27% |" in comment
+    assert "correctness tests only" in comment
+
+
+def test_perf_waits_for_an_idle_gpu_and_runs_the_whole_suite(
+    origin: tuple[Path, Path, str], tmp_path: Path
+) -> None:
+    src, root, sha = origin
+    fake = Fake(sha)
+    rc, msgs = run_main(fake, root, src, tmp_path, "--dry-run", "--perf", clock=Clock())
+    assert rc == 0, msgs
+    pytest_calls = [x for x in fake.calls if "pytest" in x]
+    assert all(x[x.index("-m", 2) + 1] == "gpu" for x in pytest_calls)
+    assert "the whole GPU suite (`--perf`" in msgs[-1]
+
+
+def test_perf_on_a_busy_gpu_gives_up_and_posts_nothing(
+    origin: tuple[Path, Path, str], tmp_path: Path
+) -> None:
+    src, root, sha = origin
+    fake = Fake(sha)
+    fake.util = 27.0
+    clock = Clock()
+    rc, msgs = run_main(fake, root, src, tmp_path, "--perf", "--max-wait", "60", clock=clock)
+    assert rc == 2
+    assert fake.posted() == []
+    assert not any("pytest" in x for x in fake.calls)
+    assert any("GPU busy (median 27%)" in m for m in msgs)

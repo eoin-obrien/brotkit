@@ -1,9 +1,11 @@
 name: gpu-gate
 
-# Required check (ADR-0010). Nothing here touches a GPU or the maintainer's machine: GPU tests
+# Advisory check (ADR-0010). Nothing here touches a GPU or the maintainer's machine: GPU tests
 # run only when the maintainer starts tools/gpu_check.py on Xenon, which posts a `gpu/xenon`
-# commit status on the PR's head SHA. This job passes if the PR changes no GPU-relevant path
-# (tools/gpu_gate_paths.toml), or if that status is `success` on exactly the head SHA.
+# commit status on the PR's head SHA. The check is satisfied if the PR changes no GPU-relevant
+# path (tools/gpu_gate_paths.toml), or if that status is `success` on exactly the head SHA.
+# Otherwise, while the config says `enforce = false`, the job passes with a warning annotation
+# and a reminder in the step summary; with `enforce = true` it fails.
 #
 # The rules (tools/gpu_gate.py and its config) come from the PR's *base* commit; the head is
 # only read as data. pull_request only, never pull_request_target, with a read-only token.

@@ -3,8 +3,14 @@
 # The gpu-gate workflow reads this file, and tools/gpu_gate.py, from the PR's *base* commit,
 # so a PR can't loosen its own gate. Changes here take effect for PRs opened after they merge.
 
-# Commit-status context posted by tools/gpu_check.py and required by gpu-gate.
+# Commit-status context posted by tools/gpu_check.py and checked by gpu-gate.
 context = "gpu/xenon"
+
+# false: advisory. A GPU-relevant PR without a passing status gets a warning and a reminder in
+# the step summary, and gpu-gate still passes. true: gpu-gate fails until the check passes.
+# Turn it on (and make gpu-gate a required check) with the first outside PR or Dependabot
+# GPU-stack bump: ADR-0010, "Revisit when".
+enforce = false
 
 # GitHub logins whose `gpu/xenon` statuses the gate accepts (the status's creator.login).
 # Read from the base branch, so a PR can't add its author.
@@ -20,8 +26,7 @@ gpu = [
     "tools/gpu_gate.py",
     "tools/gpu_gate_paths.toml",
     "tools/gpu_check.py",
-    "tools/sandbox/**",
-    "tests/conftest.py",
+        "tests/conftest.py",
     "tests/**/conftest.py",
     "tests/fixtures/**",
 ]
