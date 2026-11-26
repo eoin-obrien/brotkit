@@ -797,3 +797,60 @@ shrink how often the local check is needed.
 
 **Spec edits in the same PR:** the CI and GPU testing row, the Tests and Quality rows, and the
 phase 0 and phase 1a gates. Backlog 0.3, 1.9 and 1.24 are reworded.
+
+## ADR-0011: The pixel convention, fixed exactly, with an mpmath reference
+
+- **Status:** Accepted
+- **Date:** 2026-11-26
+- **Backlog:** 0.4 ([#12](https://github.com/eoin-obrien/brotkit/issues/12))
+
+### Context
+Backlog 0.4 was "baseline renders from the old framework". The old framework isn't available,
+so the baselines are now independent references computed exactly with mpmath
+(`docs/design/goldens.md`). An exact reference is only useful if the renderer samples the
+same points, and a pixel mapping that is silently off by half a pixel, a row flip or a
+transposition still produces a plausible image. The spec's "Pixel grid convention" section
+fixes pixel centres, row order and spacing, but says nothing about the rotation's direction or
+centre, and gives `Embedding.julia` a float `c`, which can't represent most decimal constants
+exactly (−0.8 + 0.156i among them).
+
+### Decision
+One convention, implemented exactly in `brotkit.testing.reference` (pure Python on mpmath),
+which the golden generator and the tests share. Phase 1's `Frame` and `Embedding` must agree
+with it pixel for pixel.
+
+1. **Pixel centres.** Pixel (i, j) covers [i, i+1) × [j, j+1) in pixel space and its plain
+   sample is its centre, (i + ½, j + ½). With W × H pixels and spacing s, a pixel-space point
+   (x, y) has the unrotated offset du = (x − W/2)·s, dv = −(y − H/2)·s from the frame
+   centre. For even sizes the centre falls on a pixel corner; for odd sizes, on the centre of
+   pixel (⌊W/2⌋, ⌊H/2⌋).
+2. **Rows.** Row 0 is the top row and +v points up (the minus sign above). Arrays are
+   `(H, W)`, indexed `[j, i]`, and save as images without flips.
+3. **Width.** `Frame.width` is the x extent: s = width / W, and the height is s·H. Pixels are
+   square.
+4. **Rotation.** `Frame.rotation` (radians, a float) turns the offset counter-clockwise about
+   the frame centre: u = cᵤ + cos θ·du − sin θ·dv, v = cᵥ + sin θ·du + cos θ·dv. The
+   sampled window turns counter-clockwise, so the picture appears turned clockwise. The
+   reference evaluates cos and sin of the float's exact binary value.
+5. **Embedding.** p = origin + u·e₁ + v·e₂ in ℂ² = ℝ⁴, ordered (Re z₀, Im z₀, Re c, Im c).
+   Mandelbrot: origin 0, e₁ = Re c, e₂ = Im c, derivative d/dc seeded 0. Julia(c): origin
+   (0, 0, Re c, Im c), e₁ = Re z₀, e₂ = Im z₀, derivative d/dz₀ seeded 1. The origin is
+   Decimal, so `Embedding.julia` takes c as decimal strings (or Decimals); a Python `complex`
+   is accepted only as its exact binary value.
+6. **Escape count.** z_{k+1} = z_k² + c; n is the first k with |z_k| > R (strict), testing
+   z₀ … z_{max_iter−1}; n = max_iter, outcome `MAX_ITER`, if none escapes. mu is
+   n + 1 − log(log|z_n| / log R) / log p, and DE uses `de_convention="estimate"`,
+   2·|z_n|·ln|z_n| / |z′_n|.
+
+The convention is versioned: the golden manifest records `ADR-0011 v1`. Changing any rule
+above is a new ADR and regenerated goldens.
+
+### Consequences
+- The spec's "Pixel grid convention" section gains the rotation and embedding rules, and the
+  `Embedding.julia` skeleton takes decimal strings.
+- S4's spike kernels map pixel x to c₀ + (x − ⌊W/2⌋)·dx, with no half-pixel offset. The golden
+  stand-ins pass the centre of pixel (⌊W/2⌋, ⌊H/2⌋) as c₀, which makes the two agree exactly
+  (a CPU test checks the identity on every view). The phase 1 codegen implements the
+  convention directly.
+- Supersampling offsets (`frame.to_plane(i + ox, j + oy)`) use the same pixel-space mapping;
+  the plain sample is offset (½, ½).

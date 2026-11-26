@@ -8,3 +8,4 @@ tests/golden/** filter=lfs diff=lfs merge=lfs -text
 # files, which would break the README on GitHub and PyPI. Commit them as ordinary,
 # optimised PNGs under ~300 KB each. See ADR-0003.
 docs/hero/*.png binary
+tests/golden/manifest.json !filter !diff !merge text eol=lf

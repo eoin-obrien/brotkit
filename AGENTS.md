@@ -63,8 +63,10 @@ Don't break these. If a change seems to need it, stop and raise it instead.
    intrinsic and every FMA an explicit `cuda.fma`, never bare `+ - *` (ADR-0006).
 5. **No arrays in frozen dataclasses.** Use `tuple`, `frozendict` and `frozenset`. Arrays
    belong to resource holders (`Layers`, `Histograms`, ...).
-6. **Golden images are updated only with explicit approval** from the maintainer (see the
-   `update-golden-images` skill). They live in Git LFS and are compared perceptually.
+6. **Golden images and golden references are updated only with explicit approval** from the
+   maintainer (see the `update-golden-images` skill). Both live in Git LFS. Images are
+   compared perceptually; the mpmath references in `tests/golden/` by the per-tier rules in
+   `brotkit.testing.golden` (`docs/design/goldens.md`).
 7. **The generated kernel cache is never committed.** It lives in `~/.cache/brotkit/kernels/`.
    Render outputs aren't committed either; `.gitignore` covers both.
 8. **Only the CUDA backend imports the GPU JIT.** `numba_cuda_mlir` is imported in
