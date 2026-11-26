@@ -74,6 +74,27 @@ Don't break these. If a change seems to need it, stop and raise it instead.
 
 See also "Rules that keep it fast" and "Conventions" in the spec.
 
+## GPU check
+
+There is no self-hosted runner. Nothing runs on Xenon, the maintainer's GPU machine, unless the
+maintainer starts it (ADR-0010). `uv run tools/gpu_check.py <PR>` runs the GPU correctness
+tests (`gpu and not perf`) on the PR's exact head SHA, on Python 3.14 and 3.15, and posts the
+`gpu/xenon` commit status. `--perf` adds the timing tests, which wait for an idle GPU. The
+`gpu-gate` check warns (advisory, not blocking) when a PR touches a GPU-relevant path
+(`tools/gpu_gate_paths.toml`) and has no passing status. How to run it:
+[`docs/gpu-check.md`](docs/gpu-check.md).
+
+- gpu_check refuses PRs whose author isn't a maintainer unless `--reviewed` is given.
+- `--reviewed` means a human has read the full diff, including the lockfile and the tests.
+- Tests that assert on timings are marked `perf`. Anything else marked `gpu` must pass on a
+  GPU that other programs are using.
+- **Agents never pass `--reviewed`, and never run gpu_check on PRs from other people.** On the
+  maintainer's own PRs, and only when asked, an agent may run it, `--dry-run` first, after
+  the `nvidia-smi` check in the `run-gpu-suite` skill.
+- Never change the maintainer list, the gate, its path config or `gpu-gate.yml` to get a
+  check to pass. Those files are themselves GPU-relevant, and edits to them go through the
+  check like any other.
+
 ## Commits and PRs
 
 - [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `perf:`,
@@ -91,8 +112,8 @@ See also "Rules that keep it fast" and "Conventions" in the spec.
 - [ ] `uv run pre-commit run --all-files` passes (ruff, format, pyright strict)
 - [ ] `uv run pytest -m "not gpu"` passes; new behaviour has tests (Hypothesis for value
       objects and serialisation)
-- [ ] GPU-affecting changes: `uv run pytest -m gpu` run on a GPU machine, or flagged for the
-      nightly suite
+- [ ] GPU-relevant changes: the maintainer ran `uv run tools/gpu_check.py <PR>` on the head
+      SHA and `gpu/xenon` passed (`gpu-gate` warns until then; see "GPU check" below)
 - [ ] Architecture invariants respected
 - [ ] Any deviation from the spec has an ADR in `docs/design/decisions.md`, and the spec is
       updated to match

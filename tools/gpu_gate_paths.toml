@@ -1,0 +1,74 @@
+# What makes a PR need the local GPU check (ADR-0010, docs/gpu-check.md).
+#
+# The gpu-gate workflow reads this file, and tools/gpu_gate.py, from the PR's *base* commit,
+# so a PR can't loosen its own gate. Changes here take effect for PRs opened after they merge.
+
+# Commit-status context posted by tools/gpu_check.py and checked by gpu-gate.
+context = "gpu/xenon"
+
+# false: advisory. A GPU-relevant PR without a passing status gets a warning and a reminder in
+# the step summary, and gpu-gate still passes. true: gpu-gate fails until the check passes.
+# Turn it on (and make gpu-gate a required check) with the first outside PR or Dependabot
+# GPU-stack bump: ADR-0010, "Revisit when".
+enforce = false
+
+# GitHub logins whose `gpu/xenon` statuses the gate accepts (the status's creator.login).
+# Read from the base branch, so a PR can't add its author.
+maintainers = ["eoin-obrien"]
+
+[paths]
+# Globs (pathlib full_match, `**` spans directories). The planner is src/brotkit/backends/chunks.py.
+gpu = [
+    "src/brotkit/backends/**",
+    "src/brotkit/codegen/**",
+    "src/brotkit/kernels/**",
+    ".github/workflows/gpu-gate.yml",
+    "tools/gpu_gate.py",
+    "tools/gpu_gate_paths.toml",
+    "tools/gpu_check.py",
+        "tests/conftest.py",
+    "tests/**/conftest.py",
+    "tests/fixtures/**",
+]
+# A changed test file is GPU-relevant if this text appears in it at the base or the head
+# (so removing the marker counts too).
+gpu_test_marker = "mark.gpu"
+lockfile = "uv.lock"
+pyproject = "pyproject.toml"
+
+[dependencies]
+# A lockfile or pyproject change is GPU-relevant only if it touches one of these packages
+# (fnmatch on the PEP 503 normalised name), requires-python, or one of `gpu_extras`.
+# Anything the parser doesn't recognise also counts as GPU-relevant.
+gpu_packages = [
+    "numba-cuda-mlir",
+    "numba",
+    "llvmlite",
+    "cuda-*",     # cuda-core, cuda-bindings, cuda-python, cuda-pathfinder, cuda-toolkit
+    "nvidia-*",
+    "numpy",
+    "sympy",      # changes the generated kernel source
+    "mpmath",     # reference values in GPU correctness tests
+    "gmpy2",
+]
+gpu_extras = ["cuda"]
+# pyproject.toml keys (dotted) whose changes never need the GPU check. Requirement lists
+# (project.dependencies, project.optional-dependencies, dependency-groups) are compared entry
+# by entry against gpu_packages. Any other key that changes counts as GPU-relevant.
+pyproject_safe_keys = [
+    "build-system",
+    "project.name",
+    "project.version",
+    "project.description",
+    "project.readme",
+    "project.license",
+    "project.license-files",
+    "project.authors",
+    "project.maintainers",
+    "project.keywords",
+    "project.classifiers",
+    "project.urls",
+    "tool.ruff",
+    "tool.pyright",
+    "tool.commitizen",
+]

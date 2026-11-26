@@ -1,0 +1,75 @@
+name: gpu-gate
+
+# Advisory check (ADR-0010). Nothing here touches a GPU or the maintainer's machine: GPU tests
+# run only when the maintainer starts tools/gpu_check.py on Xenon, which posts a `gpu/xenon`
+# commit status on the PR's head SHA. The check is satisfied if the PR changes no GPU-relevant
+# path (tools/gpu_gate_paths.toml), or if that status is `success` on exactly the head SHA.
+# Otherwise, while the config says `enforce = false`, the job passes with a warning annotation
+# and a reminder in the step summary; with `enforce = true` it fails.
+#
+# The rules (tools/gpu_gate.py and its config) come from the PR's *base* commit; the head is
+# only read as data. pull_request only, never pull_request_target, with a read-only token.
+# gpu_check.py re-runs this job after posting, so the check picks up the new status.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  statuses: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  gpu-gate:
+    name: gpu-gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the gate rules (base commit)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: gate
+          sparse-checkout: tools
+          persist-credentials: false
+
+      - name: Check out the PR (head commit, read as data)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          python-version: "3.14"
+
+      - name: Fetch commit statuses on the head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: gh api --paginate "repos/$REPO/commits/$HEAD_SHA/statuses" --jq '.[]' > statuses.jsonl
+
+      - name: Decide
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          if [ -f gate/tools/gpu_gate.py ]; then
+            rules=gate/tools
+            extra=()
+          else
+            # Bootstrap: the base predates the gate. Use the PR's copy, but always require
+            # the GPU status, so the PR can't exempt itself.
+            echo "::warning title=gpu-gate::base has no gate yet; requiring the GPU check"
+            rules=pr/tools
+            extra=(--force-required)
+          fi
+          uv run --no-project python "$rules/gpu_gate.py" --config "$rules/gpu_gate_paths.toml" \
+            --repo-dir pr --base "$BASE_SHA" --head "$HEAD_SHA" --pr "$PR" \
+            --statuses statuses.jsonl "${extra[@]}"

@@ -23,7 +23,6 @@ Hero PNGs are ordinary git files (not LFS), optimised to ~300 KB each: see ADR-0
 
 <!-- Quality -->
 [![CI](https://github.com/eoin-obrien/brotkit/actions/workflows/ci.yml/badge.svg)](https://github.com/eoin-obrien/brotkit/actions/workflows/ci.yml)
-<!-- [![GPU nightly](https://github.com/eoin-obrien/brotkit/actions/workflows/gpu-nightly.yml/badge.svg)](https://github.com/eoin-obrien/brotkit/actions/workflows/gpu-nightly.yml) -->
 <!-- [![Coverage](https://codecov.io/gh/eoin-obrien/brotkit/graph/badge.svg)](https://codecov.io/gh/eoin-obrien/brotkit) -->
 <!-- [![Docs](https://github.com/eoin-obrien/brotkit/actions/workflows/docs.yml/badge.svg)](https://github.com/eoin-obrien/brotkit/actions/workflows/docs.yml) -->
 

@@ -2,8 +2,8 @@
 
 These need only `compile_ptx`, but numba-cuda-mlir 0.6.0 creates a CUDA context even when the
 target cc is explicit (spike S4, Q1), so they can't run on GPU-less hosted runners yet. They're
-marked `gpu` and run in the self-hosted suite. Once upstream fixes the host-cc lookup, drop the
-marker (keep the dispatcher-comparison test GPU-only).
+marked `gpu` and run by the local GPU check (tools/gpu_check.py). Once upstream fixes the
+host-cc lookup, drop the marker (keep the dispatcher-comparison test GPU-only).
 
 Fixtures are kernel modules emitted by spike S4's generator (spikes/S4_registers/gen.py):
 - `*_Z_rn`: the multi-word escape loop with no finaliser, so the PTX holds no libdevice maths
