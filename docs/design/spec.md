@@ -48,6 +48,7 @@ Open questions:
 
 - ~~Check `numba-cuda` cp315 wheels.~~ Resolved by S1 and ADR-0005: `numba-cuda` will never ship cp315 ([#926](https://github.com/NVIDIA/numba-cuda/issues/926)), so the GPU JIT is `numba-cuda-mlir` on 3.14 and 3.15.
 - `numba-cuda-mlir` is pre-1.0 and generates code through MLIR rather than LLVM IR ([nvmath docs](https://docs.nvidia.com/cuda/nvmath-python/1.0.0/device-apis/utils.html) cover its native complex types). S3 and S4 gate the choice. **S3 passed the revised gate** ([spikes/S3.md](spikes/S3.md), ADR-0006): fastmath turned out to be inert below sm_100 and FMA contraction can't be disabled, so multi-word correctness now comes from codegen (`_rn` intrinsics plus explicit `cuda.fma`), and explicit FMA, non-contractible rounded add/mul and PTX/SASS inspection all work. **S4 passed the register half** ([spikes/S4.md](spikes/S4.md), ADR-0007): registers, spills, local memory and occupancy come from `compile_ptx` plus nvJitLink and match the driver in 175 of 175 configurations. `compile_ptx` still needs a device on 0.6.0 ([numba-cuda-mlir#492](https://github.com/NVIDIA/numba-cuda-mlir/issues/492)). Keep the backend boundary thin: only `backends/cuda.py` imports the JIT.
+- **Which precision computes mu and DE on the multi-word tiers?** (Backlog 1.x, not 0.4.) S4's kernels compute both in float32 from the hi word on every tier. A float32 |dz|² overflows past about 1.8e19, which the goldens show happens on part of almost every view and on over 90% of escaped pixels from spacing 1e-12 down (`f32_de_in_range_fraction` in `tests/golden/manifest.json`; `docs/design/goldens.md`). The renderer probably needs a float32 derivative with exponent rescaling, or f64 accumulators. Decide before the DE feature lands; recalibrate the golden tolerances when it does.
 
 ## Parameter names and defaults
 
@@ -223,6 +224,10 @@ u = c_u + \left(i + \tfrac12 - \tfrac{W}{2}\right)s \qquad v = c_v - \left(j + \
 - **The frame centre is the image centre.** For even sizes it lands on a pixel corner shared by four pixels. That's intended: a k×k grid supersample is then exactly a k× render, previews and finals cover identical regions, tiles join without half-pixel seams, and symmetric views stay exactly symmetric.
 - **Row 0 is the top and the imaginary axis points up** (the minus sign above). Arrays save as images without flips and match Matplotlib's `imshow(origin="upper")`.
 - **No pixel-anchor option.** To put a point exactly on a pixel centre, use an odd dimension or offset the centre by half a pixel explicitly.
+- **Width is the x extent** (s = width / W; height s·H), pixels are square.
+- **Rotation** (`Frame.rotation`, radians) turns the pixel offset (du, dv) counter-clockwise about the frame centre: u = cᵤ + cos θ·du − sin θ·dv, v = cᵥ + sin θ·du + cos θ·dv. The sampled window turns counter-clockwise, so the picture appears turned clockwise.
+- **Embedding:** p = origin + u·e₁ + v·e₂, ordered (Re z₀, Im z₀, Re c, Im c). Mandelbrot puts (u, v) on c with z₀ = 0; Julia puts it on z₀ with c fixed, given as decimal strings so it is exact.
+- ADR-0011 fixes all of this; `brotkit.testing.reference` is its exact implementation, and the golden references (`docs/design/goldens.md`) are computed with it.
 
 ### Strategies
 
@@ -687,7 +692,7 @@ class Embedding:                            # plane (u, v) -> (z0, c) in C^2 = R
     @classmethod
     def mandelbrot(cls) -> Self: ...        # z0 = 0, (u, v) -> c
     @classmethod
-    def julia(cls, c: complex) -> Self: ... # c fixed, (u, v) -> z0
+    def julia(cls, c: tuple[str, str] | complex) -> Self: ...  # c fixed (decimal strings: exact), (u, v) -> z0
     def rotated(self, r: Rotation4) -> Self: ...
 
 @dataclass(**FROZEN)
@@ -966,7 +971,7 @@ The additions that pay for themselves are deep zoom, feature-finding numerics, a
 | **Exterior texture mapping** | Local coordinates inside binary-decomposition cells, used to map images or hyperbolic tilings onto the exterior ([technique described here](https://www.fractalforums.com/programming/smooth-external-angle-of-mandelbrot-set)). | 3 |
 | **Vector overlays** | Trace equipotentials and external rays as SVG paths in view coordinates, alongside `trace_orbit`, for publication figures. | 3 |
 | **Formula zoo** | Curated recipes: Multibrot, Burning Ship, Tricorn and multicorns, McMullen maps, λz(1 − z) and 1/c planes, Phoenix, Nova, Magnet, Collatz, Lyapunov (its own small family), bicomplex and split-complex Mandelbrots, each with tuned defaults and a thumbnail test. | 1–2 |
-| **Test harness** | CPU vs GPU parity within tolerance per precision; mu continuity across band edges; DE ≤ brute-force distance on sampled points; known nucleus periods; golden images with perceptual diff. Generated kernels need this more than hand-written ones. | 1 |
+| **Test harness** | CPU vs GPU parity within tolerance per precision; mu continuity across band edges; DE ≤ brute-force distance on sampled points; known nucleus periods; golden references computed exactly with mpmath (layer data, per-tier rules: `docs/design/goldens.md`, ADR-0011); golden images with perceptual diff. Generated kernels need this more than hand-written ones. | 1 |
 | **Benchmarks** | Log Giter/s (pixel-iterations per second) per device in metadata. Track regressions across Numba/numba-cuda-mlir upgrades. Run-to-run drift on Xenon is about ±10% (S4), so a fixed regression threshold would flap. The harness alternates the variants being compared in one process, warms up, takes the median of at least five runs, and records SM clock and temperature with every result, flagging clock variation above 5%. Regressions are judged against a baseline timed in the same run. | 1 |
 | **Scale-out** | Tiles dispatched across GPUs or machines (Dask or Ray), merged with the same layer schema. Density histograms simply add. | 4 |
 | **Print output** | Poster tiling with overlap, 16-bit TIFF with DPI, embedded ICC profile (sRGB or Display P3). | 3 |

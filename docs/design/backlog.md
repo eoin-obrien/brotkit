@@ -18,7 +18,7 @@ Status is tracked in GitHub issues (one per row), not in this file.
 | S3 | Multi-word arithmetic spike | df64 and dd two-sum/two-product with `fastmath=False` on GPU match an mpmath reference at a 1e-20 coordinate within expected error; `fastmath=True` shown to break it. Run on numba-cuda-mlir; this gates ADR-0005, so if fastmath on/off doesn't behave as the policy needs, stop and report rather than work around it | S1 |
 | S4 | Register-pressure spike | Table of registers/thread and occupancy for f32 and dd with 1, 3 and 6 fused features; split threshold decided and written into the spec. Run on numba-cuda-mlir: PTX inspection and register-count reporting must work there, and record whether it can compile a kernel to PTX with no GPU present (if so, CPU CI gets a compile-only check). This gates ADR-0005, so if either fails, stop and report rather than work around it | S1 |
 | S5 | Chunked-launch spike | Chunk overhead under 1% at 4K; Ctrl-C in Jupyter stops within one chunk with no corrupted state | S1 |
-| 0.4 | Baseline renders from the old framework | 10 known coordinates rendered with the previous Numba version, stored in Git LFS with their parameters | 0.2 |
+| 0.4 | Golden references computed with mpmath | The pixel convention fixed in ADR-0011 with an exact reference mapping; 9 small views computed exactly (P and 2P agree), stored in Git LFS with a manifest; `brotkit.testing.golden` comparison rules with per-tier tolerances calibrated against the S4 kernels; each tier has a view it passes and one it must fail. Replaces "baseline renders from the old framework", which isn't available | 0.2 |
 
 ## Phase 1a: walking skeleton (z² + c end to end)
 
@@ -32,7 +32,7 @@ Status is tracked in GitHub issues (one per row), not in this file.
 | 1.6 | Minimal colouring | field → linear/log scale → `FromMPL` ramp (linearised) → sRGB → 16-bit PNG | 1.5 |
 | 1.7 | NPZ persistence | `__meta__` JSON, naming scheme, registry, `allow_pickle=False`; `load(save(x))` round-trips; renamed file warns | 1.5 |
 | 1.8 | `render()` facade | Progress bar, `_repr_png_` preview; 4K Mandelbrot in a notebook on the 3090 Ti, time recorded | 1.4–1.7 |
-| 1.9 | First golden test in the GPU check | One golden image compared perceptually, run by the local GPU check on Xenon; matches the 0.4 baseline within tolerance | 1.8, 0.3, 0.4 |
+| 1.9 | First golden test in the GPU check | One golden image compared perceptually, run by the local GPU check on Xenon; matches the 0.4 golden references under `brotkit.testing.golden`'s rules, replacing the S4 stand-ins in `tests/test_golden_gpu.py` | 1.8, 0.3, 0.4 |
 
 ## Phase 1b: core complete
 

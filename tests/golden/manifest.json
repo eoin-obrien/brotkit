@@ -1,0 +1,828 @@
+{
+ "format": 1,
+ "pixel_convention": "ADR-0011 v1",
+ "generator": {
+  "path": "tools/make_goldens.py",
+  "git_sha": "c85a934bd97b8c28e0075cf136aad50f98512cd3",
+  "dirty": false
+ },
+ "versions": {
+  "mpmath": "1.4.1",
+  "mpmath_backend": "python",
+  "numpy": "2.5.5",
+  "python": "3.14.0"
+ },
+ "cpu_count": 24,
+ "escape_radius": "1e6",
+ "sensitivity": {
+  "nudge_px": "0.001",
+  "radius_rel": "1e-6"
+ },
+ "stable_px_levels": [
+  "0.001",
+  "0.003",
+  "0.01",
+  "0.03",
+  "0.1",
+  "0.3"
+ ],
+ "k_decidable": 4.0,
+ "tier_eps": {
+  "f32": 5.960464477539063e-08,
+  "df64": 3.552713678800501e-15,
+  "f64": 1.1102230246251565e-16,
+  "dd": 1.232595164407831e-32,
+  "qf": 1.262177448353619e-29
+ },
+ "views": {
+  "overview": {
+   "file": "overview.npz",
+   "sha256": "7774a94268b40ce6bbef9dda8288c77150abc3aa820aa3ff4775ab416a091ea0",
+   "title": "Full Mandelbrot overview",
+   "center": [
+    "-0.75",
+    "0"
+   ],
+   "width": "3.2",
+   "spacing": "0.05",
+   "pixels": [
+    64,
+    64
+   ],
+   "rotation": 0.0,
+   "embedding": {
+    "origin": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "e1": [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    "e2": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "derivative": "dc",
+   "max_iter": 256,
+   "escape_radius": "1e6",
+   "power": 2,
+   "de_convention": "estimate",
+   "standin": true,
+   "precision_bits": 256,
+   "check_precision_bits": 512,
+   "convergence": {
+    "non_sensitive": 4010,
+    "n_or_outcome_mismatches": 0,
+    "f64_value_mismatches": 0,
+    "sensitive_n_mismatches": 0
+   },
+   "escaped_fraction": 0.8505859375,
+   "sensitive_fraction": 0.02099609375,
+   "max_sensitive_fraction": 0.04,
+   "n_range": [
+    5,
+    194
+   ],
+   "max_abs_dz": 7.808458271038307e+21,
+   "f32_de_in_range_fraction": 0.9989,
+   "f32_de_ok": true,
+   "runtime_s": 3.9,
+   "tiers": {
+    "f32": {
+     "expect": "pass",
+     "decidable_fraction": 0.979,
+     "min_decidable": 0.96
+    },
+    "df64": {
+     "expect": "pass",
+     "decidable_fraction": 0.979,
+     "min_decidable": 0.96
+    },
+    "f64": {
+     "expect": "pass",
+     "decidable_fraction": 0.979,
+     "min_decidable": 0.96
+    },
+    "dd": {
+     "expect": "pass",
+     "decidable_fraction": 0.979,
+     "min_decidable": 0.96
+    },
+    "qf": {
+     "expect": "pass",
+     "decidable_fraction": 0.979,
+     "min_decidable": 0.96
+    }
+   }
+  },
+  "seahorse": {
+   "file": "seahorse.npz",
+   "sha256": "076abc616c0b079b22412998e9f403a3fb7b5812901f7a11b4d12cb5a167b376",
+   "title": "Seahorse valley, spacing 1.6e-5 (f32's last passing view)",
+   "center": [
+    "-0.743643887037158704752191506114774",
+    "0.131825904205311970493132056385139"
+   ],
+   "width": "1.024e-3",
+   "spacing": "0.000016",
+   "pixels": [
+    64,
+    64
+   ],
+   "rotation": 0.0,
+   "embedding": {
+    "origin": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "e1": [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    "e2": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "derivative": "dc",
+   "max_iter": 1000,
+   "escape_radius": "1e6",
+   "power": 2,
+   "de_convention": "estimate",
+   "standin": true,
+   "precision_bits": 256,
+   "check_precision_bits": 512,
+   "convergence": {
+    "non_sensitive": 3458,
+    "n_or_outcome_mismatches": 0,
+    "f64_value_mismatches": 0,
+    "sensitive_n_mismatches": 0
+   },
+   "escaped_fraction": 1.0,
+   "sensitive_fraction": 0.15576171875,
+   "max_sensitive_fraction": 0.17,
+   "n_range": [
+    40,
+    902
+   ],
+   "max_abs_dz": 3.375426444079024e+28,
+   "f32_de_in_range_fraction": 0.9165,
+   "f32_de_ok": true,
+   "runtime_s": 4.5,
+   "tiers": {
+    "f32": {
+     "expect": "pass",
+     "decidable_fraction": 0.6733,
+     "min_decidable": 0.66
+    },
+    "df64": {
+     "expect": "pass",
+     "decidable_fraction": 0.8442,
+     "min_decidable": 0.83
+    },
+    "f64": {
+     "expect": "pass",
+     "decidable_fraction": 0.8442,
+     "min_decidable": 0.83
+    },
+    "dd": {
+     "expect": "pass",
+     "decidable_fraction": 0.8442,
+     "min_decidable": 0.83
+    },
+    "qf": {
+     "expect": "pass",
+     "decidable_fraction": 0.8442,
+     "min_decidable": 0.83
+    }
+   }
+  },
+  "seahorse_2e-6": {
+   "file": "seahorse_2e-6.npz",
+   "sha256": "3db61c39f273956f1cf89f0159dee0b9f7b9de3f484cc003b97392f57f0012f2",
+   "title": "Seahorse valley, spacing 2e-6 (past f32)",
+   "center": [
+    "-0.743643887037158704752191506114774",
+    "0.131825904205311970493132056385139"
+   ],
+   "width": "1.28e-4",
+   "spacing": "0.000002",
+   "pixels": [
+    64,
+    64
+   ],
+   "rotation": 0.0,
+   "embedding": {
+    "origin": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "e1": [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    "e2": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "derivative": "dc",
+   "max_iter": 2000,
+   "escape_radius": "1e6",
+   "power": 2,
+   "de_convention": "estimate",
+   "standin": true,
+   "precision_bits": 256,
+   "check_precision_bits": 512,
+   "convergence": {
+    "non_sensitive": 3279,
+    "n_or_outcome_mismatches": 0,
+    "f64_value_mismatches": 0,
+    "sensitive_n_mismatches": 0
+   },
+   "escaped_fraction": 0.999755859375,
+   "sensitive_fraction": 0.199462890625,
+   "max_sensitive_fraction": 0.21,
+   "n_range": [
+    71,
+    1236
+   ],
+   "max_abs_dz": 5.668513543882934e+31,
+   "f32_de_in_range_fraction": 0.8515,
+   "f32_de_ok": true,
+   "runtime_s": 6.0,
+   "tiers": {
+    "f32": {
+     "expect": "fail",
+     "decidable_fraction": 0.4756,
+     "min_decidable": 0.79
+    },
+    "df64": {
+     "expect": "pass",
+     "decidable_fraction": 0.8005,
+     "min_decidable": 0.79
+    },
+    "f64": {
+     "expect": "pass",
+     "decidable_fraction": 0.8005,
+     "min_decidable": 0.79
+    },
+    "dd": {
+     "expect": "pass",
+     "decidable_fraction": 0.8005,
+     "min_decidable": 0.79
+    },
+    "qf": {
+     "expect": "pass",
+     "decidable_fraction": 0.8005,
+     "min_decidable": 0.79
+    }
+   }
+  },
+  "m41_1e-12": {
+   "file": "m41_1e-12.npz",
+   "sha256": "9c4b89ed4213948e1e1bf82047340f8c936d2df6f6e79346297d8d78d1a90045",
+   "title": "M(4,1), spacing 1e-12 (S3's df64 check)",
+   "center": [
+    "-0.101096363845622161025785445738622565463805442826253483876931",
+    "0.956286510809141500771096057729977435809833336510529170034314"
+   ],
+   "width": "6.4e-11",
+   "spacing": "1E-12",
+   "pixels": [
+    64,
+    64
+   ],
+   "rotation": 0.0,
+   "embedding": {
+    "origin": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "e1": [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    "e2": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "derivative": "dc",
+   "max_iter": 1000,
+   "escape_radius": "1e6",
+   "power": 2,
+   "de_convention": "estimate",
+   "standin": true,
+   "precision_bits": 256,
+   "check_precision_bits": 512,
+   "convergence": {
+    "non_sensitive": 3974,
+    "n_or_outcome_mismatches": 0,
+    "f64_value_mismatches": 0,
+    "sensitive_n_mismatches": 0
+   },
+   "escaped_fraction": 1.0,
+   "sensitive_fraction": 0.02978515625,
+   "max_sensitive_fraction": 0.04,
+   "n_range": [
+    87,
+    140
+   ],
+   "max_abs_dz": 3.286468563022662e+28,
+   "f32_de_in_range_fraction": 0.0764,
+   "f32_de_ok": false,
+   "runtime_s": 6.5,
+   "tiers": {
+    "f32": {
+     "expect": "n/a",
+     "decidable_fraction": 0.0
+    },
+    "df64": {
+     "expect": "pass",
+     "decidable_fraction": 0.8428,
+     "min_decidable": 0.83
+    },
+    "f64": {
+     "expect": "pass",
+     "decidable_fraction": 0.9702,
+     "min_decidable": 0.96
+    },
+    "dd": {
+     "expect": "pass",
+     "decidable_fraction": 0.9702,
+     "min_decidable": 0.96
+    },
+    "qf": {
+     "expect": "pass",
+     "decidable_fraction": 0.9702,
+     "min_decidable": 0.96
+    }
+   }
+  },
+  "m41_1e-20": {
+   "file": "m41_1e-20.npz",
+   "sha256": "7f912a22ad0c7da2168d83eb644191cf59c84176eb3cf66a48e6022e0faf2589",
+   "title": "M(4,1), spacing 1e-20 (dd and qf only)",
+   "center": [
+    "-0.101096363845622161025785445738622565463805442826253483876931",
+    "0.956286510809141500771096057729977435809833336510529170034314"
+   ],
+   "width": "6.4e-19",
+   "spacing": "1E-20",
+   "pixels": [
+    64,
+    64
+   ],
+   "rotation": 0.0,
+   "embedding": {
+    "origin": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "e1": [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    "e2": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "derivative": "dc",
+   "max_iter": 5000,
+   "escape_radius": "1e6",
+   "power": 2,
+   "de_convention": "estimate",
+   "standin": true,
+   "precision_bits": 256,
+   "check_precision_bits": 512,
+   "convergence": {
+    "non_sensitive": 3995,
+    "n_or_outcome_mismatches": 0,
+    "f64_value_mismatches": 0,
+    "sensitive_n_mismatches": 0
+   },
+   "escaped_fraction": 1.0,
+   "sensitive_fraction": 0.024658203125,
+   "max_sensitive_fraction": 0.04,
+   "n_range": [
+    152,
+    234
+   ],
+   "max_abs_dz": 3.8971634475586757e+39,
+   "f32_de_in_range_fraction": 0.0,
+   "f32_de_ok": false,
+   "runtime_s": 10.3,
+   "tiers": {
+    "f32": {
+     "expect": "n/a",
+     "decidable_fraction": 0.0
+    },
+    "df64": {
+     "expect": "fail",
+     "decidable_fraction": 0.0,
+     "min_decidable": 0.96
+    },
+    "f64": {
+     "expect": "n/a",
+     "decidable_fraction": 0.0
+    },
+    "dd": {
+     "expect": "pass",
+     "decidable_fraction": 0.9753,
+     "min_decidable": 0.96
+    },
+    "qf": {
+     "expect": "pass",
+     "decidable_fraction": 0.9753,
+     "min_decidable": 0.96
+    }
+   }
+  },
+  "julia": {
+   "file": "julia.npz",
+   "sha256": "49cbd042f80019fa8841957acf09bb61b8ad58841565c7f05454d83884598d71",
+   "title": "Julia set, c = -0.8 + 0.156i",
+   "center": [
+    "0",
+    "0"
+   ],
+   "width": "3.2",
+   "spacing": "0.05",
+   "pixels": [
+    64,
+    64
+   ],
+   "rotation": 0.0,
+   "embedding": {
+    "origin": [
+     "0",
+     "0",
+     "-0.8",
+     "0.156"
+    ],
+    "e1": [
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "e2": [
+     0.0,
+     1.0,
+     0.0,
+     0.0
+    ]
+   },
+   "derivative": "dz",
+   "max_iter": 1000,
+   "escape_radius": "1e6",
+   "power": 2,
+   "de_convention": "estimate",
+   "standin": false,
+   "precision_bits": 256,
+   "check_precision_bits": 512,
+   "convergence": {
+    "non_sensitive": 3710,
+    "n_or_outcome_mismatches": 0,
+    "f64_value_mismatches": 0,
+    "sensitive_n_mismatches": 0
+   },
+   "escaped_fraction": 0.99951171875,
+   "sensitive_fraction": 0.09423828125,
+   "max_sensitive_fraction": 0.11,
+   "n_range": [
+    5,
+    913
+   ],
+   "max_abs_dz": 1.970103250554724e+33,
+   "f32_de_in_range_fraction": 0.9888,
+   "f32_de_ok": true,
+   "runtime_s": 1.7,
+   "tiers": {
+    "f32": {
+     "expect": "pass",
+     "decidable_fraction": 0.9058,
+     "min_decidable": 0.89
+    },
+    "df64": {
+     "expect": "pass",
+     "decidable_fraction": 0.9058,
+     "min_decidable": 0.89
+    },
+    "f64": {
+     "expect": "pass",
+     "decidable_fraction": 0.9058,
+     "min_decidable": 0.89
+    },
+    "dd": {
+     "expect": "pass",
+     "decidable_fraction": 0.9058,
+     "min_decidable": 0.89
+    },
+    "qf": {
+     "expect": "pass",
+     "decidable_fraction": 0.9058,
+     "min_decidable": 0.89
+    }
+   }
+  },
+  "seahorse_rotated": {
+   "file": "seahorse_rotated.npz",
+   "sha256": "c705d82228eaf45f7861ed215837a3426a32eb2d24d459beb7728a8e29044770",
+   "title": "Seahorse valley rotated by 0.5 rad",
+   "center": [
+    "-0.743643887037158704752191506114774",
+    "0.131825904205311970493132056385139"
+   ],
+   "width": "1.024e-3",
+   "spacing": "0.000016",
+   "pixels": [
+    64,
+    64
+   ],
+   "rotation": 0.5,
+   "embedding": {
+    "origin": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "e1": [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    "e2": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "derivative": "dc",
+   "max_iter": 1000,
+   "escape_radius": "1e6",
+   "power": 2,
+   "de_convention": "estimate",
+   "standin": false,
+   "precision_bits": 256,
+   "check_precision_bits": 512,
+   "convergence": {
+    "non_sensitive": 3449,
+    "n_or_outcome_mismatches": 0,
+    "f64_value_mismatches": 0,
+    "sensitive_n_mismatches": 0
+   },
+   "escaped_fraction": 1.0,
+   "sensitive_fraction": 0.157958984375,
+   "max_sensitive_fraction": 0.17,
+   "n_range": [
+    39,
+    945
+   ],
+   "max_abs_dz": 8.713053336842673e+33,
+   "f32_de_in_range_fraction": 0.9126,
+   "f32_de_ok": true,
+   "runtime_s": 4.6,
+   "tiers": {
+    "f32": {
+     "expect": "pass",
+     "decidable_fraction": 0.6716,
+     "min_decidable": 0.66
+    },
+    "df64": {
+     "expect": "pass",
+     "decidable_fraction": 0.842,
+     "min_decidable": 0.83
+    },
+    "f64": {
+     "expect": "pass",
+     "decidable_fraction": 0.842,
+     "min_decidable": 0.83
+    },
+    "dd": {
+     "expect": "pass",
+     "decidable_fraction": 0.842,
+     "min_decidable": 0.83
+    },
+    "qf": {
+     "expect": "pass",
+     "decidable_fraction": 0.842,
+     "min_decidable": 0.83
+    }
+   }
+  },
+  "elephant_61x37": {
+   "file": "elephant_61x37.npz",
+   "sha256": "0739963e15f3ac0e5f0bd237d28fe186ad03ab281c7f899155cf78a1399b9e25",
+   "title": "Elephant valley, 61 x 37 (non-square, odd)",
+   "center": [
+    "0.2925",
+    "0.0145"
+   ],
+   "width": "0.0305",
+   "spacing": "0.0005",
+   "pixels": [
+    61,
+    37
+   ],
+   "rotation": 0.0,
+   "embedding": {
+    "origin": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "e1": [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    "e2": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "derivative": "dc",
+   "max_iter": 500,
+   "escape_radius": "1e6",
+   "power": 2,
+   "de_convention": "estimate",
+   "standin": true,
+   "precision_bits": 256,
+   "check_precision_bits": 512,
+   "convergence": {
+    "non_sensitive": 2061,
+    "n_or_outcome_mismatches": 0,
+    "f64_value_mismatches": 0,
+    "sensitive_n_mismatches": 0
+   },
+   "escaped_fraction": 0.692512184315463,
+   "sensitive_fraction": 0.08684093929995569,
+   "max_sensitive_fraction": 0.1,
+   "n_range": [
+    16,
+    488
+   ],
+   "max_abs_dz": 8.118201178581456e+22,
+   "f32_de_in_range_fraction": 0.9712,
+   "f32_de_ok": true,
+   "runtime_s": 7.1,
+   "tiers": {
+    "f32": {
+     "expect": "pass",
+     "decidable_fraction": 0.9132,
+     "min_decidable": 0.9
+    },
+    "df64": {
+     "expect": "pass",
+     "decidable_fraction": 0.9132,
+     "min_decidable": 0.9
+    },
+    "f64": {
+     "expect": "pass",
+     "decidable_fraction": 0.9132,
+     "min_decidable": 0.9
+    },
+    "dd": {
+     "expect": "pass",
+     "decidable_fraction": 0.9132,
+     "min_decidable": 0.9
+    },
+    "qf": {
+     "expect": "pass",
+     "decidable_fraction": 0.9132,
+     "min_decidable": 0.9
+    }
+   }
+  },
+  "period2_bulb": {
+   "file": "period2_bulb.npz",
+   "sha256": "d00a6116f85841f3e05754e8baaa919bcc01e4ec8c772a75db8be5aa5d8c0755",
+   "title": "Period-2 bulb, mostly interior",
+   "center": [
+    "-1",
+    "0"
+   ],
+   "width": "0.5",
+   "spacing": "0.0078125",
+   "pixels": [
+    64,
+    64
+   ],
+   "rotation": 0.0,
+   "embedding": {
+    "origin": [
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    "e1": [
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ],
+    "e2": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   "derivative": "dc",
+   "max_iter": 5000,
+   "escape_radius": "1e6",
+   "power": 2,
+   "de_convention": "estimate",
+   "standin": true,
+   "precision_bits": 256,
+   "check_precision_bits": 512,
+   "convergence": {
+    "non_sensitive": 3910,
+    "n_or_outcome_mismatches": 0,
+    "f64_value_mismatches": 0,
+    "sensitive_n_mismatches": 0
+   },
+   "escaped_fraction": 0.1875,
+   "sensitive_fraction": 0.04541015625,
+   "max_sensitive_fraction": 0.06,
+   "n_range": [
+    14,
+    4614
+   ],
+   "max_abs_dz": 3.516003887895736e+37,
+   "f32_de_in_range_fraction": 0.9688,
+   "f32_de_ok": true,
+   "runtime_s": 267.3,
+   "tiers": {
+    "f32": {
+     "expect": "pass",
+     "decidable_fraction": 0.9546,
+     "min_decidable": 0.94
+    },
+    "df64": {
+     "expect": "pass",
+     "decidable_fraction": 0.9546,
+     "min_decidable": 0.94
+    },
+    "f64": {
+     "expect": "pass",
+     "decidable_fraction": 0.9546,
+     "min_decidable": 0.94
+    },
+    "dd": {
+     "expect": "pass",
+     "decidable_fraction": 0.9546,
+     "min_decidable": 0.94
+    },
+    "qf": {
+     "expect": "pass",
+     "decidable_fraction": 0.9546,
+     "min_decidable": 0.94
+    }
+   }
+  }
+ }
+}

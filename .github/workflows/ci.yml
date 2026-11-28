@@ -32,6 +32,17 @@ jobs:
         with:
           persist-credentials: false
 
+      # The golden references (tests/golden/*.npz) are in Git LFS. Cache the objects, keyed on
+      # the manifest (which holds every file's sha256), so normal runs don't fetch from LFS.
+      - name: Cache LFS objects
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .git/lfs
+          key: lfs-golden-${{ hashFiles('tests/golden/manifest.json') }}
+
+      - name: Check out LFS files
+        run: git lfs pull
+
       - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
         with:
           python-version: ${{ matrix.python }}

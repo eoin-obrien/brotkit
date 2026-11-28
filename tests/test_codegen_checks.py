@@ -121,7 +121,17 @@ def test_pure_index_arithmetic_is_never_reported(expr: tuple[str, int]) -> None:
     assert find_bare_float_ops(f"r = {src}\n", int_names={"x", "y", "n", "w"}) == ()
 
 
-@pytest.mark.parametrize("name", ["s4_dd_F6_rn.py.txt", "s4_qf_C_rn.py.txt"])
+@pytest.mark.parametrize(
+    "name",
+    [
+        "s4_dd_F6_rn.py.txt",
+        "s4_qf_C_rn.py.txt",
+        # the golden stand-ins (tests/golden_standin.py)
+        "s4_df64_B_r1e6.py.txt",
+        "s4_dd_B_r1e6.py.txt",
+        "s4_qf_B_r1e6.py.txt",
+    ],
+)
 def test_generated_multiword_modules_are_clean(name: str) -> None:
     src = (FIXTURES / name).read_text()
     assert find_bare_float_ops(src, int_names=S4_INT_NAMES) == ()
