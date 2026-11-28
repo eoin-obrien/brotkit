@@ -288,7 +288,7 @@ class EntryInfo:
     digest: str
     path: Path
     size: int
-    last_used: float
+    last_used_ns: int  # st_mtime_ns: the entry file's mtime is its last-used time
 
 
 def encode_entry(entry: CacheEntry) -> bytes:
@@ -553,7 +553,9 @@ class KernelStore:
                 st = p.stat()
             except FileNotFoundError:
                 continue
-            out.append(EntryInfo(digest=p.stem, path=p, size=st.st_size, last_used=st.st_mtime))
+            out.append(
+                EntryInfo(digest=p.stem, path=p, size=st.st_size, last_used_ns=st.st_mtime_ns)
+            )
         return out
 
     def evict(self, *, keep: str | None = None, stale_tmp_seconds: float = 3600.0) -> list[str]:
@@ -571,7 +573,9 @@ class KernelStore:
                 with suppress(FileNotFoundError):
                     if now - t.stat().st_mtime > stale_tmp_seconds:
                         t.unlink()
-            infos = sorted(self.entries(), key=lambda e: e.last_used)
+            # Entries touched within the filesystem's timestamp granularity tie on mtime; the
+            # digest breaks the tie so the order never depends on directory listing order.
+            infos = sorted(self.entries(), key=lambda e: (e.last_used_ns, e.digest))
             total = sum(e.size for e in infos)
             evicted: list[str] = []
             for e in infos:
